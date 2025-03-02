@@ -65,9 +65,9 @@ exports.otpSend=async(req,res)=>{
         }
 
        
-        sendSMS(phoneNumber, otp);
+        // sendSMS(phoneNumber, otp);
 
-        res.json({ success: true, message: "OTP sent successfully" });
+        res.json({ success: true,phoneNumber, message: "OTP sent successfully" });
     } catch (error) {
         return res.status(500).json({success:false,message:"Internal Server Error",error:error.message})
     
@@ -102,7 +102,7 @@ exports.otpConfirm_and_login = async (req, res) => {
             return res.status(400).json({ success: false, message: "Invalid OTP" });
         }
 
-        // Remove the last OTP after successful login (optional)
+       
         await OTP.deleteOne(
             { phoneNumber }
         );

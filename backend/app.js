@@ -10,7 +10,15 @@ const PORT=process.env.PORT || 5000;
 app.use(bodyParser.json({limit: "50mb"}));
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 app.use(express.json());
-app.use(cors());
+app.use(cors(
+    {
+        origin: "http://localhost:5173",
+        credentials:true,            //access-control-allow-credentials:true
+        optionSuccessStatus:200
+        
+    }
+
+));
 
 
 app.use('/mingle/v1',require('./Routes/UserRoutes'))
