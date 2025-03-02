@@ -65,7 +65,7 @@ exports.otpSend=async(req,res)=>{
         }
 
        
-        // sendSMS(phoneNumber, otp);
+        sendSMS(phoneNumber, otp);
 
         res.json({ success: true,phoneNumber, message: "OTP sent successfully" });
     } catch (error) {
