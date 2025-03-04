@@ -17,7 +17,7 @@ export const LoginByPhoneAction = createAsyncThunk("LoginByPhoneAction",async (p
 // Confirming OTP
 export const ConfirmOTPAction = createAsyncThunk("ConfirmOTPAction",
   async ({ otp, phoneNumber }) => {
-    console.log(otp, phoneNumber);
+    // console.log(otp, phoneNumber);
     const { data } = await axios.post(
       `${URL}/otpConfirm`,
       { userOtp: otp, phoneNumber: phoneNumber },
@@ -30,6 +30,16 @@ export const ConfirmOTPAction = createAsyncThunk("ConfirmOTPAction",
 
 //2 Logging in by Email and password
 
+export const LoginByEmailAction = createAsyncThunk("LoginByEmailAction",async ({email,password}) => {
+  
+    const { data } = await axios.post(
+      `${URL}/login`,
+      { email: email ,password:password},
+      { withCredentials: true, headers: { "Content-Type": "application/json" } }
+    );
+    return data;
+  }
+);
 
 // Combined user slice
 const userSlice = createSlice({
@@ -67,6 +77,21 @@ const userSlice = createSlice({
       state.loadingO = false;
     });
     builder.addCase(ConfirmOTPAction.rejected, (state) => {
+      state.successO = false;
+      state.loadingO = false;
+      state.user = null;
+    });
+
+    // Handling LoginByEmail
+    builder.addCase(LoginByEmailAction.pending, (state) => {
+      state.loadingO = true;
+    });
+    builder.addCase(LoginByEmailAction.fulfilled, (state, action) => {
+      state.successO = action.payload.success;
+      state.user = action.payload.user;
+      state.loadingO = false;
+    });
+    builder.addCase(LoginByEmailAction.rejected, (state) => {
       state.successO = false;
       state.loadingO = false;
       state.user = null;

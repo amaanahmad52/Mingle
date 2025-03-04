@@ -37,8 +37,12 @@ const LoginByPhone = () => {
               
                 <input type="text" className="w-full input selection:bg-cyan-500" placeholder="Phone Number" value={phoneNumber}  onChange={(e) => setPhoneNumber(e.target.value)} />
                 <button className="btn btn-neutral mt-3  hover:text-cyan-700 tramsition ease-in-out duration-600 ">Send OTP</button>
-                <Link className="text-left mt-3 text-cyan-500 hover:text-cyan-700" to="/signUp">Don`t have an account ?</Link>
+                
                 </fieldset>
+                <div className="flex flex-row justify-between">
+                <Link className="text-left mt-3 text-green-500 hover:text-green-700" to="/login">Login by email </Link>
+                <Link className="text-left mt-3 text-cyan-500 hover:text-cyan-700" to="/signUp">Don`t have an account ?</Link>
+                </div>
                 </div>
                 </div>
             </div>
