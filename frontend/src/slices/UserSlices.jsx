@@ -3,7 +3,7 @@ import axios from "axios";
 
 const URL = import.meta.env.VITE_BACKEND_URL;
 
-// Logging in by OTP
+// 1 Logging in by OTP
 export const LoginByPhoneAction = createAsyncThunk("LoginByPhoneAction",async (phoneNumber) => {
     const { data } = await axios.post(
       `${URL}/loginByPhone`,
@@ -26,6 +26,10 @@ export const ConfirmOTPAction = createAsyncThunk("ConfirmOTPAction",
     return data;
   }
 );
+
+
+//2 Logging in by Email and password
+
 
 // Combined user slice
 const userSlice = createSlice({

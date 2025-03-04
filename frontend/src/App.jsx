@@ -1,6 +1,6 @@
 import { Route,Routes,BrowserRouter} from 'react-router-dom'
-import LoginByPhone from './components/LoginByPhone'
-import ConfirmOTP from './components/ConfirmOTP'
+import LoginByPhone from './components/User/LoginByPhone'
+import ConfirmOTP from './components/User/ConfirmOTP'
 import Home from './components/Home'
 
 
