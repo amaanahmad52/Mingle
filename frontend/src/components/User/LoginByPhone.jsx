@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import { LoginByPhoneAction } from "../slices/UserSlices";
+import { LoginByPhoneAction } from "../../slices/UserSlices";
 
 const LoginByPhone = () => {
     const dispatch = useDispatch();

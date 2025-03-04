@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from 'react-toastify';
-import { ConfirmOTPAction } from "../slices/UserSlices";
+import { ConfirmOTPAction } from "../../slices/UserSlices";
 
 const ConfirmOTP = () => {
     const dispatch = useDispatch();
