@@ -42,9 +42,9 @@ const ConfirmOTP = () => {
                 <h1 className="text-3xl font-bold text-center ">Confirm OTP</h1>
 
                 <fieldset className="fieldset">
-                <label className="fieldset-label">OTP</label>
+
                 <input type="text" className="w-full input" placeholder="OTP" value={otp}  onChange={(e) => setOTP(e.target.value)} />
-                <button className="btn btn-neutral mt-3  hover:text-black-700 ">Confirm</button>
+                <button className="btn btn-neutral mt-3   hover:text-cyan-700 tramsition ease-in-out duration-600 ">Confirm</button>
 
                 </fieldset>
 
