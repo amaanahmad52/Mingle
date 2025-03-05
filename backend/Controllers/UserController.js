@@ -117,6 +117,7 @@ exports.otpConfirm_and_login = async (req, res) => {
 
 
 
+//sign Up user
 exports.registerUser=async(req,res)=>{
     const {name,email,password,phoneNumber}=req.body;
     
@@ -148,4 +149,21 @@ exports.registerUser=async(req,res)=>{
         return res.status(500).json({success:false,message:"Internal Server Error",error:error.message})
     }
     
+}
+
+
+//getting details of a logged in user
+
+exports.getUserDetails=async(req,res)=>{
+    //details will be fethed by the request parameter. after logging/signing in it will be saved (id save) in req.userDetails in the authentication code file
+    if (!req.userDetails) { //auth file se ayega
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+    
+    const user = await User.findById(req.userDetails.id);
+    
+    res.status(200).json({
+      success: true,
+      user
+    });
 }
