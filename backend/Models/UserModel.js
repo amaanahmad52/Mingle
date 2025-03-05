@@ -3,8 +3,15 @@ const validator = require('validator');
 const dotenv=require('dotenv');
 dotenv.config();
 const jwt=require('jsonwebtoken')
+//changes made here also....
 const userSchema=new mongoose.Schema({
-    name:{
+    firstname:{
+        type: String,
+        required: [true, "Please Enter Your Name"],
+        maxLength: [30, "Name cannot exceed 30 characters"],
+        minLength: [4, "Name should have more than 4 characters"],
+    },
+    lastname:{
         type: String,
         required: [true, "Please Enter Your Name"],
         maxLength: [30, "Name cannot exceed 30 characters"],
@@ -25,11 +32,11 @@ const userSchema=new mongoose.Schema({
     avatar: {
         public_id: {
             type: String,
-            required: true,
+           required: true,
         },
         url: {
             type: String,
-            required: true,
+         required: true,
         },
     },
     phoneNumber: {
