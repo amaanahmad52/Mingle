@@ -35,13 +35,22 @@ export const sendOtp = createAsyncThunk(
 // Async thunk for signup
 export const signUp = createAsyncThunk(
     "signUp",
+<<<<<<< HEAD
     async (  {firstName, lastName, email,phoneNumber, password, confirmPassword, otp} ,{ rejectWithValue }) => {
+=======
+    async (  {firstname, lastname, email,phoneNumber, password, confirmPassword, otp} ,{ rejectWithValue }) => {
+>>>>>>> upstream/main
       const toastId = toast.loading("Loading...");
       try {
         const response = await axios.post( `${URL}/register`, {
         
+<<<<<<< HEAD
           firstName,
           lastName,
+=======
+          firstname,
+          lastname,
+>>>>>>> upstream/main
           email,
           phoneNumber,
           password,

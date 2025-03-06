@@ -1,4 +1,8 @@
 const nodemailer = require("nodemailer");
+<<<<<<< HEAD
+=======
+const dotenv = require("dotenv").config();
+>>>>>>> upstream/main
 
 const mailSender = async (email, title, body) => {
   try {
@@ -18,10 +22,17 @@ const mailSender = async (email, title, body) => {
       html: `${body}`, // HTML content
     });
 
+<<<<<<< HEAD
     console.log(info.response);
     return info;
   } catch (error) {
     console.log(error.message);
+=======
+    // console.log(info.response);
+    return info;
+  } catch (error) {
+    // console.log(error.message);
+>>>>>>> upstream/main
     return error.message;
   }
 };

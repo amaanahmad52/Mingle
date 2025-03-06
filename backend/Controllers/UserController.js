@@ -3,11 +3,17 @@ const OTP=require('../Models/OTPModel');
 const bcrypt = require('bcrypt');
 const { setToken } = require('../Utils/TokenGenerateJWT');
 const {sendSMS}=require('../Utils/Twilio')
+<<<<<<< HEAD
 const mailSender = require("../Utils/mailsender"); // Adjust the path if needed
 
 const {emailTemplate}=require('../Utils/emailverificationtemplate')
 
 //
+=======
+const mailSender=require("../Utils/mailsender")
+
+// 1 login by email password
+>>>>>>> upstream/main
 
 exports.loginUser=async(req,res)=>{
     const {email,password}=req.body;
@@ -31,8 +37,10 @@ exports.loginUser=async(req,res)=>{
         return res.status(500).json({success:false,message:"Internal Server Error",error:error.message})
     }
 }
-//login by phone
 
+
+// 2 login by phone
+//AND
 //send the otp to phone
 exports.otpSend=async(req,res)=>{
     
@@ -68,7 +76,7 @@ exports.otpSend=async(req,res)=>{
         }
 
        
-        sendSMS(phoneNumber, otp);
+        sendSMS(phoneNumber, otp); 
 
         res.json({ success: true,phoneNumber, message: "OTP sent successfully" });
     } catch (error) {
@@ -183,6 +191,64 @@ exports.otpConfirm_and_login = async (req, res) => {
 // controller for sending otp by mail and verify;
 
 
+//3 sign Up user
+
+exports.otpSendbymail=async(req,res)=>{
+    
+    const{email,phoneNumber}=req.body
+
+    try {
+       
+        // Generate OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString(); // Convert to string
+
+        
+        const existingOTP = await OTP.findOne({ email });
+
+        if (existingOTP) {
+           
+            await OTP.findOneAndUpdate(
+                { email },
+                { $push: { otp: otp } }
+            );
+        } 
+        else {
+            // Create new OTP entry with a 5-minute expiration
+            await OTP.create({
+                email,
+                
+                otp: [otp], // Store OTP in an array
+                expiresAt: new Date(Date.now() + 5 * 60 * 1000) // Set expiration only on first OTP
+            });
+           
+        }
+
+       
+      //  sendSMSbyemail(email, otp);
+    //   console.log("this is: ",email,otp);
+
+      try {
+		const mailResponse = await mailSender(
+			email,
+			"Verification Email",
+			`your otp for verification is : ${otp}`,
+		);
+		console.log("Email sent successfully: ", mailResponse.response);
+	} catch (error) {
+		console.log("Error occurred while sending email: ", error);
+		throw error;
+	}
+
+        res.json({ success: true,email,otp, message: "OTP sent successfully" });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({success:false,message:"Internal Server Error",error:error.message})
+    
+    }
+    
+    
+    
+}
 exports.registerUser=async(req,res)=>{
     const {firstname,lastname,email,phoneNumber,password,confirmPassword,otp}=req.body;
     
@@ -237,4 +303,22 @@ exports.registerUser=async(req,res)=>{
         return res.status(500).json({success:false,message:"Internal Server Error",error:error.message})
     }
     
+}
+
+
+
+//getting details of a logged in user
+
+exports.getUserDetails=async(req,res)=>{
+    //details will be fethed by the request parameter. after logging/signing in it will be saved (id save) in req.userDetails in the authentication code file
+    if (!req.userDetails) { //auth file se ayega
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+    
+    const user = await User.findById(req.userDetails.id);
+    
+    res.status(200).json({
+      success: true,
+      user
+    });
 }

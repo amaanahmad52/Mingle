@@ -6,8 +6,16 @@ const OTPSchema = new mongoose.Schema({
   
     email: {
         type: String,
+<<<<<<< HEAD
        required:true,
         unique: true,
+=======
+        // unique: true,
+    },
+    email: {
+        type: String,
+        // unique: true,
+>>>>>>> upstream/main
     },
     otp: [{
         type: String,

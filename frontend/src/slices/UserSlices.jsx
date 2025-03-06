@@ -3,7 +3,7 @@ import axios from "axios";
 
 const URL = import.meta.env.VITE_BACKEND_URL;
 
-// Logging in by OTP
+// 1 Logging in by OTP
 export const LoginByPhoneAction = createAsyncThunk("LoginByPhoneAction",async (phoneNumber) => {
     const { data } = await axios.post(
       `${URL}/loginByPhone`,
@@ -30,7 +30,7 @@ export const LoginByEmailAction = createAsyncThunk("LoginByEmailAction",async (e
 // Confirming OTP
 export const ConfirmOTPAction = createAsyncThunk("ConfirmOTPAction",
   async ({ otp, phoneNumber }) => {
-    console.log(otp, phoneNumber);
+    // console.log(otp, phoneNumber);
     const { data } = await axios.post(
       `${URL}/otpConfirm`,
       { userOtp: otp, phoneNumber: phoneNumber },
@@ -40,12 +40,40 @@ export const ConfirmOTPAction = createAsyncThunk("ConfirmOTPAction",
   }
 );
 
+
+//2 Logging in by Email and password
+
+export const LoginByEmailAction = createAsyncThunk("LoginByEmailAction",async ({email,password}) => {
+  
+    const { data } = await axios.post(
+      `${URL}/login`,
+      { email: email ,password:password},
+      { withCredentials: true, headers: { "Content-Type": "application/json" } }
+    );
+    return data;
+  }
+);
+
+
+// 4 getting user details (will be used from home page details rendering)
+
+export const getUserDetailsAction = createAsyncThunk("getUserDetailsAction",async () => {
+    const { data } = await axios.get(
+      `${URL}/me`,
+      { withCredentials: true, headers: { "Content-Type": "application/json" } }
+    );
+    return data;
+  }
+)
+
+
 // Combined user slice
 const userSlice = createSlice({
   name: "user",
   initialState: {
     successP: false,
     successO:false,
+    successDetails:false,
     phoneNumber: "",
     email:"",
     password:"",
@@ -92,6 +120,36 @@ builder.addCase(LoginByEmailAction.rejected, (state) => {
     });
     builder.addCase(ConfirmOTPAction.rejected, (state) => {
       state.successO = false;
+      state.loadingO = false;
+      state.user = null;
+    });
+
+    // Handling LoginByEmail
+    builder.addCase(LoginByEmailAction.pending, (state) => {
+      state.loadingO = true;
+    });
+    builder.addCase(LoginByEmailAction.fulfilled, (state, action) => {
+      state.successO = action.payload.success;
+      state.user = action.payload.user;
+      state.loadingO = false;
+    });
+    builder.addCase(LoginByEmailAction.rejected, (state) => {
+      state.successO = false;
+      state.loadingO = false;
+      state.user = null;
+    });
+
+    // Handling getUserDetails
+    builder.addCase(getUserDetailsAction.pending, (state) => {
+      state.loadingO = true;
+    });
+    builder.addCase(getUserDetailsAction.fulfilled, (state, action) => {
+      state.successDetails = action.payload.success;
+      state.user = action.payload.user;
+      state.loadingO = false;
+    });
+    builder.addCase(getUserDetailsAction.rejected, (state) => {
+      state.successDetails = false;
       state.loadingO = false;
       state.user = null;
     });

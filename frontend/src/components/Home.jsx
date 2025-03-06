@@ -28,7 +28,11 @@ const Home=()=>{
         
         <div className="mt-6 flex gap-4">
           <Link to="/signup" className="px-6 py-3 text-lg font-semibold bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl shadow-lg hover:scale-105 transition-all">Sign Up</Link>
+<<<<<<< HEAD
           <Link to="/loginByEmail" className="px-6 py-3 text-lg font-semibold bg-gradient-to-r from-gray-700 to-gray-900 text-white rounded-xl shadow-lg hover:scale-105 transition-all">Login</Link>
+=======
+          <Link to="/login" className="px-6 py-3 text-lg font-semibold bg-gradient-to-r from-gray-700 to-gray-900 text-white rounded-xl shadow-lg hover:scale-105 transition-all">Login</Link>
+>>>>>>> upstream/main
         </div>
       </div>
     </div>

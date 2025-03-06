@@ -7,6 +7,7 @@ const jwt=require('jsonwebtoken')
 const userSchema=new mongoose.Schema({
     firstname:{
         type: String,
+<<<<<<< HEAD
         //required: [true, "Please Enter Your Name"],
       //  maxLength: [30, "Name cannot exceed 30 characters"],
        // minLength: [4, "Name should have more than 4 characters"],
@@ -16,18 +17,39 @@ const userSchema=new mongoose.Schema({
       //  required: [true, "Please Enter Your Name"],
        // maxLength: [30, "Name cannot exceed 30 characters"],
        // minLength: [4, "Name should have more than 4 characters"],
+=======
+       // required: [true, "Please Enter Your Name"],
+      maxLength: [30, "Name cannot exceed 30 characters"],
+      minLength: [4, "Name should have more than 4 characters"],
+    },
+    lastname:{
+        type: String,
+      // required: [true, "Please Enter Your Name"],
+      maxLength: [30, "Name cannot exceed 30 characters"],
+       minLength: [4, "Name should have more than 4 characters"],
+>>>>>>> upstream/main
     },
     email: {
         type: String,
         required: [true, "Please Enter Your Email"],
+<<<<<<< HEAD
       //  unique: true,
+=======
+       // unique: true,
+>>>>>>> upstream/main
        // validate: [validator.isEmail, "Please Enter a valid Email"],
     },
     password: {
         type: String,
+<<<<<<< HEAD
       //  required: [true, "Please Enter Your Password"],
        // minLength: [8, "Password should be greater than 8 characters"],
       //  select: false, 
+=======
+       // required: [true, "Please Enter Your Password"],
+        //minLength: [8, "Password should be greater than 8 characters"],
+        select: false, 
+>>>>>>> upstream/main
     },
     avatar: {
         public_id: {
@@ -41,8 +63,13 @@ const userSchema=new mongoose.Schema({
     },
     phoneNumber: {
         type:String,
+<<<<<<< HEAD
       //  required: [true, "Please Enter Your Phone Number"],
        unique: false,
+=======
+        required: [true, "Please Enter Your Phone Number"],
+        // unique: true,
+>>>>>>> upstream/main
     },
     joinedAt: {
         type: Date,

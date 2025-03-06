@@ -1,5 +1,5 @@
-exports.setToken = async(userdetails, statusCode, res)=> { //saves token in cookie
-    const token = await userdetails.getJWTTOKEN(); //function defined in usermodel
+exports.setToken = async(user, statusCode, res)=> { //saves token in cookie
+    const token = await user.getJWTTOKEN(); //function defined in usermodel
     const options = {
       expires: new Date(Date.now() + 86400000), 
       httpOnly: true,
@@ -8,7 +8,7 @@ exports.setToken = async(userdetails, statusCode, res)=> { //saves token in cook
     
     return res.status(statusCode).cookie("token", token, options).json({  //express method to set cookie res.cookie
       success: true,
-      userdetails,
+      user,
       token
       
   })};
