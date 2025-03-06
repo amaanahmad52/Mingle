@@ -12,7 +12,7 @@ const LoginByEmail = () => {
     const {successO} = useSelector(state => state.userReducer);
     const handleSubmit = (e) => {
         e.preventDefault();
-       
+      
         dispatch(LoginByEmailAction({email,password}));
     }
 
@@ -34,7 +34,7 @@ const LoginByEmail = () => {
                 <fieldset className="fieldset">
                 <input type="email" className=" my-2 w-full input selection:bg-cyan-500" placeholder="Email" value={email}  onChange={(e) => setEmail(e.target.value)} />
                 <input type="text" className="w-full input selection:bg-cyan-500" placeholder="Password" value={password}  onChange={(e) => setPassword(e.target.value)} />
-                <button className="btn btn-neutral mt-3  hover:text-cyan-700 tramsition ease-in-out duration-600 ">Login</button>
+                <button className="btn btn-neutral mt-3  hover:text-cyan-700 transition ease-in-out duration-600 ">Login</button>
                 </fieldset>
                 <div className="flex flex-row justify-between">
                 <Link className="text-left mt-3 text-green-500 hover:text-green-700" to="/loginByPhone">Login by Phone </Link>
