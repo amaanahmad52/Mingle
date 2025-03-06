@@ -4,22 +4,22 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const URL = import.meta.env.VITE_BACKEND_URL;
 
-
+//const nav=useNavigate();
 // Async thunk to send OTP
 export const sendOtp = createAsyncThunk(
     "sendOtpEmail",
-    async ({ email, navigate }, { rejectWithValue }) => {
+    async ({email,phoneNumber}, { rejectWithValue }) => {
       const toastId = toast.loading("Loading...");
       try {
         const { data } = await axios.post(
           `${URL}/sendOtpByEmail`,
-          { email },
+          { email,phoneNumber },
           { withCredentials: true, headers: { "Content-Type": "application/json" } }
         );
   
         toast.success("OTP Sent Successfully");
-        useNavigate("/verify-email");
-        
+       // nav('/verify-email');
+
         return data;
       } catch (error) {
         console.error("SENDOTP ERROR:", error);
@@ -34,15 +34,16 @@ export const sendOtp = createAsyncThunk(
 
 // Async thunk for signup
 export const signUp = createAsyncThunk(
-    "auth/signUp",
-    async ({ accountType, firstName, lastName, email, password, confirmPassword, otp, navigate }, { rejectWithValue }) => {
+    "signUp",
+    async (  {firstName, lastName, email,phoneNumber, password, confirmPassword, otp} ,{ rejectWithValue }) => {
       const toastId = toast.loading("Loading...");
       try {
         const response = await axios.post( `${URL}/register`, {
-          accountType,
+        
           firstName,
           lastName,
           email,
+          phoneNumber,
           password,
           confirmPassword,
           otp,
@@ -54,7 +55,7 @@ export const signUp = createAsyncThunk(
         }
         
         toast.success("Signup Successful");
-        useNavigate("/loginByEmail");
+     
         return response.data;
       } catch (error) {
         console.error("SIGNUP API ERROR:", error);
@@ -71,11 +72,13 @@ const initialState = {
   signUpdata:null,
   loading: false,
   error: null,
+  successotp:false,
+  success:false
 };
 
 const authSlice = createSlice({
   name: "auth",
-  initialState,
+initialState,
   reducers: {
   
     setSignupData: (state, action) => {
@@ -94,6 +97,7 @@ const authSlice = createSlice({
       })
       .addCase(sendOtp.fulfilled, (state) => {
         state.loading = false;
+        state.successotp=true;
       })
       .addCase(sendOtp.rejected, (state, action) => {
         state.loading = false;
@@ -105,6 +109,7 @@ const authSlice = createSlice({
       })
       .addCase(signUp.fulfilled, (state) => {
         state.loading = false;
+        state.success=true;
       })
       .addCase(signUp.rejected, (state, action) => {
         state.loading = false;

@@ -1,32 +1,32 @@
-import { useState } from "react"
-import { toast } from "react-hot-toast"
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
-import { useDispatch } from "react-redux"
-import { useNavigate } from "react-router-dom"
-
-import { sendOtp } from "../slices/authSlice"
-import { setSignupData } from "../slices/authSlice"
+import { useState, useEffect } from "react"; // Added useEffect
+import { toast } from "react-hot-toast";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux"; // Fixed import
+import { useNavigate } from "react-router-dom";
+import { sendOtp, setSignupData } from "../slices/authSlice"; // Combined imports
+import { Switch } from "@headlessui/react";
 
 
 function SignUp() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  // student or instructor
-  
+
+  const { loading, successotp, error } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
+    phoneNumber:"",
     password: "",
     confirmPassword: "",
   })
-
+  const [darkMode, setDarkMode] = useState(true);
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-  const { firstName, lastName, email, password, confirmPassword } = formData
+  const { firstName, lastName, email,phoneNumber, password, confirmPassword } = formData
 
   // Handle input fields, when some value changes
   const handleOnChange = (e) => {
@@ -53,7 +53,10 @@ function SignUp() {
     // To be used after otp verification
     dispatch(setSignupData(signupData))
     // Send OTP to user for verification
-    dispatch(sendOtp(formData.email, navigate))
+    console.log(signupData.email)
+    dispatch(sendOtp({email,phoneNumber}))
+
+   
 
     // Reset
     setFormData({
@@ -62,120 +65,162 @@ function SignUp() {
       email: "",
       password: "",
       confirmPassword: "",
+      phoneNumber:""
     })
   
   }
 
-
+  useEffect(() => {
+    if (successotp) {
+      navigate('/verify-email'); // Redirect on success
+    }
+  }, [successotp, navigate]);
  
 
   return (
-    <div>
-     
-      {/* Form */}
-      <form onSubmit={handleOnSubmit} className="flex w-full flex-col gap-y-4">
-        <div className="flex gap-x-4">
-          <label>
-            <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
-              First Name <sup className="text-red">*</sup>
-            </p>
-            <input
-              required
-              type="text"
-              name="firstName"
-              value={firstName}
-              onChange={handleOnChange}
-              placeholder="Enter first name"
-              className="form-style w-full"
-            />
-          </label>
-          <label>
-            <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
-              Last Name <sup className="text-pink-200">*</sup>
-            </p>
-            <input
-              required
-              type="text"
-              name="lastName"
-              value={lastName}
-              onChange={handleOnChange}
-              placeholder="Enter last name"
-              className="form-style w-full"
-            />
-          </label>
+    <div
+    className={`flex min-h-screen items-center justify-center p-6 transition-all duration-500 ${
+      darkMode
+        ? "bg-gradient-to-br from-black via-gray-900 to-gray-800"
+        : "bg-gradient-to-br from-gray-100 via-white to-gray-200"
+    }`}
+  >
+    {/* Toggle Button */}
+    <div className="absolute top-5 right-5">
+      <Switch
+        checked={darkMode}
+        onChange={setDarkMode}
+        className={`${darkMode ? "bg-gray-700" : "bg-gray-300"} 
+          relative inline-flex h-6 w-11 items-center rounded-full transition`}
+      >
+        <span
+          className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+            darkMode ? "translate-x-6" : "translate-x-1"
+          }`}
+        />
+      </Switch>
+    </div>
+
+    <div
+      className={`w-full max-w-md rounded-xl p-8 shadow-lg backdrop-blur-md transition-all duration-500 ${
+        darkMode ? "bg-black/40" : "bg-white/70"
+      }`}
+    >
+      <h2
+        className={`mb-6 text-center text-2xl font-bold transition-all duration-500 ${
+          darkMode ? "text-white" : "text-gray-900"
+        }`}
+      >
+        Create an Account
+      </h2>
+
+      <form onSubmit={handleOnSubmit} className="flex flex-col gap-4">
+        {/* Name Fields */}
+        <div className="flex gap-4">
+          {["firstName", "lastName"].map((field) => (
+            <label key={field} className="w-1/2">
+              <p
+                className={`mb-1 text-sm font-medium transition-all duration-500 ${
+                  darkMode ? "text-white" : "text-gray-900"
+                }`}
+              >
+                {field === "firstName" ? "First Name" : "Last Name"} <sup className="text-red-500">*</sup>
+              </p>
+              <input
+                required
+                type="text"
+                name={field}
+                value={formData[field]}
+                onChange={handleOnChange}
+                placeholder={`Enter ${field}`}
+                className={`w-full rounded-lg border p-2 placeholder-gray-400 transition-all duration-500 focus:outline-none focus:ring-2 ${
+                  darkMode
+                    ? "border-gray-600 bg-gray-800 text-white focus:ring-gray-500"
+                    : "border-gray-300 bg-gray-100 text-black focus:ring-gray-400"
+                }`}
+              />
+            </label>
+          ))}
         </div>
-        <label className="w-full">
-          <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
-            Email Address <sup className="text-pink-200">*</sup>
-          </p>
-          <input
-            required
-            type="text"
-            name="email"
-            value={email}
-            onChange={handleOnChange}
-            placeholder="Enter email address"
-            className="form-style w-full"
-          />
-        </label>
-        <div className="flex gap-x-4">
-          <label className="relative">
-            <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
-              Create Password <sup className="text-pink-200">*</sup>
+
+        {/* Email & Phone Number */}
+        {["email", "phoneNumber"].map((field) => (
+          <label key={field}>
+            <p
+              className={`mb-1 text-sm font-medium transition-all duration-500 ${
+                darkMode ? "text-white" : "text-gray-900"
+              }`}
+            >
+              {field === "email" ? "Email Address" : "Phone Number"} <sup className="text-red-500">*</sup>
             </p>
             <input
               required
-              type={showPassword ? "text" : "password"}
-              name="password"
-              value={password}
+              type={field === "email" ? "email" : "tel"}
+              name={field}
+              value={formData[field]}
               onChange={handleOnChange}
-              placeholder="Enter Password"
-              className="form-style w-full !pr-10"
+              placeholder={`Enter ${field}`}
+              className={`w-full rounded-lg border p-2 placeholder-gray-400 transition-all duration-500 focus:outline-none focus:ring-2 ${
+                darkMode
+                  ? "border-gray-600 bg-gray-800 text-white focus:ring-gray-500"
+                  : "border-gray-300 bg-gray-100 text-black focus:ring-gray-400"
+              }`}
             />
-            <span
-              onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-[38px] z-[10] cursor-pointer"
-            >
-              {showPassword ? (
-                <AiOutlineEyeInvisible fontSize={24} fill="#AFB2BF" />
-              ) : (
-                <AiOutlineEye fontSize={24} fill="#AFB2BF" />
-              )}
-            </span>
           </label>
-          <label className="relative">
-            <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
-              Confirm Password <sup className="text-pink-200">*</sup>
-            </p>
-            <input
-              required
-              type={showConfirmPassword ? "text" : "password"}
-              name="confirmPassword"
-              value={confirmPassword}
-              onChange={handleOnChange}
-              placeholder="Confirm Password"
-              className="form-style w-full !pr-10"
-            />
-            <span
-              onClick={() => setShowConfirmPassword((prev) => !prev)}
-              className="absolute right-3 top-[38px] z-[10] cursor-pointer"
-            >
-              {showConfirmPassword ? (
-                <AiOutlineEyeInvisible fontSize={24} fill="#AFB2BF" />
-              ) : (
-                <AiOutlineEye fontSize={24} fill="#AFB2BF" />
-              )}
-            </span>
-          </label>
+        ))}
+
+        {/* Password Fields */}
+        <div className="flex gap-4">
+          {["password", "confirmPassword"].map((field, index) => (
+            <label key={field} className="relative w-1/2">
+              <p
+                className={`mb-1 text-sm font-medium transition-all duration-500 ${
+                  darkMode ? "text-white" : "text-gray-900"
+                }`}
+              >
+                {index === 0 ? "Create Password" : "Confirm Password"} <sup className="text-red-500">*</sup>
+              </p>
+              <input
+                required
+                type={(index === 0 ? showPassword : showConfirmPassword) ? "text" : "password"}
+                name={field}
+                value={formData[field]}
+                onChange={handleOnChange}
+                placeholder={`Enter ${field}`}
+                className={`w-full rounded-lg border p-2 pr-10 placeholder-gray-400 transition-all duration-500 focus:outline-none focus:ring-2 ${
+                  darkMode
+                    ? "border-gray-600 bg-gray-800 text-white focus:ring-gray-500"
+                    : "border-gray-300 bg-gray-100 text-black focus:ring-gray-400"
+                }`}
+              />
+              <span
+                onClick={() =>
+                  index === 0 ? setShowPassword(!showPassword) : setShowConfirmPassword(!showConfirmPassword)
+                }
+                className="absolute right-3 top-9 cursor-pointer text-gray-400"
+              >
+                {index === 0
+                  ? showPassword
+                    ? <AiOutlineEyeInvisible fontSize={20} />
+                    : <AiOutlineEye fontSize={20} />
+                  : showConfirmPassword
+                  ? <AiOutlineEyeInvisible fontSize={20} />
+                  : <AiOutlineEye fontSize={20} />}
+              </span>
+            </label>
+          ))}
         </div>
+
+        {/* Submit Button */}
         <button
           type="submit"
-          className="mt-6 rounded-[8px] bg-yellow-50 py-[8px] px-[12px] font-medium text-richblack-900"
+          className="mt-6 w-full rounded-lg bg-gray-800 py-3 text-lg font-semibold text-white transition hover:bg-gray-700"
         >
           Create Account
         </button>
       </form>
     </div>
+  </div>
   )
 }
 
