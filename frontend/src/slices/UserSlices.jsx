@@ -41,12 +41,26 @@ export const LoginByEmailAction = createAsyncThunk("LoginByEmailAction",async ({
   }
 );
 
+
+// 4 getting user details (will be used from home page details rendering)
+
+export const getUserDetailsAction = createAsyncThunk("getUserDetailsAction",async () => {
+    const { data } = await axios.get(
+      `${URL}/me`,
+      { withCredentials: true, headers: { "Content-Type": "application/json" } }
+    );
+    return data;
+  }
+)
+
+
 // Combined user slice
 const userSlice = createSlice({
   name: "user",
   initialState: {
     successP: false,
     successO:false,
+    successDetails:false,
     phoneNumber: "",
     loadingP: false,
     loadingO: false,
@@ -93,6 +107,21 @@ const userSlice = createSlice({
     });
     builder.addCase(LoginByEmailAction.rejected, (state) => {
       state.successO = false;
+      state.loadingO = false;
+      state.user = null;
+    });
+
+    // Handling getUserDetails
+    builder.addCase(getUserDetailsAction.pending, (state) => {
+      state.loadingO = true;
+    });
+    builder.addCase(getUserDetailsAction.fulfilled, (state, action) => {
+      state.successDetails = action.payload.success;
+      state.user = action.payload.user;
+      state.loadingO = false;
+    });
+    builder.addCase(getUserDetailsAction.rejected, (state) => {
+      state.successDetails = false;
       state.loadingO = false;
       state.user = null;
     });
