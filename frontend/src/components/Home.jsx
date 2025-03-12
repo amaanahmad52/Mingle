@@ -17,24 +17,43 @@ import { motion } from "framer-motion"; // Correct import
 import MessageInput from '../assets/utilityComponents/messageBox';
 import Message from '../assets/utilityComponents/MessageContainer';
 import MessageContainer from '../assets/utilityComponents/MessageContainer';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Sidebar from '../assets/utilityComponents/Sidebar';
 import SimpleDialogDemo from '../assets/utilityComponents/DialogBox';
-
+import ViewListIcon from '@mui/icons-material/ViewList';
 
 
 const Home = () => {
+    const switcher=useRef()
+
     const kya="Pankaj Nunnu"
     const [name,setName]=useState("Pankaj Nunnu")
+
+    const[sidebarOpen, setSidebarOpen]=useState(true)
+
+
+    const clickSidebar=()=>{
+      if(sidebarOpen){
+        switcher.current.classList.add("hidden")
+        setSidebarOpen(false)
+      }
+      else{
+        switcher.current.classList.remove("hidden")
+        setSidebarOpen(true)
+      }
+    }
     return (
         <>
             <div className="w-full h-screen overflow-hidden font-mono" style={{ fontFamily: 'Poppins' }}>
                 <div className="flex flex-row w-full h-16 ">
-                    <div className="rounded-1xl text-center w-1/5 p-4 border-2 border-solid flex justify-start max-md:hidden">
+                    <div className="rounded-1xl text-center w-1/5 p-4 border-2 border-solid flex justify-between max-md:hidden" ref={switcher}>
                         <Logoicon className="text-cyan-600 mx-3 hover:text-cyan-800 cursor-pointer" />
                         <span>Mingle</span>
+                        <ViewListIcon className="text-cyan-600 mx-3 hover:text-cyan-800 cursor-pointer"
+                          onClick={clickSidebar} />
                     </div>
                     <div className="items-center  text-center w-1/3 p-4 border-2 border-solid flex justify-between max-sm:hidden">
+                      
                         <span className=" text-xl font-extrabold max-md:text-sm max-sm:text-xs" >{`${kya}...`}</span>
                         <div>
                             <SearchIcon className="hover:text-cyan-600 cursor-pointer" onClick={() => alert("clicked search")} />
@@ -55,7 +74,7 @@ const Home = () => {
                 {/* Main Content Wrapper */}
                 <div className=" flex w-full h-[calc(100vh-4rem)]">
                     {/* Sidebar */}
-                   <Sidebar/>
+                   <Sidebar st={sidebarOpen}/>
 
                     {/* Content Sections */}
                     <div className="w-1/3 border-2 text-center p-4 border-solid flex justify-center items-center max-sm:hidden">
