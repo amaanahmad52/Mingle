@@ -39,15 +39,16 @@ const Home = () => {
                         <div>
                             <SearchIcon className="hover:text-cyan-600 cursor-pointer" onClick={() => alert("clicked search")} />
                         </div>
+                        <MultiAvatars count={"+3"}/>
                     </div>
                     <div className="rounded-1xl text-center w-2/3 p-4 flex justify-between border-2 border-solid max-sm:h-full max-sm:w-full">
                         <FaceIcon className="text-cyan-600 cursor-pointer" />
                         <span>{name}</span>
-                        <div>
+                       
+                        <div className='flex just '>
                             <DuoIcon className="hover:text-cyan-700 mx-1 cursor-pointer" />
                             <CallIcon className="hover:text-cyan-700 mx-1 cursor-pointer" />
-                            {/* <MoreHorizIcon className="hover:text-cyan-700 mx-1 cursor-pointer" /> */}
-                            <SimpleDialogDemo/>
+                             <SimpleDialogDemo  />
                         </div>
                     </div>
                 </div>
