@@ -10,12 +10,26 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import Me from '@mui/icons-material/Person2';
 
 import { motion } from "framer-motion"; // Correct import
+import { useEffect, useRef } from 'react';
 
 
 
-const Sidebar = () => {
+const Sidebar = ({st}) => {
+    const switcher=useRef()
+     
+    useEffect(()=>{
+        if(!st){
+            switcher.current.classList.add("hidden")
+            switcher.current.classList.remove("flex");
+        }
+        else{
+            switcher.current.classList.remove("hidden")
+            switcher.current.classList.add("flex");
+        }
+    },[st])
+
     return (
-        <div className="flex flex-col w-1/5 border-2 p-4 border-solid h-full justify-around max-md:hidden">
+        <div className={`flex flex-col w-1/5 border-2 p-4 border-solid h-full justify-around max-md:hidden`} ref={switcher}>
         {/* Motion applied to all sidebar items */}
         <motion.div
             className="flex items-center gap-x-2 cursor-pointer hover:text-cyan-700 p-2 rounded-lg"
