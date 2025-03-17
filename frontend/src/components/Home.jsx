@@ -1,114 +1,134 @@
-
 import Logoicon from '@mui/icons-material/WhatsApp';
 import SearchIcon from '@mui/icons-material/Search';
-import FaceIcon from '@mui/icons-material/Face';
+import { Avatar } from '@mui/material';
 import { MultiAvatars } from '../assets/utilityComponents/MultiAvatars';
 import DuoIcon from '@mui/icons-material/Duo';
 import CallIcon from '@mui/icons-material/Call';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import MessageIcon from '@mui/icons-material/Message';
-import SettingsIcon from '@mui/icons-material/Settings';
-import AttachmentIcon from '@mui/icons-material/Attachment';
-import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-
-import { motion } from "framer-motion"; // Correct import
+import { motion } from "framer-motion";
 import MessageInput from '../assets/utilityComponents/messageBox';
-import Message from '../assets/utilityComponents/MessageContainer';
 import MessageContainer from '../assets/utilityComponents/MessageContainer';
-import { useRef, useState } from 'react';
+import { useRef, useState ,useEffect} from 'react';
 import Sidebar from '../assets/utilityComponents/Sidebar';
 import SimpleDialogDemo from '../assets/utilityComponents/DialogBox';
 import ViewListIcon from '@mui/icons-material/ViewList';
-
-
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import axios from 'axios';
+import ProfileTile from '../assets/utilityComponents/ProfileTile';
+const URL = import.meta.env.VITE_BACKEND_URL;
 const Home = () => {
-    const switcher=useRef()
+    const switcher = useRef();
+    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [searchOpen, setSearchOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [selectedSearch, setSelectedSearch] = useState("Pankaj Nunnu");
+   
+ 
+    const [users, setUsers] = useState([]);
 
-    const kya="Pankaj Nunnu"
-    const [name,setName]=useState("Pankaj Nunnu")
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get(`${URL}/getalluser`, {
+                    withCredentials: true,
+                    headers: { "Content-Type": "application/json" }
+                });
+                console.log("API Response:", response.data); // Debugging
+                setUsers(response.data);
+            } catch (error) {
+                console.error("Error fetching users:", error);
+            }
+        };
+        fetchUsers();
+    }, []);
+      
+   console.log(users.user);
+    
+    
+    
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+      
+    };
 
-    const[sidebarOpen, setSidebarOpen]=useState(true)
+   
+    const handleSearchSubmit = (e) => {
+        if (e.key === "Enter") {
+            setSearchOpen(false);
+        }
+    };
 
+    const clickSidebar = () => setSidebarOpen(!sidebarOpen);
 
-    const clickSidebar=()=>{
-      if(sidebarOpen){
-        switcher.current.classList.add("hidden")
-        setSidebarOpen(false)
-      }
-      else{
-        switcher.current.classList.remove("hidden")
-        setSidebarOpen(true)
-      }
-    }
     return (
         <>
-            <div className="w-full h-screen overflow-hidden font-mono" style={{ fontFamily: 'Poppins' }}>
-                <div className="flex flex-row w-full h-16 ">
-                    <div className="rounded-1xl text-center w-1/5 p-4 border-2 border-solid flex justify-between max-md:hidden" ref={switcher}>
-                        <Logoicon className="text-cyan-600 mx-3 hover:text-cyan-800 cursor-pointer" />
-                        <span>Mingle</span>
-                        <ViewListIcon className="text-cyan-600 mx-3 hover:text-cyan-800 cursor-pointer"
-                          onClick={clickSidebar} />
-                    </div>
-                    <div className="items-center  text-center w-1/3 p-4 border-2 border-solid flex justify-between max-sm:hidden">
-                      
-                        <span className=" text-xl font-extrabold max-md:text-sm max-sm:text-xs" >{`${kya}...`}</span>
-                        <div>
-                            <SearchIcon className="hover:text-cyan-600 cursor-pointer" onClick={() => alert("clicked search")} />
-                        </div>
-                    </div>
-                    <div className="rounded-1xl text-center w-2/3 p-4 flex justify-between border-2 border-solid max-sm:h-full max-sm:w-full">
-                        <FaceIcon className="text-cyan-600 cursor-pointer" />
-                        <span>{name}</span>
-                        <div>
-                            <DuoIcon className="hover:text-cyan-700 mx-1 cursor-pointer" />
-                            <CallIcon className="hover:text-cyan-700 mx-1 cursor-pointer" />
-                            {/* <MoreHorizIcon className="hover:text-cyan-700 mx-1 cursor-pointer" /> */}
-                            <SimpleDialogDemo/>
-                        </div>
-                    </div>
+        <div className="w-full h-screen overflow-hidden font-mono" style={{ fontFamily: 'Poppins' }}>
+            <div className="flex flex-row w-full h-16">
+                <div className={`text-center ${sidebarOpen ? "w-1/5 p-4" : "w-1/15 p-5"} flex ${sidebarOpen ? "justify-between" : "flex-col items-start"}`} ref={switcher}>
+                    <Logoicon className="text-cyan-600 mx-3 hover:text-cyan-800 cursor-pointer" />
+                    {sidebarOpen && <span>Mingle</span>}
+                    <ViewListIcon className="text-cyan-600 mx-3 hover:text-cyan-800 cursor-pointer" onClick={clickSidebar} />
                 </div>
-
-                {/* Main Content Wrapper */}
-                <div className=" flex w-full h-[calc(100vh-4rem)]">
-                    {/* Sidebar */}
-                   <Sidebar st={sidebarOpen}/>
-
-                    {/* Content Sections */}
-                    <div className="w-1/3 border-2 text-center p-4 border-solid flex justify-center items-center max-sm:hidden">
-                        sw
+                <div className="items-center text-center w-1/3 p-4 flex justify-between max-sm:hidden">
+                    {!searchOpen && <span className="text-xl font-extrabold">{selectedSearch}</span>}
+                    <div className="relative">
+                        {searchOpen ? (
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+                                onKeyDown={handleSearchSubmit}
+                                className="border border-gray-400 rounded px-2 py-1 focus:outline-none"
+                                placeholder="Search..."
+                            />
+                        ) : (
+                            <SearchIcon className="hover:text-cyan-600 cursor-pointer" onClick={() => setSearchOpen(true)} />
+                        )}
+                      
                     </div>
+                    <MultiAvatars count={"+3"} />
+                </div>
+            
 
-
-                    <div className="w-2/3 border-2 p-4 border-solid flex flex-col  justify-between max-sm:h-full max-sm:w-full">
-                        
-                        <motion.div className="flex flex-col gap-2 overflow-y-scroll scrollbar-hidden" animate={{ y: [0, -100, 0] }} transition={{ ease: "easeInOut", duration: 0.5 }}>
-                            <MessageContainer message={"hi what are u doing"} fromMe={true}/>
-                            <MessageContainer message={"nothing"} fromMe={false}/>
-                            <MessageContainer message={"ohk"} fromMe={true}/>
-                            <MessageContainer message={"i am now at home by the way"} fromMe={false}/>
-                            <MessageContainer message={"ohk"} fromMe={true}/>
-                            <MessageContainer message={"i am now at home by the way"} fromMe={false}/>
-                            <MessageContainer message={"ohk"} fromMe={true}/>
-                            <MessageContainer message={"i am now at home by the way"} fromMe={false}/>
-                            <MessageContainer message={"ohk"} fromMe={true}/>
-                            <MessageContainer message={"i am now at home by the way"} fromMe={false}/>
-                            <MessageContainer message={"ohk"} fromMe={true}/>
-                            <MessageContainer message={"i am now at home by the way"} fromMe={false}/>
-                            <MessageContainer message={"ohk"} fromMe={true}/>
-                            <MessageContainer message={"i am now at home by the way"} fromMe={false}/>
-                            
-                        </motion.div>
-                        {/* CHAT BOX */}
-                        <MessageInput/>
+                <div className="rounded-1xl text-center w-2/3 p-4 flex justify-between border-1 border-solid max-sm:h-full max-sm:w-full">
+                    <Avatar className="text-cyan-600 cursor-pointer" />
+                    <span>{selectedSearch}</span>
+                    <div className='flex'>
+                        <DuoIcon className="hover:text-cyan-700 mx-1 cursor-pointer" />
+                        <CallIcon className="hover:text-cyan-700 mx-1 cursor-pointer" />
+                        <SimpleDialogDemo />
                     </div>
                 </div>
             </div>
+            <div className="flex w-full h-[calc(100vh-4rem)]">
+                <Sidebar st={sidebarOpen} />
+                <div className="w-1/3 p-4 flex flex-wrap gap-2">
+                
+                <div className='py-2 flex flex-col overflow-auto'>
+                            {users?.user?.filter((item) => {
+                        return searchQuery.trim() === '' ? item : item.firstname.toLowerCase().startsWith(searchQuery.toLowerCase());
+                    }).map((u, index) => (
+                        <ProfileTile key={index} user={u} onClick={() => setSelectedSearch(u.name)}
+                        />
+                    ))}
+                </div>
+                
+                </div>
+                <div className="w-2/3 p-4 flex flex-col justify-between max-sm:h-full max-sm:w-full">
+                    <motion.div className="flex flex-col gap-2 overflow-y-scroll scrollbar-hidden" animate={{ y: [0, -100, 0] }} transition={{ ease: "easeInOut", duration: 0.5 }}>
+                        <MessageContainer message={"hi what are u doing"} fromMe={true} />
+                        <MessageContainer message={"nothing"} fromMe={false} />
+                        <MessageContainer message={"ohk"} fromMe={true} />
+                        <MessageContainer message={"i am now at home by the way"} fromMe={false} />
+                    </motion.div>
+                    <MessageInput />
+                </div>
+            </div>
+        </div>
         </>
     );
 };
 
 export default Home;
+
 

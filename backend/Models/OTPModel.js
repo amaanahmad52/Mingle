@@ -5,8 +5,11 @@ dotenv.config();
 const OTPSchema = new mongoose.Schema({
     phoneNumber: {
         type: String,
-        required: [true, "Please Enter Your Phone Number"],
-        unique: true,
+        // unique: true,
+    },
+    email: {
+        type: String,
+        // unique: true,
     },
     otp: [{
         type: String,
