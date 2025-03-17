@@ -4,5 +4,16 @@
   .scrollbar-hidden {
     scrollbar-width: none;
   }
- 
+  .online::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #00ff00; /* Green */
+    border-radius: 50%;
+    top: 6px;   /* Moves dot to the top */
+    right: 6px; /* Moves dot to the right */
+    border: 2px solid white;
+  }
+  
  

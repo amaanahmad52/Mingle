@@ -104,7 +104,7 @@ const Home = () => {
                 <Sidebar st={sidebarOpen} />
                 <div className="w-1/3 p-4 flex flex-wrap gap-2">
                 
-                <div className='py-2 flex flex-col overflow-auto'>
+                <div className='py-2  gap-2 w-full flex flex-col overflow-auto '>
                             {users?.user?.filter((item) => {
                         return searchQuery.trim() === '' ? item : item.firstname.toLowerCase().startsWith(searchQuery.toLowerCase());
                     }).map((u, index) => (
