@@ -1,14 +1,31 @@
-import React from "react";
+import React, { useState } from "react"; 
 import SendIcon from "@mui/icons-material/Send";
 import PendingIcon from "@mui/icons-material/Pending";
 import Emoji from "@mui/icons-material/SentimentVerySatisfied";
 import BasicSpeedDial from "./SpeedDial";
+import Backdrop from "@mui/material/Backdrop";
 
 const MessageInput = () => {
   const success = false;
+  const [open, setOpen] = useState(false); // State for Backdrop & SpeedDial
 
   return (
     <>
+      {/* Backdrop covering the whole UI when SpeedDial is open */}
+      <Backdrop
+        open={open}
+        onClick={() => setOpen(false)} // Clicking Backdrop closes SpeedDial
+        sx={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: (theme) => theme.zIndex.drawer + 1, // Ensures it covers UI
+          backgroundColor: "rgba(0, 0, 0, 0.4)", // Dim background effect
+        }}
+      />
+
       <form className="px-4 my-3">
         <div className="w-full relative">
           {/* Emoji Button */}
@@ -33,10 +50,10 @@ const MessageInput = () => {
           >
             {success ? <PendingIcon /> : <SendIcon />}
           </button>
-
-          {/* Speed Dial Positioned Absolutely */}
-          <div className="absolute bottom-1/8  left-20 bg-transparent">
-            <BasicSpeedDial />
+             
+          {/* SpeedDial Positioned Absolutely */}
+          <div className="absolute bottom-1/8 left-20 bg-transparent">
+            <BasicSpeedDial open={open} setOpen={setOpen} />
           </div>
         </div>
       </form>
@@ -45,3 +62,4 @@ const MessageInput = () => {
 };
 
 export default MessageInput;
+

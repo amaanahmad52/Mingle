@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Avatar from '@mui/material/Avatar';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -11,36 +10,52 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PersonIcon from '@mui/icons-material/Person';
 import AddIcon from '@mui/icons-material/Add';
+import Backdrop from '@mui/material/Backdrop';
 import { blue } from '@mui/material/colors';
 
 const options = ['Select Messages', 'Group Info', 'Leave Chat'];
 
 export default function ThreeDotMenu() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [reference, setReference] = React.useState(null)
 
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+    setReference(event.currentTarget);
+    
   };
 
   const handleClose = () => {
-    setAnchorEl(null);
+    setReference(null);
+    
   };
 
-  const open = Boolean(anchorEl);
+  const open = Boolean(reference);
 
   return (
-    <div className='flex '>
-      <IconButton onClick={handleClick} >
-        <MoreVertIcon sx={{color:"black", scale: 1.5,  // Correct way to scale
-    cursor: "pointer", // Enables pointer on hover
-    "&:hover": {
-      color: "blue", // Changes color on hover
-    }}} />
+    <div className='flex'>
+      <IconButton onClick={handleClick}>
+        <MoreVertIcon sx={{
+          color: "black",
+          scale: 1.5,
+          cursor: "pointer",
+          "&:hover": {
+            color: "blue",
+          }
+        }} />
       </IconButton>
+
+      {/* Backdrop for dim effect */}
+      <Backdrop
+        open={open}
+   
+        sx={{ 
+          zIndex: (theme) => theme.zIndex.drawer - 1, 
+          backgroundColor: "rgba(0, 0, 0, 0.3)" 
+        }}
+      />
 
       <Popover
         open={open}
-        anchorEl={anchorEl}
+        anchorEl={reference}//this means current element in ui show that popover casn be placed properly
         onClose={handleClose}
         anchorOrigin={{
           vertical: 'bottom',
@@ -50,9 +65,9 @@ export default function ThreeDotMenu() {
           vertical: 'top',
           horizontal: 'right',
         }}
-        sx={{mt:2}}
+        sx={{ mt: 2, zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
-        <List sx={{ }}>
+        <List>
           {options.map((option) => (
             <ListItem disablePadding key={option}>
               <ListItemButton onClick={handleClose}>
@@ -80,3 +95,4 @@ export default function ThreeDotMenu() {
     </div>
   );
 }
+

@@ -16,13 +16,16 @@ const actions = [
   { icon: <ShareIcon />, name: 'Share' },
 ];
 
-export default function BasicSpeedDial() {
+export default function BasicSpeedDial({open, setOpen}) {
+  const handleToggle = () => setOpen(!open);
   return (
     <Box sx={{ height: 320, transform: 'translateZ(0px)', flexGrow: 1}}>
       <SpeedDial
         ariaLabel="SpeedDial basic example"
-        sx={{ position: 'absolute', bottom: 0, right: 10}}
-        icon={<SpeedDialIcon sx={{ fontSize: 30 ,size:"small", marginBottom: "15px"}} />} // Reduce main icon size
+        onClick={handleToggle}
+      open={open}
+        sx={{ position: 'absolute', bottom: 0, right: 10,zIndex: (theme) => theme.zIndex.drawer + 2}}
+        icon={<SpeedDialIcon sx={{ fontSize: 30 ,size:"small", marginBottom: "8px"}} />} // Reduce main icon size
         FabProps={{sx:{size:"small", bgcolor:"transparent", border:"none", boxShadow:"none", "&:hover":{bgcolor:"transparent"}}}}
          // Reduce SpeedDial button size
       >

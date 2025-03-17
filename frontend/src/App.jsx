@@ -1,3 +1,4 @@
+
 import { useDispatch,useSelector} from 'react-redux'
 import { useEffect } from 'react'
 import { Route,Routes,BrowserRouter} from 'react-router-dom'
@@ -7,6 +8,11 @@ import LoginByPhone from './components/User/LoginByPhone'
 import ConfirmOTP from './components/User/ConfirmOTP'
 import LoginByEmail from './components/User/LoginByEmail'
 import { getUserDetailsAction } from './slices/UserSlices'
+
+
+import SignUp from './components/User/SignUp'
+import Verify_Email_on_Signup from './components/User/Verify_Email_on_Signup'
+
 // import ProtectedRoute from '../protectedRoute'
 
 
@@ -32,6 +38,10 @@ function App() {
         <Route exact path='/login' element={<LoginByEmail/>}/>
         <Route exact path='/loginByPhone' element={<LoginByPhone/>}/>
         <Route exact path='/confirmOTP' element={<ConfirmOTP/>}/>
+
+        <Route exact path='/signUp' element={<SignUp/>}/>
+        <Route exact path='/verify-email' element={<Verify_Email_on_Signup/>}/>
+
 
         {/* conditional routing */}
         {/* <Route element={<ProtectedRoute/>}> */}
