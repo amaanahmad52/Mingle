@@ -15,6 +15,7 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import axios from 'axios';
 import ProfileTile from '../assets/utilityComponents/ProfileTile';
+import { useSelector } from 'react-redux';
 const URL = import.meta.env.VITE_BACKEND_URL;
 const Home = () => {
     const switcher = useRef();
@@ -23,7 +24,7 @@ const Home = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedSearch, setSelectedSearch] = useState("Pankaj Nunnu");
    
- 
+  const { user } = useSelector((state) => state.userReducer);
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
@@ -96,7 +97,7 @@ const Home = () => {
                     <div className='flex'>
                         <DuoIcon className="hover:text-cyan-700 mx-1 cursor-pointer" />
                         <CallIcon className="hover:text-cyan-700 mx-1 cursor-pointer" />
-                        <SimpleDialogDemo />
+                        <SimpleDialogDemo friend={users.user}/>
                     </div>
                 </div>
             </div>
@@ -108,8 +109,8 @@ const Home = () => {
                             {users?.user?.filter((item) => {
                         return searchQuery.trim() === '' ? item : item.firstname.toLowerCase().startsWith(searchQuery.toLowerCase());
                     }).map((u, index) => (
-                        <ProfileTile key={index} user={u} onClick={() => setSelectedSearch(u.name)}
-                        />
+                        (u.email !== user.email)? <ProfileTile key={index} user={u} onClick={() => setSelectedSearch(u.name)}
+                        />:<ProfileTile key={index} user={"you"} onClick={() => setSelectedSearch(u.name)} />   
                     ))}
                 </div>
                 

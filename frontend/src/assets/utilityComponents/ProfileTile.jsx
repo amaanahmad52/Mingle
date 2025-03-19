@@ -12,7 +12,7 @@ const ProfileTile = React.memo(({ user }) => {
       </div>
       <div className="flex flex-col flex-1">
         <div className="flex gap-3 justify-between">
-          <p className="font-bold text-gray-200 max-sm:hidden">{user.firstname} </p>
+          <p className="font-bold text-gray-200 max-sm:hidden">{user!=="you"?user.firstname:user} </p>
         </div>
       </div>
     </div>

@@ -46,7 +46,8 @@ const userSchema=new mongoose.Schema({
     joinedAt: {
         type: Date,
         default: Date.now,
-    }
+    },
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 })
 
 userSchema.methods.getJWTTOKEN=async function(){  

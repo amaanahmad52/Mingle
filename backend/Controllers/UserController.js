@@ -244,7 +244,7 @@ exports.getUserDetails=async(req,res)=>{
         return res.status(401).json({ error: "Unauthorized" });
     }
     
-    const user = await User.findById(req.userDetails.id);
+    const user = await User.findById(req.userDetails.id).populate("friends");
     
     res.status(200).json({
       success: true,
@@ -257,10 +257,37 @@ exports.getAllUser=async(req,res)=>{
     //details will be fethed by the request parameter. after logging/signing in it will be saved (id save) in req.userDetails in the authentication code file
   
     
-    const user = await User.find();
+    const user = await User.find().populate("friends");
     
     res.status(200).json({
       success: true,
       user
     });
 }
+
+//adding friend 
+
+exports.addFriend = async (req, res) => {
+    const { id, email } = req.body;
+
+    try {
+        const user = await User.findOneAndUpdate(
+            { email: email },
+            { $push: { friends:id } }, // Allows duplicates
+            { new: true }
+        ).populate("friends");
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+console.log(id,"this is friend")
+        res.status(200).json({
+            success: true,
+            user
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Internal Server Error", error: error.message });
+    }
+};
+
+
