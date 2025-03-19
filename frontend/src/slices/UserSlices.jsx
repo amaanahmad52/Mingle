@@ -61,7 +61,14 @@ export const AddToFriend = createAsyncThunk("addtofriend",async ({id,email}) => 
       {id, email},
       { withCredentials: true, headers: { "Content-Type": "application/json" } }
     );
-    toast.success("friend added successfully")
+    if(data.message==="Already a friend" ){
+      toast.success(data.message)
+
+    
+    }
+    else{
+      toast.success("Friend added successfully")
+    }
     return data;
   }catch(err){
     console.error(err);
