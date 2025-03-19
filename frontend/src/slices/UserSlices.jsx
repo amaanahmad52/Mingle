@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import { toast } from "react-toastify";
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 // 1 Logging in by OTP
@@ -52,7 +52,32 @@ export const getUserDetailsAction = createAsyncThunk("getUserDetailsAction",asyn
     return data;
   }
 )
+//add to friend
+export const AddToFriend = createAsyncThunk("addtofriend",async ({id,email}) => {
+  try{
 
+    const { data } = await axios.post(
+      `${URL}/addfriend`,
+      {id, email},
+      { withCredentials: true, headers: { "Content-Type": "application/json" } }
+    );
+    if(data.message==="Already a friend" ){
+      toast.success(data.message)
+
+    
+    }
+    else{
+      toast.success("Friend added successfully")
+    }
+    return data;
+  }catch(err){
+    console.error(err);
+    toast.error("could not add friend")
+    
+  }
+ 
+}
+);
 
 // Combined user slice
 const userSlice = createSlice({
@@ -125,6 +150,7 @@ const userSlice = createSlice({
       state.loadingO = false;
       state.user = null;
     });
+  
   },
 });
 

@@ -15,6 +15,7 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import axios from 'axios';
 import ProfileTile from '../assets/utilityComponents/ProfileTile';
+import { useSelector } from 'react-redux';
 const URL = import.meta.env.VITE_BACKEND_URL;
 const Home = () => {
     const switcher = useRef();
@@ -23,8 +24,9 @@ const Home = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedSearch, setSelectedSearch] = useState("Pankaj Nunnu");
    
- 
+  const { user } = useSelector((state) => state.userReducer);
     const [users, setUsers] = useState([]);
+    
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -86,7 +88,7 @@ const Home = () => {
                         )}
                       
                     </div>
-                    <MultiAvatars count={"+3"} />
+                    <MultiAvatars count={`+${user?.friends?.length}`} />
                 </div>
             
 
@@ -96,7 +98,7 @@ const Home = () => {
                     <div className='flex'>
                         <DuoIcon className="hover:text-cyan-700 mx-1 cursor-pointer" />
                         <CallIcon className="hover:text-cyan-700 mx-1 cursor-pointer" />
-                        <SimpleDialogDemo />
+                        <SimpleDialogDemo friend={users.user}/>
                     </div>
                 </div>
             </div>
@@ -104,14 +106,18 @@ const Home = () => {
                 <Sidebar st={sidebarOpen} />
                 <div className="w-1/3 p-4 flex flex-wrap gap-2">
                 
-                <div className='py-2  gap-2 w-full flex flex-col overflow-auto '>
-                            {users?.user?.filter((item) => {
-                        return searchQuery.trim() === '' ? item : item.firstname.toLowerCase().startsWith(searchQuery.toLowerCase());
-                    }).map((u, index) => (
-                        <ProfileTile key={index} user={u} onClick={() => setSelectedSearch(u.name)}
-                        />
-                    ))}
-                </div>
+                <div className='py-2 gap-2 w-full flex flex-col overflow-auto'>
+    {users?.user?.filter((item) => {
+        return searchQuery.trim() === '' ? item : item.firstname.toLowerCase().startsWith(searchQuery.toLowerCase());
+    }).map((u, index) => (
+        (user.friends?.includes(u._id)) ? 
+            <ProfileTile key={index} user={u} onClick={() => setSelectedSearch(u.name)} /> 
+        : (u?.email === user?.email) ? 
+            <ProfileTile key={index} user={"you"} onClick={() => setSelectedSearch(u.name)} /> 
+        : null  
+    ))}
+</div>
+
                 
                 </div>
                 <div className="w-2/3 p-4 flex flex-col justify-between max-sm:h-full max-sm:w-full">

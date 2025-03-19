@@ -46,7 +46,8 @@ const userSchema=new mongoose.Schema({
     joinedAt: {
         type: Date,
         default: Date.now,
-    }
+    },
+    friends: [{ type: String}],
 })
 
 userSchema.methods.getJWTTOKEN=async function(){  
