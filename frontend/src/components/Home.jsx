@@ -8,7 +8,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { motion } from "framer-motion";
 import MessageInput from '../assets/utilityComponents/messageBox';
 import MessageContainer from '../assets/utilityComponents/MessageContainer';
-import { useRef, useState ,useEffect} from 'react';
+import { useRef, useState ,useEffect, useContext} from 'react';
 import Sidebar from '../assets/utilityComponents/Sidebar';
 import SimpleDialogDemo from '../assets/utilityComponents/DialogBox';
 import ViewListIcon from '@mui/icons-material/ViewList';
@@ -18,14 +18,25 @@ import ProfileTile from '../assets/utilityComponents/ProfileTile';
 import { useSelector } from 'react-redux';
 import Spinner from '../assets/utilityComponents/Spinner';
 const URL = import.meta.env.VITE_BACKEND_URL;
+
+import { SidebarContext } from '../Context/SideBarContext';
+import MessagesBar from '../assets/utilityComponents/MessagesBar';
+import SettingsBar from '../assets/utilityComponents/SettingsBar';
+import DashBoardBar from '../assets/utilityComponents/DashBoardBar';
+import CallsBar from '../assets/utilityComponents/CallsBar';
+import FilesBar from '../assets/utilityComponents/FilesBar';
+
+
+
 const Home = () => {
+    const{SideBarselected}=useContext(SidebarContext);
     const switcher = useRef();
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [searchOpen, setSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedSearch, setSelectedSearch] = useState("Pankaj Nunnu");
-   
-  const { user } = useSelector((state) => state.userReducer);
+    const { user } = useSelector((state) => state.userReducer);
+ 
     const [users, setUsers] = useState([]);
     
 
@@ -45,7 +56,7 @@ const Home = () => {
         fetchUsers();
     }, []);
       
-   console.log(users.user);
+
     
     
     
@@ -75,55 +86,59 @@ const Home = () => {
                         {sidebarOpen && <span>Mingle</span>}
                         <ViewListIcon className="text-cyan-600 mx-3 hover:text-cyan-800 cursor-pointer" onClick={clickSidebar} />
                     </div>
-                    <div className="items-center text-center w-1/3 p-4 flex justify-between max-sm:hidden">
-                        {!searchOpen && <span className="text-xl font-extrabold">{selectedSearch}</span>}
-                        <div className="relative">
-                            {searchOpen ? (
-                                <input
-                                    type="text"
-                                    value={searchQuery}
-                                    onChange={handleSearchChange}
-                                    onKeyDown={handleSearchSubmit}
-                                    className="border border-gray-400 rounded px-2 py-1 focus:outline-none"
-                                    placeholder="Search..."
-                                />
-                            ) : (
-                                <SearchIcon className="hover:text-cyan-600 cursor-pointer" onClick={() => setSearchOpen(true)} />
-                            )}
-                          
-                        </div>
-                        <MultiAvatars count={`+${user?.friends?.length}`} />
+                <div className="items-center text-center w-1/3 p-4 flex justify-between max-sm:hidden">
+                    {!searchOpen && (
+                        <span className="text-xl font-extrabold flex-grow text-center truncate">
+                            {SideBarselected}
+                        </span>
+                    )}
+                    <div className="relative">
+                        {searchOpen ? (
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+                                onKeyDown={handleSearchSubmit}
+                                className="border border-gray-400 rounded px-2 py-1 focus:outline-none"
+                                placeholder="Search..."
+                            />
+                        ) : (
+                            <SearchIcon className="hover:text-cyan-600 cursor-pointer ml-4" onClick={() => setSearchOpen(true)} />
+                        )}
                     </div>
+                    <MultiAvatars count={`+${user?.friends?.length}`} />
+                </div>
+
                 
     
                     <div className="rounded-1xl text-center w-2/3 p-4 flex justify-between border-1 border-solid max-sm:h-full max-sm:w-full">
                         <Avatar className="text-cyan-600 cursor-pointer" />
                         <span>{selectedSearch}</span>
                         <div className='flex'>
-                            <DuoIcon className="hover:text-cyan-700 mx-1 cursor-pointer" />
-                            <CallIcon className="hover:text-cyan-700 mx-1 cursor-pointer" />
-                            <SimpleDialogDemo friend={users.user}/>
+                            <DuoIcon className="mt-1 hover:text-cyan-700 mx-1 cursor-pointer" />
+                            <CallIcon className="mt-1 hover:text-cyan-700 mx-1 cursor-pointer" />
+                            <SimpleDialogDemo />
                         </div>
                     </div>
                 </div>
                 <div className="flex w-full h-[calc(100vh-4rem)]">
                     <Sidebar st={sidebarOpen} />
+                    
                     <div className="w-1/3 p-4 flex flex-wrap gap-2">
-                    
-                    <div className='py-2 gap-2 w-full flex flex-col overflow-auto'>
-                        {users?.user?.filter((item) => {
-                            return searchQuery.trim() === '' ? item : item.firstname.toLowerCase().startsWith(searchQuery.toLowerCase());
-                        }).map((u, index) => (
-                            (user.friends?.includes(u._id)) ? 
-                                <ProfileTile key={index} user={u} onClick={() => setSelectedSearch(u.name)} /> 
-                            : (u?.email === user?.email) ? 
-                                <ProfileTile key={index} user={"you"} onClick={() => setSelectedSearch(u.name)} /> 
-                            : null  
-                        ))}
-                    </div>
-    
+
+                        {/* middle box */}
+                        <div className='py-2 gap-2 w-full flex flex-col overflow-auto'>
+
+                            {(SideBarselected==="Messages") && <MessagesBar setSelectedSearch={setSelectedSearch} searchQuery={searchQuery} users={users}/>}
+                            {(SideBarselected==="Settings") && <SettingsBar />}
+                            {(SideBarselected==="Dashboard") && <DashBoardBar friend={users.user} />}
+                            {(SideBarselected==="Calls") && <CallsBar />}
+                            {(SideBarselected==="Files") && <FilesBar />}
+                            
+                        </div>
                     
                     </div>
+
                     <div className="w-2/3 p-4 flex flex-col justify-between max-sm:h-full max-sm:w-full">
                         <motion.div className="flex flex-col gap-2 overflow-y-scroll scrollbar-hidden" animate={{ y: [0, -100, 0] }} transition={{ ease: "easeInOut", duration: 0.5 }}>
                             <MessageContainer message={"hi what are u doing"} fromMe={true} />
