@@ -18,7 +18,7 @@
     "@mui/material": "^6.4.7",
     "@reduxjs/toolkit": "^2.6.0",
     "axios": "^1.8.1",
-    "daisyui": "^5.0.3",
+    "fluent-emoji": "^0.1.2",
     "headlessui": "^0.0.0",
     "material-ui": "^0.20.2",
     "motion": "^12.4.10",
@@ -30,6 +30,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.2.0",
     "react-toastify": "^11.0.5",
+    "reactjs-emoji-keyboard": "^1.0.17",
     "tailwind-scrollbar": "^4.0.1"
   },
   "devDependencies": {
@@ -38,6 +39,7 @@
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
+    "daisyui": "^5.0.6",
     "eslint": "^9.19.0",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.0.0",
