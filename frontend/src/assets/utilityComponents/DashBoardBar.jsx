@@ -44,9 +44,11 @@ const DashBoardBar = ({ friend }) => {
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearch(value);
+    
     const results = friend?.filter((u) =>
-      (u.email !== user.email) && u.firstname.toLowerCase().includes(value.toLowerCase())
+      u.email !== user.email && u.phoneNumber.toLowerCase() === value.toLowerCase()
     );
+    
     setFilteredUsers(results);
     if (results.length === 0) setInviteNumber(value);
   };
@@ -127,7 +129,7 @@ const DashBoardBar = ({ friend }) => {
               ))}
             </List>
           ) : (
-            search && (
+            search &&search?.length===10 && (
               <div>
                 <p style={{ color: "cyan" }}>No user found.</p>
                 <Button
