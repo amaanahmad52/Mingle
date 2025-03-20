@@ -5,7 +5,7 @@ import EmojiIcon from "@mui/icons-material/SentimentVerySatisfied";
 import BasicSpeedDial from "./SpeedDial";
 import Backdrop from "@mui/material/Backdrop";
 import { EmojiKeyboard } from "reactjs-emoji-keyboard";
-
+import {AnimatePresence,  motion } from "framer-motion";
 const MessageInput = () => {
   const success = false;
   const [open, setOpen] = useState(false); // SpeedDial state
@@ -53,19 +53,31 @@ const MessageInput = () => {
           </button>
 
           {/* Emoji Picker (Aligned with Input) */}
-          {open1 && (
-            <div className="absolute bottom-12 left-0 z-50">
-              <EmojiKeyboard
-                height={200}
-                width={250}
-                theme="dark"
-                searchLabel="Search emoji"
-                searchDisabled={false}
-                onEmojiSelect={handleEmojiSelect}
-                categoryDisabled={false}
-              />
-            </div>
-          )}
+          {
+            <AnimatePresence>
+            {open1 && (
+              <motion.div
+                key="box"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.2 }}
+                className="absolute bottom-12 left-0 z-50 rounded-2xl overflow-hidden"
+              >
+                <EmojiKeyboard
+                  height={200}
+                  width={250}
+                  theme="dark"
+                  searchLabel="Search emoji"
+                  searchDisabled={false}
+                  onEmojiSelect={handleEmojiSelect}
+                  categoryDisabled={false}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+          
+          }
 
           {/* Input Box */}
           <input
@@ -85,7 +97,7 @@ const MessageInput = () => {
           </button>
 
           {/* SpeedDial Positioned Absolutely */}
-          <div className="absolute bottom-1/8 ml-22 bg-transparent">
+          <div className="absolute bottom-1/8 ml-18 mb-1 bg-transparent ">
             <BasicSpeedDial open={open} setOpen={setOpen} />
           </div>
         </div>

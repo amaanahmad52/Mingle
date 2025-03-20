@@ -25,7 +25,7 @@ export default function BasicSpeedDial({open, setOpen}) {
         onClick={handleToggle}
       open={open}
         sx={{ position: 'absolute', bottom: 0, right: 10,zIndex: (theme) => theme.zIndex.drawer + 2}}
-        icon={<SpeedDialIcon sx={{ fontSize: 30 ,size:"small", marginBottom: "8px"}} />} // Reduce main icon size
+        icon={<SpeedDialIcon sx={{ fontSize: 30 ,size:"small", marginBottom: "8px","&:hover":{color:"#0891b2"}}} />} // Reduce main icon size
         FabProps={{sx:{size:"small", bgcolor:"transparent", border:"none", boxShadow:"none", "&:hover":{bgcolor:"transparent"}}}}
          // Reduce SpeedDial button size
       >
