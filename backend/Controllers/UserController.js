@@ -234,6 +234,17 @@ exports.registerUser=async(req,res)=>{
     
 }
 
+//logout user
+
+exports.logoutUser = (req, res) => {
+    res.cookie("token", "", {
+        expires: new Date(Date.now()), // Expire immediately
+    });
+    res.status(200).json({
+        success: true,
+        message: "Logged out successfully"
+    });
+};
 
 
 //getting details of a logged in user
@@ -299,5 +310,6 @@ exports.addFriend = async (req, res) => {
         return res.status(500).json({ success: false, message: "Internal Server Error", error: error.message });
     }
 };
+
 
 

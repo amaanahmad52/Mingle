@@ -52,7 +52,17 @@ export const getUserDetailsAction = createAsyncThunk("getUserDetailsAction",asyn
     return data;
   }
 )
-//add to friend
+//5 logout user
+export const LogoutAction = createAsyncThunk("LogoutAction", async () => {
+    await axios.post(
+        `${URL}/logout`,
+        {}, // Empty body
+        { withCredentials: true, headers: { "Content-Type": "application/json" } } // Config object
+    );
+});
+
+
+// 6 add to friend
 export const AddToFriend = createAsyncThunk("addtofriend",async ({id,email}) => {
   try{
 
@@ -90,6 +100,7 @@ const userSlice = createSlice({
     loadingP: false,
     loadingO: false,
     user: null,
+    logoutdone:false
   },
   extraReducers: (builder) => {
     // Handling LoginByPhone
@@ -150,7 +161,15 @@ const userSlice = createSlice({
       state.loadingO = false;
       state.user = null;
     });
-  
+    //handling logout
+    builder.addCase(LogoutAction.fulfilled,(state,action)=>{
+      state.user=null;
+      state.logoutdone=true;
+      window.location.reload();
+    })
+    builder.addCase(LogoutAction.rejected,(state,action)=>{
+      state.logoutdone=false;
+    })
   },
 });
 

@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import { useSelector } from "react-redux";
 import Spinner from "./Spinner";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import Help from "@mui/icons-material/Info";
 import ThreeDotMenu from "./Modal";
-
+import { useDispatch } from "react-redux";
+import { LogoutAction } from "../../slices/UserSlices";
+import { useNavigate } from "react-router-dom";
 const SettingsBar = () => {
     const [nameUpdate, setNameUpdate] = useState(false);
     const [aboutUpdate, setAboutUpdate] = useState(false);
@@ -15,6 +17,11 @@ const SettingsBar = () => {
     const [updatedAbout, setUpdatedAbout] = useState(about);
     const[profilePicModal, setProfilePicModal] = useState(false);
     const [reference, setReference] = useState(null);
+    const dispatch = useDispatch();
+    const nav=useNavigate();
+
+    const{logoutdone}=useSelector(state=>state.userReducer)
+
     const handleNameUpdate = () => {
         setNameUpdate(!nameUpdate);
     };
@@ -40,6 +47,19 @@ const SettingsBar = () => {
        setReference(e.currentTarget);
         // dispatch action
     };
+
+    const handleLogout = () => {
+        // dispatch action
+        dispatch(LogoutAction());
+        
+    };
+
+    // useEffect(() => {
+    //     if (logoutdone) {
+    //         nav('/login')
+    //     }
+    // }, [logoutdone, nav]);
+    
     return (
         <>
             
@@ -133,7 +153,7 @@ const SettingsBar = () => {
 
                         <hr className="my-4 border-t border-gray-600 ml-4" />
                         <div className="flex justify-start ml-4">
-                            <button className="btn btn-secondary">Logout</button>
+                            <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
                         </div>
                         <p className="ml-4 text-xs text-gray-400">
                             Chat History on this computer will be erased when you log out.
