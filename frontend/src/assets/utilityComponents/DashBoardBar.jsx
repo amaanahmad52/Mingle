@@ -20,6 +20,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import { blue } from '@mui/material/colors';
 import { AddToFriend } from "../../slices/UserSlices";
 import CloseIcon from '@mui/icons-material/HighlightOff';
+import { Typography } from "@mui/material";
 
 const DashBoardBar = ({ friend }) => {
   const { user } = useSelector((state) => state.userReducer);
@@ -45,7 +46,7 @@ const DashBoardBar = ({ friend }) => {
     const value = e.target.value;
     setSearch(value);
     const results = friend?.filter((u) =>
-      (u.email !== user.email) && u.firstname.toLowerCase().includes(value.toLowerCase())
+      (u.email !== user.email) && u.phoneNumber.toLowerCase() === value.toLowerCase()
     );
     setFilteredUsers(results);
     if (results.length === 0) setInviteNumber(value);
@@ -85,29 +86,30 @@ const DashBoardBar = ({ friend }) => {
       >
         <Box
           sx={{
-            bgcolor: "rgba(0, 0, 0, 0.7)", // Semi-transparent background
+            bgcolor: "transparent", // Semi-transparent background
             p: 4,
             borderRadius: 2,
             boxShadow: 24,
             minWidth: 350,
             textAlign: "center",
             position: "relative",
-            color: "cyan", // Text color set to cyan
+            color: "rgb(128,127,255)", 
+            backdropFilter: "blur(10px)"
           }}
         >
-          <h2 style={{ color: "cyan" }}>Add Friends</h2>
+          <h2 style={{ color: "rgb(128,127,255)", fontWeight: "bold" }}>Add Friends</h2>
           <TextField
             fullWidth
-            label="Search user by name or phone"
+            label="Search user by Phone number"
             variant="outlined"
             value={search}
             onChange={handleSearch}
             sx={{ 
               mt: 2, 
               mb: 2, 
-              input: { color: "cyan" }, 
-              label: { color: "cyan" },
-              fieldset: { borderColor: "cyan" }
+              input: { color: "rgb(128,127,255)", fontWeight: "bold" }, 
+              label: { color: "rgb(128,127,255)" },
+              fieldset: { borderColor: "rgb(128,127,255)", fontWeight: "bold" }
             }}
           />
 
@@ -117,22 +119,24 @@ const DashBoardBar = ({ friend }) => {
                 <ListItem key={u.phoneNumber} disablePadding>
                   <ListItemButton onClick={() => handleAddFriend(u)}>
                     <ListItemAvatar>
-                      <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
+                      <Avatar sx={{ bgcolor: ["rgb(128,127,255)"], color: [blue] }}>
                         <PersonIcon />
                       </Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary={u.firstname} sx={{ color: "cyan" }} />
+                    <ListItemText
+                    primary={<Typography sx={{ color: "rgb(128,127,255)", fontWeight: "bold",":hover":{color:"rgb(14, 116, 144)"} }}>{u.firstname}</Typography>}/>
+
                   </ListItemButton>
                 </ListItem>
               ))}
             </List>
           ) : (
-            search && (
+            search &&search?.length===10 && (
               <div>
-                <p style={{ color: "cyan" }}>No user found.</p>
+                <p style={{ color: "rgb(128,127,255)" }}>No user found.</p>
                 <Button
                   variant="contained"
-                  sx={{ bgcolor: "cyan", color: "black", "&:hover": { bgcolor: "darkcyan" } }}
+                  sx={{ bgcolor: "rgb(128,127,255)", color: "black", "&:hover": { bgcolor: "darkcyan" } }}
                   onClick={handleInvite}
                 >
                   Send Invite
@@ -140,8 +144,8 @@ const DashBoardBar = ({ friend }) => {
               </div>
             )
           )}
-          <IconButton onClick={closeModal} sx={{ position: "absolute", top: 8, right: 8, color: "cyan" }}>
-            <CloseIcon className=" text-cyan-600 hover:text-cyan-700"/>
+          <IconButton onClick={closeModal} sx={{ position: "absolute", top: 8, right: 8, color: "rgb(128,127,255)" }}>
+            <CloseIcon className=" rgb(128,127,255) hover:text-cyan-700"/>
           </IconButton>
         </Box>
       </Modal>
@@ -163,7 +167,8 @@ const DashBoardBar = ({ friend }) => {
 
       <button
         onClick={handlefriend}
-        className="btn btn-info bg-cyan-600 rounded-2xl hover:bg-cyan-700"
+        className=" btn btn-info text-white bg-[#f43098] rounded-2xl hover:bg-[#c02078] hover:shadow-[0_4px_10px_rgba(0,0,0,0.2)]"
+
       >
         Add new Friend
       </button>

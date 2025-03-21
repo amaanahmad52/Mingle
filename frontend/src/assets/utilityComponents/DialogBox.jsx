@@ -10,7 +10,6 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PersonIcon from '@mui/icons-material/Person';
 import Backdrop from '@mui/material/Backdrop';
-import { blue } from '@mui/material/colors';
 
 const options = ['Select Messages', 'Clear Chat', 'User Profile'];
 
@@ -24,14 +23,24 @@ export default function ThreeDotMenu() {
   return (
     <div className="flex">
       <IconButton onClick={handleClick}>
-        <MoreVertIcon sx={{ color: "white", scale: 1.2, cursor: "pointer", "&:hover": { color: "cyan" } }} />
+        <MoreVertIcon
+          sx={{
+            color: "white",
+            scale: 1.2,
+            cursor: "pointer",
+            "&:hover": { color: "cyan" },
+          }}
+        />
       </IconButton>
 
       {/* Backdrop */}
-      <Backdrop 
-        open={open} 
-        onClick={handleClose} 
-        sx={{ zIndex: (theme) => theme.zIndex.drawer - 1, backgroundColor: "rgba(0,0,0,0.5)" }} 
+      <Backdrop
+        open={open}
+        onClick={handleClose}
+        sx={{
+          zIndex: (theme) => theme.zIndex.drawer - 1,
+          backgroundColor: "rgba(0,0,0,0.5)",
+        }}
       />
 
       {/* Popover */}
@@ -39,20 +48,27 @@ export default function ThreeDotMenu() {
         open={open}
         anchorEl={reference}
         onClose={handleClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        sx={{ mt: 2, zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        sx={{
+          mt: 2,
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          "& .MuiPaper-root": {
+            backgroundColor: "transparent", // Transparent background
+            boxShadow: "none",
+            backdropFilter: "blur(10px)", // Adds a frosted glass effect
+          },
+        }}
       >
         <List>
           {options.map((option) => (
             <ListItem disablePadding key={option}>
               <ListItemButton onClick={handleClose}>
-                <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                    <PersonIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={option} />
+                
+                <ListItemText 
+                  primary={option} 
+                  sx={{ color: "rgb(247,174,30)",":hover":{color:"rgb(246,146,19)"}} } // Deep cyan text
+                />
               </ListItemButton>
             </ListItem>
           ))}
@@ -61,7 +77,3 @@ export default function ThreeDotMenu() {
     </div>
   );
 }
-
-
-
-
