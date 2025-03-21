@@ -45,9 +45,11 @@ const DashBoardBar = ({ friend }) => {
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearch(value);
+    
     const results = friend?.filter((u) =>
-      (u.email !== user.email) && u.phoneNumber.toLowerCase() === value.toLowerCase()
+      u.email !== user.email && u.phoneNumber.toLowerCase() === value.toLowerCase()
     );
+    
     setFilteredUsers(results);
     if (results.length === 0) setInviteNumber(value);
   };
