@@ -5,7 +5,7 @@ import Spinner from "./Spinner";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import Help from "@mui/icons-material/Info";
 import ThreeDotMenu from "./Modal";
-import { LogoutAction, NameAboutUpdate } from "../../slices/UserSlices";
+import { LogoutAction, NameAboutUpdate, UpdateProfilePicAction } from "../../slices/UserSlices";
 import { useNavigate } from "react-router-dom";
 
 const SettingsBar = () => {
@@ -35,6 +35,8 @@ const SettingsBar = () => {
         setUpdatedFirstName(user?.firstname || "");
         setUpdatedLastName(user?.lastname || "");
         setUpdatedAbout(user?.about || "");
+        setUpdatedProfilePic(user?.avatar?.url || "");
+       
     }, [user]);
 
     const handleNameUpdate = () => setNameUpdate(true);
@@ -62,24 +64,34 @@ const SettingsBar = () => {
 
     };
 
-   const handleMenuOptionClick = (option) => {
-    console.log("Selected Option:", option);
+    const handlProfileRemove = (option) => {
+        // console.log("Selected Option:", option);
+        setUpdatedProfilePic(""); 
+        dispatch(UpdateProfilePicAction({ avatar: "" })); // Update Redux state
+        
 
-    if (option === "View image" && user.avatar?.url) {  //not working
-        window.open(user.avatar.url, "_blank"); // Open image in new tab
-    }
+        setProfilePicModal(false); // Close modal
+    };
 
-    else if (option === "Change image") {
-        handleProfilePicDone();
-    }
-    else if (option === "Remove image") {
-       
-    }
+    const handleProfileFileChange = (option, file) => {
+        if (!file) return;
     
-
-    setProfilePicModal(false); // Close the modal
-};
-
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+    
+        reader.onload = () => {
+            const base64Image = reader.result;
+            setUpdatedProfilePic(URL.createObjectURL(file));
+            dispatch(UpdateProfilePicAction({ avatar: base64Image }));
+            setProfilePicModal(false);
+        };
+    
+        reader.onerror = (error) => {
+            console.error("Error converting image to Base64:", error);
+        };
+    };
+    
+        
 
 
     return (
@@ -105,7 +117,9 @@ const SettingsBar = () => {
                             <ThreeDotMenu 
                                 r={reference} 
                                 sr={setReference} 
-                                handleOptionClick={handleMenuOptionClick} 
+                                handleOptionClick={handlProfileRemove} 
+                                handleProfileFileChange={handleProfileFileChange}
+                                user={user}
                             />
                         )}
                     </div>

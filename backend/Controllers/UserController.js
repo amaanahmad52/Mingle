@@ -355,36 +355,55 @@ exports.UpdateProfilePic = async (req, res, next) => {
             return res.status(401).json({ error: "Unauthorized: User details missing" });
         }
 
-        const newUserData ={};
-
-        const userFind = await User.findById(req.userdetails.id);
-            
+        const newUserData = {};
+        const userFind = await User.findById(req.userDetails.id);
         const imageId = userFind.avatar.public_id;
-    
-        await cloudinary.uploader.destroy(imageId); 
-    
-        const myCloud = await cloudinary.uploader.upload(req.body.avatar, {
-            folder: "MingleAvatars",
-            width: 150,
-            crop: "scale",
-        });
-            
-        newUserData.avatar = {  //inserted new key value in newuserdata
-            public_id: myCloud.public_id,
-            url: myCloud.secure_url,
-        };
+
+        if (imageId !== "sample") {
+            await cloudinary.uploader.destroy(imageId);
+        }
+
+        if (!req.body.avatar) {
+           
+
+            newUserData.avatar = {
+                public_id: "sample",
+                url: "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"
+            };
+        } 
+        else {
+            // ✅ Ensure the image is a Base64 string before uploading
+            if (!req.body.avatar.startsWith("data:image")) {
+                return res.status(400).json({ error: "Invalid image format. Must be Base64." });
+            }
+
         
+            // ✅ Upload new image on cloudinary
+            const myCloud = await cloudinary.uploader.upload(req.body.avatar, {
+                folder: "MingleAvatars",
+                width: 150,
+                crop: "scale",
+            });
+
+            newUserData.avatar = {
+                public_id: myCloud.public_id,
+                url: myCloud.secure_url,
+            };
+
+
+         
+        }
         
-        
-        
+        //update DB
         const user = await User.findByIdAndUpdate(req.userDetails._id, newUserData, {
             new: true,
             runValidators: true,
             useFindAndModify: false,
         });
+
         res.status(200).json({ success: true, user });
     } catch (error) {
         console.error("Update Error:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
-    }   
-}
+    }
+};

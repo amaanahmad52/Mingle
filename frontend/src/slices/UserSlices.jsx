@@ -100,6 +100,18 @@ export const NameAboutUpdate = createAsyncThunk("nameAboutUpdate",async ({firstn
   }
 );
 
+//8 profile pic update
+export const UpdateProfilePicAction = createAsyncThunk("UpdateProfilePicAction",async ({avatar}) => {
+  // console.log("ok",avatar);
+  const { data } = await axios.put(
+      `${URL}/updateProfilePic`,
+      {avatar},
+      { withCredentials: true, headers: { "Content-Type": "application/json" } }
+    );
+    return data;
+  }
+)
+
 // Combined user slice
 const userSlice = createSlice({
   name: "user",
@@ -190,6 +202,11 @@ const userSlice = createSlice({
     })
     builder.addCase(NameAboutUpdate.rejected,(state,action)=>{
       state.nameaboutupdate=false;
+    })
+
+    //handling profile pic update
+    builder.addCase(UpdateProfilePicAction.fulfilled,(state,action)=>{
+      state.user=action.payload.user;
     })
   },
 });
