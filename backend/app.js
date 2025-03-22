@@ -13,6 +13,7 @@ app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:500
 app.use(express.json());
 app.use(cookieParser());
 
+
 app.use(cors(
     {
         origin: "http://localhost:5173",

@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const { setToken } = require('../Utils/TokenGenerateJWT');
 const {sendSMS}=require('../Utils/Twilio')
 const mailSender=require("../Utils/mailsender")
+const cloudinary=require("../Utils/cloudinary")
 
 // 1 login by email password
 
@@ -284,6 +285,7 @@ exports.addFriend = async (req, res) => {
     try {
         const user1 = await User.findOne({
             email: email,
+            
             friends: { $in: [id] } // Checks if ID exists in friends array
         });
         
@@ -313,3 +315,76 @@ exports.addFriend = async (req, res) => {
 
 
 
+//update profile
+exports.NameAboutUpdate = async (req, res, next) => {
+    try {
+        if (!req.userDetails) {
+            return res.status(401).json({ error: "Unauthorized: User details missing" });
+        }
+
+        const newUserData = {
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            about: req.body.about
+        };
+
+        // console.log("Updating User:", req.userDetails._id);
+
+
+        const user = await User.findByIdAndUpdate(req.userDetails._id, newUserData, {
+            new: true,
+            runValidators: true,
+            useFindAndModify: false,
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.status(200).json({ success: true, user });
+    } catch (error) {
+        console.error("Update Error:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+//update profile picture
+exports.UpdateProfilePic = async (req, res, next) => {
+    try {
+        if (!req.userDetails) {
+            return res.status(401).json({ error: "Unauthorized: User details missing" });
+        }
+
+        const newUserData ={};
+
+        const userFind = await User.findById(req.userdetails.id);
+            
+        const imageId = userFind.avatar.public_id;
+    
+        await cloudinary.uploader.destroy(imageId); 
+    
+        const myCloud = await cloudinary.uploader.upload(req.body.avatar, {
+            folder: "MingleAvatars",
+            width: 150,
+            crop: "scale",
+        });
+            
+        newUserData.avatar = {  //inserted new key value in newuserdata
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url,
+        };
+        
+        
+        
+        
+        const user = await User.findByIdAndUpdate(req.userDetails._id, newUserData, {
+            new: true,
+            runValidators: true,
+            useFindAndModify: false,
+        });
+        res.status(200).json({ success: true, user });
+    } catch (error) {
+        console.error("Update Error:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
+    }   
+}

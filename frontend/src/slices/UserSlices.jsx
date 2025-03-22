@@ -62,7 +62,7 @@ export const LogoutAction = createAsyncThunk("LogoutAction", async () => {
 });
 
 
-// 6 add to friend
+// 6 add to friend  --> No builder
 export const AddToFriend = createAsyncThunk("addtofriend",async ({id,email}) => {
   try{
 
@@ -89,6 +89,17 @@ export const AddToFriend = createAsyncThunk("addtofriend",async ({id,email}) => 
 }
 );
 
+//7 name about update  -->no builder
+export const NameAboutUpdate = createAsyncThunk("nameAboutUpdate",async ({firstname,lastname,about}) => {
+  const { data } = await axios.put(
+      `${URL}/nameAboutUpdate`,
+      {firstname,lastname,about},
+      { withCredentials: true, headers: { "Content-Type": "application/json" } }
+    );
+    return data;
+  }
+);
+
 // Combined user slice
 const userSlice = createSlice({
   name: "user",
@@ -100,7 +111,8 @@ const userSlice = createSlice({
     loadingP: false,
     loadingO: false,
     user: null,
-    logoutdone:false
+    logoutdone:false,
+    nameaboutupdate:false
   },
   extraReducers: (builder) => {
     // Handling LoginByPhone
@@ -169,6 +181,15 @@ const userSlice = createSlice({
     })
     builder.addCase(LogoutAction.rejected,(state,action)=>{
       state.logoutdone=false;
+    })
+
+    //handling name about update
+    builder.addCase(NameAboutUpdate.fulfilled,(state,action)=>{
+      state.nameaboutupdate=true;
+      state.user=action.payload.user;
+    })
+    builder.addCase(NameAboutUpdate.rejected,(state,action)=>{
+      state.nameaboutupdate=false;
     })
   },
 });

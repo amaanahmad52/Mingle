@@ -21,8 +21,9 @@ exports.authenticationCheck = async (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
 
-        // Fetch user details and attach to request
+        // Fetch user details and attach to request 
         req.userDetails = await User.findById(userId);
+        // console.log(req.userDetails);
         
         next();
     } catch (error) {

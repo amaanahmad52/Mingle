@@ -43,6 +43,10 @@ const userSchema=new mongoose.Schema({
         required: [true, "Please Enter Your Phone Number"],
         // unique: true,
     },
+    about:{
+        type: String,
+        default: "Hey there i am using Mingle !",
+    },
     joinedAt: {
         type: Date,
         default: Date.now,
