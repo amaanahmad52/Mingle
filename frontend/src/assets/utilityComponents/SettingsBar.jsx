@@ -70,7 +70,7 @@ const SettingsBar = () => {
     };
 
     const handlProfileRemove = (option) => {
-        // console.log("Selected Option:", option);
+       
         setUpdatedProfilePic(""); 
         dispatch(UpdateProfilePicAction({ avatar: "" })); // Update Redux state
         
