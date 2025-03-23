@@ -205,8 +205,12 @@ const userSlice = createSlice({
     })
 
     //handling profile pic update
+    builder.addCase(UpdateProfilePicAction.pending,(state,action)=>{
+      state.loadingP=true;
+    })
     builder.addCase(UpdateProfilePicAction.fulfilled,(state,action)=>{
       state.user=action.payload.user;
+      state.loadingP=false;
     })
   },
 });

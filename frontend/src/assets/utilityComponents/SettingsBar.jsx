@@ -7,6 +7,7 @@ import Help from "@mui/icons-material/Info";
 import ThreeDotMenu from "./Modal";
 import { LogoutAction, NameAboutUpdate, UpdateProfilePicAction } from "../../slices/UserSlices";
 import { useNavigate } from "react-router-dom";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const SettingsBar = () => {
     const [nameUpdate, setNameUpdate] = useState(false);
@@ -17,7 +18,7 @@ const SettingsBar = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { user, logoutdone } = useSelector((state) => state.userReducer);
+    const { user, logoutdone,loadingP } = useSelector((state) => state.userReducer);
 
     const [updatedFirstName, setUpdatedFirstName] = useState(user?.firstname || "");
     const [updatedLastName, setUpdatedLastName] = useState(user?.lastname || "");
@@ -102,12 +103,12 @@ const SettingsBar = () => {
                 <div className="flex flex-col space-y-3 text-sm overflow-hidden">
                     {/* Profile Image with Edit Icon */}
                     <div className="relative w-27 h-27 rounded-full overflow-hidden flex justify-center items-center mx-4 group max-sm:w-20 max-sm:h-20">
-                        <img
+                        {loadingP ? <CircularProgress color="secondary" /> :<img
                             src={user?.avatar?.url || "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"}
                             alt="Profile"
                             className="w-full h-full object-cover transition duration-300 group-hover:blur-sm"
                             onClick={handleProfilePicDone}
-                        />
+                        />}
                          
                         <EditIcon
                             className="cursor-pointer absolute text-[#f457a8] hover:text-[#f43098] opacity-0 group-hover:opacity-100 transition duration-300"

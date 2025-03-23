@@ -407,3 +407,27 @@ exports.UpdateProfilePic = async (req, res, next) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
+
+//verify phone number
+// exports.verifyPhoneNumber = async (req, res) => {
+    
+//     try {
+//         // Check if the user exists
+//         if (!req.userDetails) {
+//             return res.status(401).json({ error: "Unauthorized: User details missing" });
+//         }
+//         const userFind = await User.findById(req.userDetails.id);
+//         const phoneNumber = userFind.phoneNumber;
+
+
+       
+//         if (!user) {
+//             return res.status(400).json({ success: false, message: "User not found" }); 
+//         }
+        
+//         res.status(200).json({ success: true, user });
+//     } catch (error) {
+//         return res.status(500).json({ success: false, message: "Internal Server Error", error: error.message });
+//     }
+// };
