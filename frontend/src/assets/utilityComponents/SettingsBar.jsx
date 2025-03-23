@@ -36,6 +36,7 @@ const SettingsBar = () => {
         }
     }, [logoutdone, navigate]);
 
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         setUpdatedFirstName(user?.firstname || "");
         setUpdatedLastName(user?.lastname || "");
