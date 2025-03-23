@@ -21,6 +21,7 @@ import { blue } from "@mui/material/colors";
 import { AddToFriend } from "../../slices/UserSlices";
 import CloseIcon from "@mui/icons-material/HighlightOff";
 import { Typography } from "@mui/material";
+import { toast } from "react-toastify";
 
 const DashBoardBar = ({ friend }) => {
   const { user } = useSelector((state) => state.userReducer);
@@ -55,7 +56,8 @@ const DashBoardBar = ({ friend }) => {
   };
 
   const handleAddFriend = async (u) => {
-    alert(`${u.firstname} added as a friend!`);
+   
+    // alert(`${u.firstname} added as a friend!`);
     const email = user.email;
     const id = u._id;
     dispatch(AddToFriend({ id, email }));
@@ -122,8 +124,8 @@ console.log("userid",id);
                 <ListItem key={u.phoneNumber} disablePadding>
                   <ListItemButton onClick={() => handleAddFriend(u)}>
                     <ListItemAvatar>
-                      <Avatar sx={{ bgcolor: "rgb(128,127,255)", color: blue[500] }}>
-                        <PersonIcon />
+                      <Avatar sx={{ bgcolor: "transparent", color: blue[500] ,scale: 0.7}}>
+                        <img src={u.avatar.url} alt="" />
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText

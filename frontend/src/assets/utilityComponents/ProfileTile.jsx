@@ -7,7 +7,7 @@ const ProfileTile = React.memo(({ user }) => {
     <div className="flex gap-2 items-center hover:bg-cyan-600 rounded-2xl p-2 py-1 cursor-pointer bg-cyan-700 max-sm:w-12 max-sm:rounded-full max-sm:bg-transparent">
       <div className="avatar">
         <div className={`w-12 rounded-full object-cover ${isOnline ? "online" : ""}`}>
-          <img  src="https://avatar.iran.liara.run/public/46" alt="user avatar" />
+          <img  src="https://i.pravatar.cc/100" alt="user avatar" />
         </div>
       </div>
       <div className="flex flex-col flex-1">

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"; // Added useEffect
 import { toast } from "react-hot-toast";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux"; // Fixed import
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { sendOtp, setSignupData } from "../../slices/authSlice"; // Combined imports
 import { Switch } from "@headlessui/react";
 
@@ -12,7 +12,7 @@ function SignUp() {
   const dispatch = useDispatch()
 
 
-  const { loading, successotp, error } = useSelector((state) => state.auth);
+  const { loading, successotp, error,success } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
     firstName:"",
@@ -73,6 +73,9 @@ function SignUp() {
   useEffect(() => {
     if (successotp) {
       navigate('/verify-email'); // Redirect on success
+    }
+    if(success){
+      navigate('/home');
     }
   }, [successotp, navigate]);
  
@@ -218,7 +221,9 @@ function SignUp() {
         >
           Create Account
         </button>
+       
       </form>
+      <Link className="flex justify-end mt-2 text-cyan-500 hover:text-cyan-700" to="/login">Already have an account ?</Link>
     </div>
   </div>
   )

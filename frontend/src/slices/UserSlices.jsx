@@ -77,6 +77,7 @@ export const AddToFriend = createAsyncThunk("addtofriend",async ({id,email}) => 
     
     }
     else{
+      
       toast.success("Friend added successfully")
     }
     return data;

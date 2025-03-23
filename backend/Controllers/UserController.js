@@ -219,7 +219,7 @@ exports.otpSendbymail=async(req,res)=>{
 
         res.json({ success: true,email,otp, message: "OTP sent successfully" });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.status(500).json({success:false,message:"Internal Server Error",error:error.message})
     
     }
@@ -265,7 +265,7 @@ exports.registerUser=async(req,res)=>{
                 email,
                 phoneNumber:phoneNumber,
                 password: new_password,
-                avatar: { public_id: "sample", url: "sample" }
+                avatar: { public_id: "sample", url: "https://i.pravatar.cc/200" }
             });
         
             console.log("User created successfully:", user);
@@ -403,30 +403,37 @@ exports.UpdateProfilePic = async (req, res, next) => {
             return res.status(401).json({ error: "Unauthorized: User details missing" });
         }
 
-        const newUserData = {};
+        // Find user
         const userFind = await User.findById(req.userDetails.id);
-        const imageId = userFind.avatar.public_id;
-
-        if (imageId !== "sample") {
-            await cloudinary.uploader.destroy(imageId);
+        if (!userFind) {
+            return res.status(404).json({ error: "User not found" });
         }
 
-        if (!req.body.avatar) {
-           
+        const imageId = userFind.avatar?.public_id || "sample";
+        const newUserData = {};
 
+        // Delete old image from Cloudinary if it's not the default
+        if (imageId !== "sample") {
+            try {
+                await cloudinary.uploader.destroy(imageId);
+            } catch (cloudError) {
+                console.error("Cloudinary Deletion Error:", cloudError);
+            }
+        }
+
+        // If no new avatar is provided, reset to default image
+        if (!req.body.avatar) {
             newUserData.avatar = {
                 public_id: "sample",
                 url: "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"
             };
-        } 
-        else {
-            // ✅ Ensure the image is a Base64 string before uploading
+        } else {
+            // Ensure the image is a valid Base64 string
             if (!req.body.avatar.startsWith("data:image")) {
                 return res.status(400).json({ error: "Invalid image format. Must be Base64." });
             }
 
-        
-            // ✅ Upload new image on cloudinary
+            // Upload new image to Cloudinary
             const myCloud = await cloudinary.uploader.upload(req.body.avatar, {
                 folder: "MingleAvatars",
                 width: 150,
@@ -437,13 +444,10 @@ exports.UpdateProfilePic = async (req, res, next) => {
                 public_id: myCloud.public_id,
                 url: myCloud.secure_url,
             };
-
-
-         
         }
-        
-        //update DB
-        const user = await User.findByIdAndUpdate(req.userDetails._id, newUserData, {
+
+        // Update user in DB
+        const user = await User.findByIdAndUpdate(req.userDetails.id, newUserData, {
             new: true,
             runValidators: true,
             useFindAndModify: false,
@@ -451,10 +455,11 @@ exports.UpdateProfilePic = async (req, res, next) => {
 
         res.status(200).json({ success: true, user });
     } catch (error) {
-        console.error("Update Error:", error.message);
+        console.error("Update Error:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
 
 
 //send sms by twilio
