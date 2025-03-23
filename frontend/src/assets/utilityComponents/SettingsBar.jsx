@@ -36,7 +36,6 @@ const SettingsBar = () => {
         }
     }, [logoutdone, navigate]);
 
-    const [loading, setLoading] = useState(false);
     useEffect(() => {
         setUpdatedFirstName(user?.firstname || "");
         setUpdatedLastName(user?.lastname || "");
@@ -71,7 +70,7 @@ const SettingsBar = () => {
     };
 
     const handlProfileRemove = (option) => {
-       
+        // console.log("Selected Option:", option);
         setUpdatedProfilePic(""); 
         dispatch(UpdateProfilePicAction({ avatar: "" })); // Update Redux state
         
@@ -97,18 +96,18 @@ const SettingsBar = () => {
         };
     };
     
-        //verify phone 
-        //verify state
-        const [verify, setverify] = useState(false);
+    //verify phone 
+    //verify state
+    const [verify, setverify] = useState(false);
 
-        const handleVerifyPhone=()=>{
-          
-            //backend call for sms to get otp 
-            setverify(true)
-          dispatch(sendotpbysms({phoneNumber:user.phoneNumber}))
-         //  navigate('verifyphone')
+    const handleVerifyPhone=()=>{
+        
+        //backend call for sms to get otp 
+        setverify(true)
+        dispatch(sendotpbysms({phoneNumber:user.phoneNumber}))
+        //  navigate('verifyphone')
 
-        }
+    }
 
 
 
@@ -208,11 +207,24 @@ const SettingsBar = () => {
                         {verify && <VerifyPhone isOpen={verify} onClose={()=>{setverify(false)}}/>}
                         <div className="ml-4">
                             <p className="text-gray-400">Phone number</p>
-                            <div className="flex justify-between items-center max-sm:flex-col">
-                                <p className="text-gray-200">{user.phoneNumber}</p>
-                                 
-                              { user?.isPhoneVerified ?<><div className="flex flex-col gap-2 items-end"> <VerifyIcon className="text-green-500" /><p className="text-gray-400 text-sm">verified</p></div></>:<button  onClick={handleVerifyPhone} className="btn btn-secondary scale-60 h-2/3">Verify Phone</button>}
+                            <div className="flex  justify-between max-sm:flex-col ">
+                                <p className="text-gray-200 text-sm">{user.phoneNumber}</p>
+
+                                {user?.isPhoneVerified ? (
+                                    <div className="flex flex-row-reverse items-center gap-2">
+                                        <TaskAltIcon className="text-green-500 scale-[0.7]" />
+                                        <p className="text-gray-400 text-sm">Verified</p>
+                                    </div>
+                                ) : (
+                                    <button 
+                                        onClick={handleVerifyPhone} 
+                                        className="btn btn-secondary text-sm ml-auto scale-60 h-2/3"
+                                    >
+                                        Verify Phone
+                                    </button>
+                                )}
                             </div>
+
                         </div>
 
                         <hr className="my-4 border-t border-gray-600 ml-4" />
