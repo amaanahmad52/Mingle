@@ -67,14 +67,61 @@ export const signUp = createAsyncThunk(
       }
     }
   );
+  // otpsend ke liye call
+  export const sendotpbysms = createAsyncThunk(
+    "sendOtpbysms",
+    async ({phoneNumber}, { rejectWithValue }) => {
+      const toastId = toast.loading("Loading...");
+      try {
+        const { data } = await axios.post(
+          `${URL}/loginByPhone`,
+          { phoneNumber },
+          { withCredentials: true, headers: { "Content-Type": "application/json" } }
+        );
+  
+        toast.success("OTP Sent Successfully");
+        return data;
+      } catch (error) {
+        console.error("SENDOTP ERROR:", error);
+        toast.error(error.response?.data?.message || "Could Not Send OTP");
+        return rejectWithValue(error.response?.data);
+      } finally {
+        toast.dismiss(toastId);
+      }
+    }
+  );
+/// otp send for verificatio og phone number
+export const verifyPhoneNumber = createAsyncThunk(
+  "verifyPhoneNumber",
+  async ({otp,phoneNumber}, { rejectWithValue }) => {
+    const toastId = toast.loading("Loading...");
+    try {
+      const { data } = await axios.post(
+        `${URL}/verifyphone`,
+        { userOtp:otp,phoneNumber },
+        { withCredentials: true, headers: { "Content-Type": "application/json" } }
+      );
 
+      toast.success("Phone Number Verified Successfully");
+      return data;
+    } catch (error) {
+      console.error("VERIFY PHONE NUMBER ERROR:", error);
+      toast.error(error.response?.data?.message || "Could Not Verify Phone Number");
+      return rejectWithValue(error.response?.data);
+    } finally {
+      toast.dismiss(toastId);
+    }
+  }
+);
 const initialState = {
  
   signUpdata:null,
+  invite_data:null,
   loading: false,
   error: null,
   successotp:false,
-  success:false
+  success:false,
+  isverify:false
 };
 
 const authSlice = createSlice({
@@ -84,6 +131,9 @@ initialState,
   
     setSignupData: (state, action) => {
       state.signUpdata = action.payload;
+    },
+    setInvite: (state, action) => {
+      state.invite_data = action.payload;
     },
     setLoading: (state, action) => {
       state.loading = action.payload;
@@ -115,9 +165,17 @@ initialState,
       .addCase(signUp.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      .addCase(sendotpbysms.fulfilled, (state) => {
+       // state.loading = false;
+        state.successotp=true;
+      })
+      .addCase(verifyPhoneNumber.fulfilled, (state) => {
+        // state.loading = false;
+         state.isverify=true;
+       })
   },
 });
 
-export const { setSignupData, setLoading,  } = authSlice.actions;
+export const { setSignupData, setLoading,  setInvite} = authSlice.actions;
 export default authSlice.reducer;

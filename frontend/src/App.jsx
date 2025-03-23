@@ -12,6 +12,9 @@ import { getUserDetailsAction } from './slices/UserSlices'
 
 import SignUp from './components/User/SignUp'
 import Verify_Email_on_Signup from './components/User/Verify_Email_on_Signup'
+import Invitation from './assets/utilityComponents/Invitation'
+
+
 
 // import ProtectedRoute from '../protectedRoute'
 
@@ -40,8 +43,10 @@ function App() {
         <Route exact path='/confirmOTP' element={<ConfirmOTP/>}/>
 
         <Route exact path='/signUp' element={<SignUp/>}/>
+        <Route exact path='/signUp/:id' element={<Invitation/>}/>
         <Route exact path='/verify-email' element={<Verify_Email_on_Signup/>}/>
-
+       
+       
 
         {/* conditional routing */}
         {/* <Route element={<ProtectedRoute/>}> */}
