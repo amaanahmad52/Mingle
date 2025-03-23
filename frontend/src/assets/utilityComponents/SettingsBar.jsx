@@ -6,8 +6,11 @@ import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import Help from "@mui/icons-material/Info";
 import ThreeDotMenu from "./Modal";
 import { LogoutAction, NameAboutUpdate, UpdateProfilePicAction } from "../../slices/UserSlices";
+import{sendotpbysms} from '../../slices/authSlice'
 import { useNavigate } from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
+import VerifyIcon from '@mui/icons-material/CheckCircleOutline';
+import VerifyPhone from "../../components/User/VerifyPhone";
 
 const SettingsBar = () => {
     const [nameUpdate, setNameUpdate] = useState(false);
@@ -19,13 +22,14 @@ const SettingsBar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { user, logoutdone,loadingP } = useSelector((state) => state.userReducer);
+    const { isverify} = useSelector((state) => state.auth);
 
     const [updatedFirstName, setUpdatedFirstName] = useState(user?.firstname || "");
     const [updatedLastName, setUpdatedLastName] = useState(user?.lastname || "");
     const [updatedAbout, setUpdatedAbout] = useState(user?.about || "");
 
     const[updatedProfilePic, setUpdatedProfilePic] = useState(user?.avatar?.url || "");
-
+     
     useEffect(() => {
         if (logoutdone) {
             navigate("/login");
@@ -92,7 +96,19 @@ const SettingsBar = () => {
         };
     };
     
-        
+        //verify phone 
+        //verify state
+        const [verify, setverify] = useState(false);
+
+        const handleVerifyPhone=()=>{
+          
+            //backend call for sms to get otp 
+            setverify(true)
+          dispatch(sendotpbysms({phoneNumber:user.phoneNumber}))
+         //  navigate('verifyphone')
+
+        }
+
 
 
     return (
@@ -188,11 +204,13 @@ const SettingsBar = () => {
                         </div>
 
                         {/* Phone Section */}
+                        {verify && <VerifyPhone isOpen={verify} onClose={()=>{setverify(false)}}/>}
                         <div className="ml-4">
                             <p className="text-gray-400">Phone number</p>
                             <div className="flex justify-between items-center max-sm:flex-col">
                                 <p className="text-gray-200">{user.phoneNumber}</p>
-                                <button className="btn btn-secondary scale-60 h-2/3">Verify Phone</button>
+                                 
+                              { user?.isPhoneVerified ?<><div className="flex flex-col gap-2 items-end"> <VerifyIcon className="text-green-500" /><p className="text-gray-400 text-sm">verified</p></div></>:<button  onClick={handleVerifyPhone} className="btn btn-secondary scale-60 h-2/3">Verify Phone</button>}
                             </div>
                         </div>
 

@@ -119,7 +119,55 @@ exports.otpConfirm_and_login = async (req, res) => {
     }
 };
 
+///verify phone number 
+exports.verifyPhoneNumber = async (req, res) => {
+    const { userOtp, phoneNumber } = req.body;
 
+    try {
+        // Find user by phone number
+        const user = await User.findOne({ phoneNumber });
+        if (!user) {
+            return res.status(400).json({ success: false, message: "User not found" });
+        }
+
+        // Find OTP entry
+        const otpEntry = await OTP.findOne({ phoneNumber });
+
+        // Check if OTP exists
+        if (!otpEntry || otpEntry.otp.length === 0) {
+            return res.status(400).json({ success: false, message: "No OTP found" });
+        }
+
+        // Get the most recent (last) OTP
+        const lastOtp = otpEntry.otp[otpEntry.otp.length - 1];
+
+        // Validate only the last OTP
+        if (lastOtp !== userOtp) {
+            return res.status(400).json({ success: false, message: "Invalid OTP" });
+        }
+
+       
+        await OTP.deleteOne(
+            { phoneNumber }
+        );
+
+        // Set authentication token
+        await User.findOneAndUpdate
+        (
+            { phoneNumber },
+            { isPhoneVerified: true },
+            { new: true }
+        );
+     res.status(200).json({ success: true, message: "Phone Number Verified" });
+
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Internal Server Error", error: error.message });
+    }
+
+
+
+
+}
 
 //3 sign Up user
 
@@ -298,7 +346,7 @@ exports.addFriend = async (req, res) => {
             { $addToSet: { friends:id } }, // Allows duplicates
             { new: true }
         )
-
+console.log("user",user)
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
@@ -409,25 +457,15 @@ exports.UpdateProfilePic = async (req, res, next) => {
 };
 
 
-//verify phone number
-// exports.verifyPhoneNumber = async (req, res) => {
-    
-//     try {
-//         // Check if the user exists
-//         if (!req.userDetails) {
-//             return res.status(401).json({ error: "Unauthorized: User details missing" });
-//         }
-//         const userFind = await User.findById(req.userDetails.id);
-//         const phoneNumber = userFind.phoneNumber;
+//send sms by twilio
+exports.sendSMS = async (req, res) => {
+    const { phoneNumber, message } = req.body;
 
-
-       
-//         if (!user) {
-//             return res.status(400).json({ success: false, message: "User not found" }); 
-//         }
-        
-//         res.status(200).json({ success: true, user });
-//     } catch (error) {
-//         return res.status(500).json({ success: false, message: "Internal Server Error", error: error.message });
-//     }
-// };
+    try {
+        const response =sendSMS(phoneNumber, message);
+        res.status(200).json({ success: true, message: "SMS sent successfully", response });
+    } catch (error) {
+        console.error("Error sending SMS:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+};

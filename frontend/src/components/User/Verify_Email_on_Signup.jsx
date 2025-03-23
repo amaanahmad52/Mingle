@@ -7,11 +7,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { sendOtp, signUp } from "../../slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { BsSun, BsMoon } from "react-icons/bs";
+import { AddToFriend } from "../../slices/UserSlices";
 
 
 const Verify_Email_on_Signup = () => {
+
     const [otp, setOtp] = useState("");
-  const { signUpdata, loading ,success} = useSelector((state) => state.auth);
+  const { signUpdata, loading ,success,invite_data} = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(true);
@@ -23,27 +25,21 @@ const Verify_Email_on_Signup = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  useEffect(() => {
-    // Only allow access of this route when user has filled the signup form
-    if (success ) {
-      navigate('/login')
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success]);
-
+ 
+  const {
+     
+    firstName,
+    lastName,
+    email,
+    phoneNumber,
+    password,
+    confirmPassword,
+  } = signUpdata;
   const handleVerifyAndSignup = (e) => {
     e.preventDefault();
    // setOtp(otp);
    console.log("my otp is",otp);
-    const {
-     
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      password,
-      confirmPassword,
-    } = signUpdata;
+    
     // console.log("helloooo",phoneNumber)
     console.log("my otp is",firstName,lastName,email,phoneNumber,password,confirmPassword,otp);
 console.log(signUpdata);
@@ -57,9 +53,20 @@ console.log(signUpdata);
         confirmPassword,otp}
       )
     );
+console.log("invitedate",typeof(invite_data))
+  
    
   };
 
+
+  useEffect(() => {
+    // Only allow access of this route when user has filled the signup form
+    if (success ) {
+      dispatch(AddToFriend({id:invite_data,email:email}))
+      navigate('/login')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [success]);
   return (
     <div className={`${darkMode ? "bg-gradient-to-br from-black via-richblack-900 to-gray-900" : "bg-gradient-to-br from-white via-gray-100 to-gray-300"} min-h-screen flex flex-col items-center justify-center p-6 transition-all duration-300`}>
     <button

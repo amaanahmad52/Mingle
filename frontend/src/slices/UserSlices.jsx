@@ -112,6 +112,17 @@ export const UpdateProfilePicAction = createAsyncThunk("UpdateProfilePicAction",
   }
 )
 
+//verify phone number
+export const VerifyPhoneNumber = createAsyncThunk("VerifyPhoneNumber",async ({otp,phoneNumber}) => {
+  const { data } = await axios.post(
+      `${URL}/otpConfirm`,
+      {userOtp:otp,phoneNumber},
+      { withCredentials: true, headers: { "Content-Type": "application/json" } }
+    );
+    return data;
+  }
+)
+
 // Combined user slice
 const userSlice = createSlice({
   name: "user",

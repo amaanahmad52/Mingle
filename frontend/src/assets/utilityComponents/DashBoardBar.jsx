@@ -25,7 +25,7 @@ import { Typography } from "@mui/material";
 const DashBoardBar = ({ friend }) => {
   const { user } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
-
+  const URL = import.meta.env.VITE_BACKEND_URL;
   const [isopen, setIsopen] = React.useState(false);
   const [search, setSearch] = React.useState("");
   const [filteredUsers, setFilteredUsers] = React.useState([]);
@@ -63,13 +63,14 @@ const DashBoardBar = ({ friend }) => {
   };
 
   const handleInvite = () => setInviteDialog(true);
-
+const id= user._id;
+console.log("userid",id);
   const sendInviteSMS = async () => {
     alert(`Invitation link sent to ${inviteNumber}!`);
-    await fetch(`${URL}/sendOtpByEmail`, {
+    await fetch(`${URL}/sendsms`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phoneNumber: inviteNumber, email: user.email }),
+      body: JSON.stringify({ phoneNumber:inviteNumber,message:`http://localhost:5173/signUp/:${id}` }),
     })
       .then((response) => response.json())
       .then((data) => console.log("Success:", data))
