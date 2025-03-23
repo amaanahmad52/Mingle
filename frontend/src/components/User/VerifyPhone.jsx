@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import OtpInput from "react-otp-input";
 import { RxCountdownTimer } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,15 +8,39 @@ import { AiOutlineClose } from "react-icons/ai";
 import { Backdrop, Popover, Typography } from "@mui/material";
 
 const VerifyPhone = ({ isOpen, onClose }) => {
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState(new Array(6).fill("")); // Track input values
+  const inputRefs = useRef([]); // Store refs for each input field
   const { user } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleVerifyPhone = (e) => {
     e.preventDefault();
-   // dispatch(verifyPhoneNumber({ otp, phoneNumber: user.phoneNumber }));
+    dispatch(verifyPhoneNumber({ otp: otp.join(""), phoneNumber: user.phoneNumber }));
     onClose();
+  };
+
+  // Function to allow only numbers and move focus
+  const handleChangeOtp = (value, index) => {
+    if (value && !/^\d$/.test(value)) {
+      alert("Only numbers are allowed!");
+      return;
+    }
+
+    let newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    // Move to the next input if a number is entered
+    if (value && index < otp.length - 1) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  // Handle backspace: Move focus to the previous input
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
   };
 
   return (
@@ -48,12 +72,12 @@ const VerifyPhone = ({ isOpen, onClose }) => {
           },
         }}
       >
-        <div >
+        <div>
           <button
             onClick={onClose}
             className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
           >
-            <AiOutlineClose size={20} />
+            <AiOutlineClose className="text-cyan-600 hover:text-cyan-700 cursor-pointer" size={20} />
           </button>
 
           <Typography
@@ -69,23 +93,26 @@ const VerifyPhone = ({ isOpen, onClose }) => {
           </Typography>
 
           <form onSubmit={handleVerifyPhone} className="flex flex-col items-center">
-            <OtpInput
-              value={otp}
-              onChange={setOtp}
-              numInputs={6}
-              renderInput={(props) => (
+            <div className="flex gap-2">
+              {otp.map((digit, index) => (
                 <input
-                  {...props}
-                  placeholder="-"
-                  className="w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-md focus:outline-none bg-white/40 backdrop-blur-md"
+                  key={index}
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  type="text"
+                  value={digit}
+                  maxLength={1}
+                  onChange={(e) => handleChangeOtp(e.target.value, index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  className={`w-12 h-12 text-center text-white text-lg font-semibold border-2 rounded-md focus:outline-none bg-transparent backdrop-blur-md ${
+                    digit ? "border-cyan-700" : "border-gray-500"
+                  }`}
                 />
-              )}
-              containerStyle={{ gap: "8px" }}
-            />
+              ))}
+            </div>
 
             <button
               type="submit"
-              className="w-full mt-6 py-2 bg-blue-500 text-white font-medium rounded-lg shadow-md hover:bg-blue-600 transition-all"
+              className="cursor-pointer w-full mt-6 py-2 bg-cyan-600 text-white font-medium rounded-lg shadow-md hover:bg-cyan-700 transition-all"
             >
               Verify Phone
             </button>
@@ -93,10 +120,10 @@ const VerifyPhone = ({ isOpen, onClose }) => {
 
           <div className="mt-6 flex justify-center text-sm">
             <button
-              className="flex items-center gap-x-2 text-blue-200 hover:text-blue-300"
-              onClick={() => dispatch(sendotpbysms(user.phoneNumber))}
+              className="flex items-center gap-x-2 text-blue-200 cursor-pointer hover:text-blue-300"
+              // onClick={() => dispatch(sendotpbysms(user.phoneNumber))}
             >
-              <RxCountdownTimer /> Resend it
+              <RxCountdownTimer/> Resend it
             </button>
           </div>
         </div>
@@ -106,7 +133,3 @@ const VerifyPhone = ({ isOpen, onClose }) => {
 };
 
 export default VerifyPhone;
-
-
-
-

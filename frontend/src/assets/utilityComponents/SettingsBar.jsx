@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
 import VerifyIcon from '@mui/icons-material/CheckCircleOutline';
 import VerifyPhone from "../../components/User/VerifyPhone";
+import { AiFillDatabase } from "react-icons/ai";
 
 const SettingsBar = () => {
     const [nameUpdate, setNameUpdate] = useState(false);
@@ -36,13 +37,7 @@ const SettingsBar = () => {
         }
     }, [logoutdone, navigate]);
 
-    useEffect(() => {
-        setUpdatedFirstName(user?.firstname || "");
-        setUpdatedLastName(user?.lastname || "");
-        setUpdatedAbout(user?.about || "");
-        setUpdatedProfilePic(user?.avatar?.url || "");
-       
-    }, [user]);
+    
 
     const handleNameUpdate = () => setNameUpdate(true);
     const handleAboutUpdate = () => setAboutUpdate(true);
@@ -104,12 +99,20 @@ const SettingsBar = () => {
         
         //backend call for sms to get otp 
         setverify(true)
-        dispatch(sendotpbysms({phoneNumber:user.phoneNumber}))
+       dispatch(sendotpbysms({phoneNumber:user.phoneNumber}))
         //  navigate('verifyphone')
 
     }
 
-
+    useEffect(() => {
+        setUpdatedFirstName(user?.firstname || "");
+        setUpdatedLastName(user?.lastname || "");
+        setUpdatedAbout(user?.about || "");
+        setUpdatedProfilePic(user?.avatar?.url || "");
+        setverify(verify)
+        
+       
+    }, [user,verify]);
 
     return (
         <>
