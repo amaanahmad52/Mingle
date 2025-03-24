@@ -51,7 +51,7 @@ exports.otpSend=async(req,res)=>{
 
         
         const existingOTP = await OTP.findOne({ phoneNumber });
-
+             console.log("existingOTP",existingOTP)
         if (existingOTP) {
            
             await OTP.findOneAndUpdate(
@@ -67,7 +67,7 @@ exports.otpSend=async(req,res)=>{
                 expiresAt: new Date(Date.now() + 5 * 60 * 1000) // Set expiration only on first OTP
             });
         }
-
+console.log("otp",otp)
        
         sendSMS(phoneNumber, otp); 
 
