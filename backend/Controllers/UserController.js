@@ -462,7 +462,7 @@ exports.UpdateProfilePic = async (req, res, next) => {
 
 
 
-//send sms by twilio
+//send sms by twilio for phone number verification
 exports.sendSMS = async (req, res) => {
     const { phoneNumber, message } = req.body;
 
@@ -474,3 +474,4 @@ exports.sendSMS = async (req, res) => {
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
+
