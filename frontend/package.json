@@ -30,6 +30,7 @@
     "react-otp-input": "^3.1.1",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.2.0",
+    "react-speech-recognition": "^4.0.0",
     "react-toastify": "^11.0.5",
     "reactjs-emoji-keyboard": "^1.0.17",
     "tailwind-scrollbar": "^4.0.1"

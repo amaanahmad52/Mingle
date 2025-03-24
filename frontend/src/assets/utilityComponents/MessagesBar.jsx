@@ -31,17 +31,18 @@ const MessagesBar = ({ setSelectedSearch, searchQuery, users }) => {
         .map((u, index) =>
           user.friends?.includes(u._id) ? (
             <ProfileTile
-              key={index}
+              key={u._id}
               user={u}
               onClick={() => handleClick(u)}
-              imageUrl={"https://i.pravatar.cc/100"}
+              imageUrl={u.avatar.url}
+              
             />
           ) : u?.email === user?.email ? (
             <ProfileTile
               key={index}
               user={"you"}
               onClick={() => handleClick(u)}
-              imageUrl={"https://i.pravatar.cc/100"}
+              imageUrl={u.avatar.url}
             />
           ) : null
         )}

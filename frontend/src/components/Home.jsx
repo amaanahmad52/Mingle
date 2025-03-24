@@ -24,6 +24,7 @@ import FilesBar from "../assets/utilityComponents/FilesBar";
 import { Button, Box } from "@mui/material";
 import { MailOutline } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import MessagesRequest from "../assets/utilityComponents/MessagesRequest";
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 const Home = () => {
@@ -133,7 +134,7 @@ const Home = () => {
                             </div>
                                {/* //container to display the selected user */}
                             <div className="rounded-1xl text-center w-2/3 p-4 flex justify-between border-1 border-solid max-sm:h-full max-sm:w-full">
-                               {Userselected?<img src={"https://i.pravatar.cc/100"} className="rounded-full scale-170" alt="user avatar" /> : <Avatar className="text-cyan-600 cursor-pointer" />}
+                               {Userselected?<img src={Userselected.avatar.url} className="rounded-full scale-130" alt="user avatar" /> : <Avatar className="text-cyan-600 cursor-pointer" />}
                                 <span className="text-2xl text-cyan-600 font-bold font-sans hover:text-cyan-700">{Userselected?Userselected.firstname :selectedSearch}</span>
                                 <div className="flex">
                                     <DuoIcon className="mt-1 hover:text-cyan-700 mx-1 cursor-pointer" />
@@ -147,22 +148,11 @@ const Home = () => {
                             <Sidebar st={sidebarOpen} />
 
                             <div className="w-1/3 p-4 flex flex-wrap gap-2">
-                                <div className="py-2 gap-2 w-full flex flex-col overflow-auto ">
-                                    {SideBarselected === "Messages" && (<>
+                                <div className="py-2 gap-2 w-full flex flex-col overflow-y-scroll scrollbar-hidden relative ">
+                                    {SideBarselected === "Messages" && (
+                                        <>
                                         <MessagesBar setSelectedSearch={setSelectedSearch} searchQuery={searchQuery} users={users} />
-                                        <Button
-                                        variant="contained"
-                                        color="primary"
-                                        startIcon={<MailOutline />}
-                                        sx={{
-                                          borderRadius: "50px", // Fully rounded button
-                                          padding: "10px 20px",
-                                          fontWeight: "bold",
-                                          textTransform: "none",
-                                        }}
-                                      >
-                                        Message Request
-                                      </Button>
+                                        <MessagesRequest/>
                                       </>
                                     )}
                                     {SideBarselected === "Settings" && <SettingsBar />}

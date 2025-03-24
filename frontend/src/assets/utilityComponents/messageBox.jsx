@@ -1,16 +1,58 @@
-import React, { useState } from "react"; 
+import React, { useEffect, useState } from "react"; 
 import SendIcon from "@mui/icons-material/Send";
 import PendingIcon from "@mui/icons-material/Pending";
 import EmojiIcon from "@mui/icons-material/SentimentVerySatisfied";
 import BasicSpeedDial from "./SpeedDial";
 import Backdrop from "@mui/material/Backdrop";
 import { EmojiKeyboard } from "reactjs-emoji-keyboard";
-import {AnimatePresence,  motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import MicNoneIcon from '@mui/icons-material/MicNone';
+import { useSpeechRecognition } from 'react-speech-recognition';
+import SpeechRecognition from 'react-speech-recognition';
+import SettingsVoiceIcon from '@mui/icons-material/SettingsVoice';
+
 const MessageInput = () => {
   const success = false;
   const [open, setOpen] = useState(false); // SpeedDial state
   const [open1, setOpen1] = useState(false); // Emoji picker state
   const [message, setMessage] = useState(""); // Input value state
+  const [isListening, setIsListening] = useState(false); // Microphone state
+
+  // Speech Recognition Hook
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+    isMicrophoneAvailable,
+  } = useSpeechRecognition();
+
+  // Ensure Speech Recognition is supported
+  if (!browserSupportsSpeechRecognition) {
+    return <p>Speech Recognition is not supported in this browser.</p>;
+  }
+
+  // Toggle Speech Recognition
+  const toggleListening = () => {
+    if (listening) {
+      SpeechRecognition.stopListening();
+      setIsListening(false);
+      resetTranscript();
+    } else {
+      setMessage(""); // Clears input only when restarting listening
+      SpeechRecognition.startListening({ continuous: true, language: "en-US" });
+      setIsListening(true);
+    }
+  };
+  
+  
+
+  // Update message when transcript changes
+  useEffect(() => {
+    if (transcript) {
+      setMessage(transcript); // Continuously update message field
+    }
+  }, [transcript,isListening]);
 
   const handleEmojiSelect = (emoji) => {
     setMessage((prev) => prev + emoji.character); // Append emoji to input
@@ -53,8 +95,7 @@ const MessageInput = () => {
           </button>
 
           {/* Emoji Picker (Aligned with Input) */}
-          {
-            <AnimatePresence>
+          <AnimatePresence>
             {open1 && (
               <motion.div
                 key="box"
@@ -76,15 +117,13 @@ const MessageInput = () => {
               </motion.div>
             )}
           </AnimatePresence>
-          
-          }
 
           {/* Input Box */}
           <input
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="pl-16 border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 text-white"
+            className="pl-16 pr-19 border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 text-white truncate"
             placeholder="Send a message"
           />
 
@@ -96,8 +135,18 @@ const MessageInput = () => {
             {success ? <PendingIcon /> : <SendIcon />}
           </button>
 
+          {/* Microphone Button */}
+          <button
+            type="button"
+            onClick={toggleListening}
+            className="absolute inset-y-0 end-8 flex items-center pe-3 transition duration-150 ease-in-out hover:scale-110 cursor-pointer hover:text-cyan-600"
+            
+          >
+            {!isListening?(<MicNoneIcon />):(<SettingsVoiceIcon className="text-orange-800 text-blink" />)}
+          </button>
+
           {/* SpeedDial Positioned Absolutely */}
-          <div className="absolute bottom-1/8 ml-18 mb-1 bg-transparent ">
+          <div className="absolute bottom-1/8 ml-20 bg-transparent">
             <BasicSpeedDial open={open} setOpen={setOpen} />
           </div>
         </div>
@@ -107,4 +156,3 @@ const MessageInput = () => {
 };
 
 export default MessageInput;
-

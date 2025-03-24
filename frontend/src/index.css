@@ -11,9 +11,27 @@
     height: 10px;
     background-color: #00ff00; /* Green */
     border-radius: 50%;
-    top: 6px;   /* Moves dot to the top */
-    right: 6px; /* Moves dot to the right */
+    top: 2px;   /* Moves dot to the top */
+    right: 2px; /* Moves dot to the right */
     border: 2px solid white;
   }
   
- 
+  @keyframes pulseBlink {
+    0% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(1.2);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .text-blink {
+    animation: pulseBlink 1.2s infinite ease-in-out;
+  }
+  
