@@ -59,7 +59,7 @@ export default function ThreeDotMenu() {
       boxShadow: "none",
       backdropFilter: "blur(10px)", // Adds a frosted glass effect
       borderRadius: "12px", // Rounded border for the outer popover
-      border: "2px solid rgba(247,174,30, 0.5)", // Optional border
+      // border: "2px solid rgba(247,174,30, 0.5)", // Optional border
       padding: "5px",
     },
   }}

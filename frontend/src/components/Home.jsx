@@ -24,7 +24,8 @@ import FilesBar from "../assets/utilityComponents/FilesBar";
 import { Button, Box } from "@mui/material";
 import { MailOutline } from "@mui/icons-material";
 import { Link } from "react-router-dom";
-import MessagesRequest from "../assets/utilityComponents/MessagesRequest";
+import ToggleBars from "../assets/utilityComponents/ToggleBars";
+import RequestsBar from "../assets/utilityComponents/RequestsBar";
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 const Home = () => {
@@ -37,6 +38,7 @@ const Home = () => {
     const { user } = useSelector((state) => state.userReducer);
     const [users, setUsers] = useState([]);
     const [showLoginPopup, setShowLoginPopup] = useState(false);
+    const[requestClick,setRequestClick]=useState(false)
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -78,6 +80,7 @@ const Home = () => {
 
     const clickSidebar = () => setSidebarOpen(!sidebarOpen);
 
+
     return (
         <>
             {!user ? (
@@ -112,10 +115,15 @@ const Home = () => {
 
                             <div className="items-center text-center w-1/3 p-4 flex justify-between max-sm:hidden">
                                 {!searchOpen && (
-                                    <span className="text-xl font-extrabold flex-grow text-center truncate">
+                                    requestClick ? (
+                                        <span className="text-xl font-extrabold flex-grow text-center truncate">Requests</span>
+                                    ) : (
+                                        <span className="text-xl font-extrabold flex-grow text-center truncate">
                                         {SideBarselected}
-                                    </span>
+                                        </span>
+                                    )
                                 )}
+
                                 <div className="relative">
                                     {searchOpen ? (
                                         <input
@@ -132,17 +140,21 @@ const Home = () => {
                                 </div>
                                 <MultiAvatars count={`+${user?.friends?.length}`} />
                             </div>
-                               {/* //container to display the selected user */}
-                            <div className="rounded-1xl text-center w-2/3 p-4 flex justify-between border-1 border-solid max-sm:h-full max-sm:w-full">
-                               {Userselected?<img src={Userselected.avatar.url} className="rounded-full scale-130" alt="user avatar" /> : <Avatar className="text-cyan-600 cursor-pointer" />}
-                                <span className="text-2xl text-cyan-600 font-bold font-sans hover:text-cyan-700">{Userselected?Userselected.firstname :selectedSearch}</span>
-                                <div className="flex">
+                               {/* navbar of chatbox */}
+                            <div className="rounded-1xl text-center w-2/3 p-4 flex justify-between border-b border-gray-400 mx-4 max-sm:h-full max-sm:w-full">
+                              
+                               {Userselected?<img src={Userselected.avatar.url} className="rounded-full scale-130" alt="user avatar" /> :null}
+                                <span className="text-2xl text-cyan-600 font-bold font-sans hover:text-cyan-700">{Userselected?Userselected.firstname :null}</span>
+                                <div className={`${!Userselected ? "hidden" : "flex"}`}>
                                     <DuoIcon className="mt-1 hover:text-cyan-700 mx-1 cursor-pointer" />
                                     <CallIcon className="mt-1 hover:text-cyan-700 mx-1 cursor-pointer" />
                                     <SimpleDialogDemo />
                                 </div>
+                                
                             </div>
+                            
                         </div>
+                       
 
                         <div className="flex w-full h-[calc(100vh-4rem)]">
                             <Sidebar st={sidebarOpen} />
@@ -151,8 +163,10 @@ const Home = () => {
                                 <div className="py-2 gap-2 w-full flex flex-col overflow-y-scroll scrollbar-hidden relative ">
                                     {SideBarselected === "Messages" && (
                                         <>
-                                        <MessagesBar setSelectedSearch={setSelectedSearch} searchQuery={searchQuery} users={users} />
-                                        <MessagesRequest/>
+                                        {!requestClick?<MessagesBar setSelectedSearch={setSelectedSearch} searchQuery={searchQuery} users={users} />
+                                         :<RequestsBar/>}
+                                        
+                                        <ToggleBars setClick={setRequestClick} requestClick={requestClick}/>
                                       </>
                                     )}
                                     {SideBarselected === "Settings" && <SettingsBar />}
@@ -163,6 +177,8 @@ const Home = () => {
                             </div>
 
                             <div className="w-2/3 p-4 flex flex-col justify-between max-sm:h-full max-sm:w-full">
+                             {!Userselected?(<div className="flex flex-col justify-center items-center h-full"><h1 className="text-3xl font-semibold text-center text-gray-300">Start Messaging Now</h1></div>): 
+                                <>
                                 <motion.div
                                     className="flex flex-col gap-2 overflow-y-scroll scrollbar-hidden"
                                     animate={{ y: [0, -100, 0] }}
@@ -172,7 +188,10 @@ const Home = () => {
                                     <MessageContainer message={"nothing"} fromMe={false} />
                                 </motion.div>
                                 <MessageInput />
+                                </>
+                             }
                             </div>
+                             
                         </div>
                     </div>
                 </>
