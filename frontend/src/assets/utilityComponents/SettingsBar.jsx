@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import Spinner from "./Spinner";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import Help from "@mui/icons-material/Info";
@@ -22,8 +22,8 @@ const SettingsBar = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { user, logoutdone,loadingP } = useSelector((state) => state.userReducer);
-    const { isverify} = useSelector((state) => state.auth);
+    const { user, logoutdone,loadingP } = useSelector((state) => state.userReducer,shallowEqual);
+    const { isverify} = useSelector((state) => state.auth,shallowEqual);
 
     const [updatedFirstName, setUpdatedFirstName] = useState(user?.firstname || "");
     const [updatedLastName, setUpdatedLastName] = useState(user?.lastname || "");
@@ -96,9 +96,9 @@ const SettingsBar = () => {
     const [verify, setverify] = useState(false);
 
     const handleVerifyPhone=()=>{
-        
+        setverify(true);
         //backend call for sms to get otp 
-        setverify(true)
+       
        dispatch(sendotpbysms({phoneNumber:user.phoneNumber}))
         //  navigate('verifyphone')
 
@@ -109,10 +109,12 @@ const SettingsBar = () => {
         setUpdatedLastName(user?.lastname || "");
         setUpdatedAbout(user?.about || "");
         setUpdatedProfilePic(user?.avatar?.url || "");
-        setverify(verify)
         
+        if (isverify)  {
+            setverify(false); 
+        }
        
-    }, [user,verify]);
+    }, [user,isverify]);
 
     return (
         <>
@@ -213,7 +215,7 @@ const SettingsBar = () => {
                             <div className="flex  justify-between max-sm:flex-col ">
                                 <p className="text-gray-200 text-sm">{user.phoneNumber}</p>
 
-                                {user?.isPhoneVerified ? (
+                                {isverify ? (
                                     <div className="flex flex-row-reverse items-center gap-2">
                                         <TaskAltIcon className="text-green-500 scale-[0.7]" />
                                         <p className="text-gray-400 text-sm">Verified</p>

@@ -136,7 +136,9 @@ const userSlice = createSlice({
     loadingO: false,
     user: null,
     logoutdone:false,
-    nameaboutupdate:false
+    nameaboutupdate:false,
+    friendadded:false,
+
   },
   extraReducers: (builder) => {
     // Handling LoginByPhone
@@ -223,6 +225,10 @@ const userSlice = createSlice({
     builder.addCase(UpdateProfilePicAction.fulfilled,(state,action)=>{
       state.user=action.payload.user;
       state.loadingP=false;
+    })
+    builder.addCase(AddToFriend.fulfilled,(state,action)=>{
+     // state.user=action.payload.user;
+      state.friendadded=true;
     })
   },
 });

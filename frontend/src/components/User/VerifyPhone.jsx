@@ -35,7 +35,9 @@ const VerifyPhone = ({ isOpen, onClose }) => {
       inputRefs.current[index + 1]?.focus();
     }
   };
+useEffect(() => { 
 
+}, [user]);
   // Handle backspace: Move focus to the previous input
   const handleKeyDown = (e, index) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
@@ -121,7 +123,7 @@ const VerifyPhone = ({ isOpen, onClose }) => {
           <div className="mt-6 flex justify-center text-sm">
             <button
               className="flex items-center gap-x-2 text-blue-200 cursor-pointer hover:text-blue-300"
-              // onClick={() => dispatch(sendotpbysms(user.phoneNumber))}
+               onClick={() => dispatch(sendotpbysms(user.phoneNumber))}
             >
               <RxCountdownTimer/> Resend it
             </button>

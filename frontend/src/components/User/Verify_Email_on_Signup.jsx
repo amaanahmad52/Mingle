@@ -61,7 +61,7 @@ console.log("invitedate",typeof(invite_data))
 
   useEffect(() => {
     // Only allow access of this route when user has filled the signup form
-    if (success ) {
+    if (success && invite_data) {
       dispatch(AddToFriend({id:invite_data,email:email}))
       navigate('/login')
     }
