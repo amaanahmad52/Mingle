@@ -10,7 +10,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Backdrop from '@mui/material/Backdrop';
 import { Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { setMessages, clearMessagesAction } from '../../slices/MessagesSlice';
+import { setMessages, clearMessagesAction ,getAllMessagesAction} from '../../slices/MessagesSlice';
 import { toast } from 'react-toastify';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
@@ -36,9 +36,15 @@ export default function ThreeDotMenu({ id }) {
     handleClose();
   };
 
+  // React.useEffect(() => {
+  //   dispatch(getAllMessagesAction({receiverId:id}));
+
+  // }, [openModal]);
   const handleConfirmClearChat = () => {
-    dispatch(setMessages([]));
+    //we can also render by using useeffect and modal open state ,but here i used redux state and set to []
+   dispatch(setMessages([]));
     dispatch(clearMessagesAction({ receiverId: id }));
+  
     setOpenModal(false);
   };
 
