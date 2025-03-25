@@ -92,7 +92,7 @@ const Home = () => {
         if(Userselected){
             dispatch(getAllMessagesAction({receiverId:Userselected._id}))
         }
-    }, [Userselected,successSend]);  ///////////////////////dnwejskcvnjlwiebsdvcwiersdc
+    }, [Userselected,successSend]);  
 
     const showLastMessageDiv = useRef();
   
@@ -162,7 +162,8 @@ const Home = () => {
                                 </div>
                                 <MultiAvatars count={`+${user?.friends?.length}`} />
                             </div>
-                               {/* navbar of chatbox */}
+
+                        {/* navbar of chatbox */}
                             <div className="rounded-1xl text-center w-2/3 p-4 flex justify-between border-b border-gray-400 mx-4 max-sm:h-full max-sm:w-full">
                               
                                {Userselected?<img src={Userselected.avatar.url} className="rounded-full scale-130" alt="user avatar" /> :null}
