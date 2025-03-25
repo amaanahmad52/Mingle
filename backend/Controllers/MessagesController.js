@@ -32,9 +32,26 @@ exports.sendMessage = async (req, res) => {
 
         await Promise.all([newMessage.save(), convo.save()]);
 
-        res.status(200).json({ success: true, message: newMessage, conversation: convo });
+        res.status(200).json({ success: true, messages: newMessage });
     } catch (error) {
         console.error("Error sending message:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+};
+
+exports.getMessages = async (req, res) => {
+    try {
+        const  receiverId  = req.params.receiverId;
+        const senderId=req.userDetails._id;
+        const conversation = await Conversation.findOne({ participants: { $all: [senderId, receiverId] } }).populate("messages");
+        if(!conversation){
+            return res.status(200).json({ success: false, message: [] });
+        }
+        const messages = conversation.messages;
+        
+        res.status(200).json({ success: true, messages });
+    } catch (error) {
+        console.error("Error fetching messages:", error);
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };

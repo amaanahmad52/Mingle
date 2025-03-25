@@ -26,9 +26,12 @@ import { MailOutline } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import ToggleBars from "../assets/utilityComponents/ToggleBars";
 import RequestsBar from "../assets/utilityComponents/RequestsBar";
+import { useDispatch } from "react-redux";
+import { getAllMessagesAction } from "../slices/MessagesSlice";
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 const Home = () => {
+    const dispatch = useDispatch();
     const { SideBarselected ,Userselected} = useContext(SidebarContext);
     const switcher = useRef();
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -80,6 +83,15 @@ const Home = () => {
 
     const clickSidebar = () => setSidebarOpen(!sidebarOpen);
 
+    
+    const {messages}=useSelector((state)=>state.messagesReducer)
+
+
+    useEffect(() => {
+        if(Userselected){
+            dispatch(getAllMessagesAction({receiverId:Userselected._id}))
+        }
+    }, [messages,Userselected]);
 
     return (
         <>
@@ -179,13 +191,13 @@ const Home = () => {
                             <div className="w-2/3 p-4 flex flex-col justify-between max-sm:h-full max-sm:w-full">
                              {!Userselected?(<div className="flex flex-col justify-center items-center h-full"><h1 className="text-3xl font-semibold text-center text-gray-300">Start Messaging Now</h1></div>): 
                                 <>
-                                <motion.div
-                                    className="flex flex-col gap-2 overflow-y-scroll scrollbar-hidden"
-                                    animate={{ y: [0, -100, 0] }}
-                                    transition={{ ease: "easeInOut", duration: 0.5 }}
-                                >
-                                    <MessageContainer message={"hi what are u doing"} fromMe={true} />
-                                    <MessageContainer message={"nothing"} fromMe={false} />
+                                <motion.div className="flex flex-col gap-2 overflow-y-scroll scrollbar-hidden">
+                                    {messages &&
+                                        messages.map((m, index) => {
+                                            const messageDate = new Date(m.createdAt).toLocaleDateString();
+                                            const showDate = index === 0 || new Date(messages[index - 1].createdAt).toLocaleDateString() !== messageDate;
+                                            return <MessageContainer key={index} message={m} user={user} showDate={showDate} />;
+                                        })}
                                 </motion.div>
                                 <MessageInput />
                                 </>

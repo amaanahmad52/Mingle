@@ -12,12 +12,12 @@ const messageSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    messageBody: [
+    messageBody: 
       {
         type: String,
         required: true,
       },
-    ],
+    
   },
   { timestamps: true } 
 );
