@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { sendMessageAction } from "../../slices/MessagesSlice";
 import { useContext } from "react";
 import { SidebarContext } from "../../Context/SideBarContext";
-
+import  sendsound from "../../assets/sound/sendsound.mp3";
 const MessageInput = () => {
   const {loadingSend,successSend}=useSelector((state)=>state.messagesReducer)
   const dispatch=useDispatch()
@@ -63,9 +63,19 @@ const MessageInput = () => {
   const handleEmojiSelect = (emoji) => {
     setMessage((prev) => prev + emoji.character); // Append emoji to input
   };
+  const [audio] = useState(new Audio(sendsound));
 
+  useEffect(() => {
+    audio.load(); // Preload the audio when the component mounts
+  }, [audio]);
+
+  const playSound = () => {
+    audio.currentTime = 0; // Reset audio to start
+    audio.play();
+  };
   const handleSendMessage = (e) => {
     e.preventDefault();
+   playSound();
     dispatch(sendMessageAction({messageBody:message,receiverId:Userselected._id}))
     setMessage(""); // Clear input after sending message
   };

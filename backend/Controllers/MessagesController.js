@@ -55,3 +55,26 @@ exports.getMessages = async (req, res) => {
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
+
+// deleting the messages and conversation between user
+
+exports.DeleteMessages = async (req, res) => {
+    try {
+        const  receiverId  = req.params.receiverId;
+        const senderId=req.userDetails._id;
+        await Conversation.findOneAndDelete({ participants: { $all: [senderId, receiverId] } })
+       
+        await Message.deleteMany({
+            $or: [
+                { senderId, receiverId },
+                { senderId: receiverId, receiverId: senderId } // Reverse condition
+            ]
+        });
+        
+       res.status(200).json({ success: true });
+       
+    } catch (error) {
+        console.error("Error deleting  messages:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+};
