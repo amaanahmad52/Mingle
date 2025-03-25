@@ -82,9 +82,9 @@ function SignUp() {
 
   return (
     <div
-    className={`flex min-h-screen items-center justify-center p-6 transition-all duration-500 ${
+    className={`flex min-h-screen  items-center justify-center p-6 transition-all duration-500 ${
       darkMode
-        ? "bg-gradient-to-br from-black via-gray-900 to-gray-800"
+        ? "bg-gradient-to-br from-cyan-900 via-cyan-600 to-cyan-800"
         : "bg-gradient-to-br from-gray-100 via-white to-gray-200"
     }`}
   >
@@ -106,7 +106,7 @@ function SignUp() {
 
     <div
       className={`w-full max-w-md rounded-xl p-8 shadow-lg backdrop-blur-md transition-all duration-500 ${
-        darkMode ? "bg-black/40" : "bg-white/70"
+        darkMode ? "bg-black/35" : "bg-white/70"
       }`}
     >
       <h2

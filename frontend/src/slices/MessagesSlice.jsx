@@ -26,7 +26,15 @@ export const sendMessageAction = createAsyncThunk("sendMessageAction",async ({me
         return data;
     }
 )
-
+//3 clear the messages between two users
+export const clearMessagesAction = createAsyncThunk("clearMessagesAction",async ({receiverId}) => {
+        const { data } = await axios.delete(
+            `${URL}/clearMessages/${receiverId}`,
+            { withCredentials: true, headers: { "Content-Type": "application/json" } }
+        );
+        return data;
+    }
+)
 
 const messagesSlice = createSlice({
     name: "messages",
@@ -36,7 +44,12 @@ const messagesSlice = createSlice({
         successSend:false,
         messages: [],
     },
-    reducers: {},
+    reducers: {
+
+        setMessages: (state, action) => {
+            state.messages = action.payload;
+        }
+    },
     extraReducers: (builder) => {
         //handling get all messages
         builder
@@ -70,5 +83,5 @@ const messagesSlice = createSlice({
            
     },
 });
-
+export const { setMessages} = messagesSlice.actions;
 export default messagesSlice.reducer;

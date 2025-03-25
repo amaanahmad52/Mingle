@@ -170,7 +170,7 @@ const Home = () => {
                                 <div className={`${!Userselected ? "hidden" : "flex"}`}>
                                     <DuoIcon className="mt-1 hover:text-cyan-700 mx-1 cursor-pointer" />
                                     <CallIcon className="mt-1 hover:text-cyan-700 mx-1 cursor-pointer" />
-                                    <SimpleDialogDemo />
+                                    <SimpleDialogDemo id={Userselected?._id} />
                                 </div>
                                 
                             </div>
