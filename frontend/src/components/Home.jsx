@@ -28,6 +28,7 @@ import ToggleBars from "../assets/utilityComponents/ToggleBars";
 import RequestsBar from "../assets/utilityComponents/RequestsBar";
 import { useDispatch } from "react-redux";
 import { getAllMessagesAction } from "../slices/MessagesSlice";
+import Skeleton from "../assets/utilityComponents/Skeleton";
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 const Home = () => {
@@ -84,15 +85,24 @@ const Home = () => {
     const clickSidebar = () => setSidebarOpen(!sidebarOpen);
 
     
-    const {messages}=useSelector((state)=>state.messagesReducer)
+    const {messages,successAll,loadingSend,successSend}=useSelector((state)=>state.messagesReducer)
 
 
     useEffect(() => {
         if(Userselected){
             dispatch(getAllMessagesAction({receiverId:Userselected._id}))
         }
-    }, [messages,Userselected]);
+    }, [Userselected,successSend]);  ///////////////////////dnwejskcvnjlwiebsdvcwiersdc
 
+    const showLastMessageDiv = useRef();
+  
+    useEffect(() => {
+      if (showLastMessageDiv.current) {
+        showLastMessageDiv.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, [messages]);
+
+  
     return (
         <>
             {!user ? (
@@ -189,18 +199,30 @@ const Home = () => {
                             </div>
 
                             <div className="w-2/3 p-4 flex flex-col justify-between max-sm:h-full max-sm:w-full">
-                             {!Userselected?(<div className="flex flex-col justify-center items-center h-full"><h1 className="text-3xl font-semibold text-center text-gray-300">Start Messaging Now</h1></div>): 
-                                <>
+                             {!Userselected?(<div className="flex flex-col justify-center items-center h-full p-40"><h1 className="text-3xl font-semibold text-center text-gray-300">Start Messaging Now</h1></div>): 
+                                
+                                !successAll?(
+                                    <div className="w-full h-screen flex items-center justify-center">
+                                    <Skeleton/>
+                                    </div>
+                                ):(
+                                    <>
                                 <motion.div className="flex flex-col gap-2 overflow-y-scroll scrollbar-hidden">
-                                    {messages &&
-                                        messages.map((m, index) => {
-                                            const messageDate = new Date(m.createdAt).toLocaleDateString();
-                                            const showDate = index === 0 || new Date(messages[index - 1].createdAt).toLocaleDateString() !== messageDate;
-                                            return <MessageContainer key={index} message={m} user={user} showDate={showDate} />;
-                                        })}
+                                {!messages?.length ? (
+                                        <div className="flex flex-col justify-center items-center h-full p-40">
+                                            <h1 className="text-3xl font-semibold text-center text-gray-300 ">No message content</h1>
+                                        </div>
+                                    ) : (
+                                        messages.map((m, index) => (
+                                            <div key={index} ref={showLastMessageDiv}>
+                                                <MessageContainer message={m} user={user} />
+                                            </div>
+                                        ))
+                                    )}
                                 </motion.div>
                                 <MessageInput />
                                 </>
+                                )
                              }
                             </div>
                              

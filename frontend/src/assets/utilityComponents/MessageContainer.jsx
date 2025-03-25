@@ -1,7 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { SidebarContext } from '../../Context/SideBarContext';
+import { useRef } from 'react';
+import { useSelector } from 'react-redux';
 
-const Message = ({ message, user, showDate }) => {
+const Message = ({ message, user }) => {
+  const { successSend,loadingSend } = useSelector((state) => state.messagesReducer);
   const { Userselected } = useContext(SidebarContext);
   const fromMe = message.senderId === user._id;
 
@@ -16,16 +19,25 @@ const Message = ({ message, user, showDate }) => {
   const messageDate = new Date(message.createdAt).toLocaleDateString();
   const messageTime = new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+  
+  // useEffect(() => {
+  //   console.log(loadingSend);
+
+  // }, [loadingSend]);
+
+
+  
+
   return (
     <>
       {/* Show date heading only when the date changes */}
-      {showDate && (
+      {/* {showDate && (
         <div className="text-center text-gray-500 text-xs my-2">
           {messageDate}
         </div>
-      )}
+      ) */}
 
-      <div className={`chat ${chatClass}`}>
+      <div className={`chat ${chatClass}`} >
         <div className="chat-image avatar">
           <div className="w-10 rounded-full">
             <img alt="Profile" src={profilePic} />

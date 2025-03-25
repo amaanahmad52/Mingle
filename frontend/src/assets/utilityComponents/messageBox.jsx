@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"; 
+import React, { useEffect, useState,useRef } from "react"; 
 import SendIcon from "@mui/icons-material/Send";
 import PendingIcon from "@mui/icons-material/Pending";
 import EmojiIcon from "@mui/icons-material/SentimentVerySatisfied";
@@ -10,13 +10,19 @@ import MicNoneIcon from '@mui/icons-material/MicNone';
 import { useSpeechRecognition } from 'react-speech-recognition';
 import SpeechRecognition from 'react-speech-recognition';
 import SettingsVoiceIcon from '@mui/icons-material/SettingsVoice';
+import { useDispatch, useSelector } from "react-redux";
+import { sendMessageAction } from "../../slices/MessagesSlice";
+import { useContext } from "react";
+import { SidebarContext } from "../../Context/SideBarContext";
 
 const MessageInput = () => {
-  const success = false;
+  const {loadingSend,successSend}=useSelector((state)=>state.messagesReducer)
+  const dispatch=useDispatch()
   const [open, setOpen] = useState(false); // SpeedDial state
   const [open1, setOpen1] = useState(false); // Emoji picker state
   const [message, setMessage] = useState(""); // Input value state
   const [isListening, setIsListening] = useState(false); // Microphone state
+  const {Userselected}=useContext(SidebarContext);
 
   // Speech Recognition Hook
   const {
@@ -58,6 +64,14 @@ const MessageInput = () => {
     setMessage((prev) => prev + emoji.character); // Append emoji to input
   };
 
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    dispatch(sendMessageAction({messageBody:message,receiverId:Userselected._id}))
+    setMessage(""); // Clear input after sending message
+  };
+    
+
+ 
   return (
     <>
       {/* Backdrop for closing Emoji Picker & SpeedDial */}
@@ -80,7 +94,7 @@ const MessageInput = () => {
         />
       )}
 
-      <form className="px-4 my-3">
+      <form className="px-4 my-3" onSubmit={handleSendMessage} >
         <div className="w-full relative">
           {/* Emoji Button */}
           <button
@@ -129,10 +143,11 @@ const MessageInput = () => {
 
           {/* Send Button */}
           <button
+            
             type="submit" 
             className="absolute inset-y-0 end-0 flex items-center pe-3 transition duration-150 ease-in-out hover:scale-110 cursor-pointer hover:text-cyan-600"
           >
-            {success ? <PendingIcon /> : <SendIcon />}
+            {loadingSend ? <PendingIcon /> : <SendIcon />}
           </button>
 
           {/* Microphone Button */}
@@ -151,6 +166,8 @@ const MessageInput = () => {
           </div>
         </div>
       </form>
+     
+      
     </>
   );
 };
