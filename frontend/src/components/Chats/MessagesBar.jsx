@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import ProfileTile from "./ProfileTile";
+import ProfileTile from "../../assets/utilityComponents/ProfileTile";
 import { useEffect, useContext } from "react";
 import { SidebarContext } from "../../Context/SideBarContext";
 

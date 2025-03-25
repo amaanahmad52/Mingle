@@ -93,7 +93,11 @@ export default function ThreeDotMenu({ id }) {
         </List>
       </Popover>
 
-      {/* Confirmation Modal */}
+
+
+
+
+      {/* Confirmation Modal for chat delete */}
       <Dialog open={openModal} onClose={() => setOpenModal(false)}    sx={{
         '& .MuiPaper-root': {
           background: 'rgba(255, 255, 255, 0.2)', // Glassy effect

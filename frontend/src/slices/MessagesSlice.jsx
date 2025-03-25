@@ -46,7 +46,7 @@ const messagesSlice = createSlice({
     },
     reducers: {
 
-        setMessages: (state, action) => {
+        setMessages: (state, action) => { //this is for clearing the chat messages
             state.messages = action.payload;
         }
     },

@@ -2,7 +2,7 @@ import React, { useEffect, useState,useRef } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import PendingIcon from "@mui/icons-material/Pending";
 import EmojiIcon from "@mui/icons-material/SentimentVerySatisfied";
-import BasicSpeedDial from "./SpeedDial";
+import BasicSpeedDial from "../../assets/utilityComponents/SpeedDial";
 import Backdrop from "@mui/material/Backdrop";
 import { EmojiKeyboard } from "reactjs-emoji-keyboard";
 import { AnimatePresence, motion } from "framer-motion";
