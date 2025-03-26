@@ -36,6 +36,22 @@ export const clearMessagesAction = createAsyncThunk("clearMessagesAction",async 
     }
 )
 
+//4 clear the one message between two user with message id
+export const clearMultipleMessagesAction = createAsyncThunk(
+    "clearMultipleMessagesAction",
+    async ({ receiverId, messageIds }) => {
+        const { data } = await axios.delete(
+            `${URL}/clearMultipleMessages`, 
+            { 
+                data: { receiverId, messageIds }, 
+                withCredentials: true, 
+                headers: { "Content-Type": "application/json" } 
+            }
+        );
+        return data;
+    }
+);
+
 const messagesSlice = createSlice({
     name: "messages",
     initialState: {

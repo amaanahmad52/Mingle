@@ -2,10 +2,24 @@ import React, { useContext, useEffect, useState } from 'react';
 import { SidebarContext } from '../../Context/SideBarContext';
 import { useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { MesssageContext } from "../../Context/MessageContext";
+
 
 const Message = ({ message, user }) => {
+  const {opencheckbox,setopencheckbox,setSelectedMessages,selectedMessages} = useContext(MesssageContext);
   const { successSend,loadingSend } = useSelector((state) => state.messagesReducer);
   const { Userselected } = useContext(SidebarContext);
+  ///funtion to hanle checkbox selection..............
+  
+  const toggleSelection = (id) => {
+    setSelectedMessages((prev) => {
+      const newSet = new Set(prev);
+      newSet.has(id) ? newSet.delete(id) : newSet.add(id);
+      return newSet;
+    });
+
+  };
+  //....................................
   const fromMe = message.senderId === user._id;
 
   const avatar = user.avatar?.url || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp";
@@ -36,7 +50,12 @@ const Message = ({ message, user }) => {
           {messageDate}
         </div>
       ) */}
-
+ {opencheckbox && <input
+              type="checkbox"
+              className="mr-2"
+              checked={selectedMessages.has(message._id)}
+              onChange={() => toggleSelection(message._id)}
+            />}
       <div className={`chat ${chatClass}`} >
         <div className="chat-image avatar">
           <div className="w-10 rounded-full">
