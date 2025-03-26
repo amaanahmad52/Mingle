@@ -11,18 +11,23 @@ import { useSpeechRecognition } from 'react-speech-recognition';
 import SpeechRecognition from 'react-speech-recognition';
 import SettingsVoiceIcon from '@mui/icons-material/SettingsVoice';
 import { useDispatch, useSelector } from "react-redux";
-import { sendMessageAction } from "../../slices/MessagesSlice";
+import {setMessages, sendMessageAction ,clearMultipleMessagesAction} from "../../slices/MessagesSlice";
 import { useContext } from "react";
 import { SidebarContext } from "../../Context/SideBarContext";
+import { MesssageContext } from "../../Context/MessageContext";
 import  sendsound from "../../assets/sound/sendsound.mp3";
+import DeleteIcon from '@mui/icons-material/Delete';
+import ForwardIcon from '@mui/icons-material/Forward';
 const MessageInput = () => {
-  const {loadingSend,successSend}=useSelector((state)=>state.messagesReducer)
+  const {opencheckbox,setopencheckbox} = useContext(MesssageContext);
+  const {loadingSend,successSend,messages}=useSelector((state)=>state.messagesReducer)
   const dispatch=useDispatch()
   const [open, setOpen] = useState(false); // SpeedDial state
   const [open1, setOpen1] = useState(false); // Emoji picker state
   const [message, setMessage] = useState(""); // Input value state
   const [isListening, setIsListening] = useState(false); // Microphone state
   const {Userselected}=useContext(SidebarContext);
+   const{selectedMessages,setSelectedMessages}=useContext(MesssageContext);
 
   // Speech Recognition Hook
   const {
@@ -80,6 +85,19 @@ const MessageInput = () => {
     setMessage(""); // Clear input after sending message
   };
     
+//...............deleting the selected user::
+const deleteMessages = () => {
+  // Get the current messages from Redux
+  const updatedMessages = messages.filter((msg) => !selectedMessages.has(msg._id));
+
+  // Dispatch the new list (not a function)
+  dispatch(setMessages(updatedMessages));
+  dispatch(clearMultipleMessagesAction({receiverId:Userselected._id,messageIds:Array.from(selectedMessages)}))
+
+  // Clear selected messages
+  setSelectedMessages(new Set());
+};
+
 
  
   return (
@@ -103,79 +121,90 @@ const MessageInput = () => {
           }}
         />
       )}
+{
+  opencheckbox ?<div className="  translate-2 m-auto flex items-center justify-between bg-gray-200 w-full rounded-2xl p-2.5 ">
+    <button className="bg-cyan-600 text-white px-2 py-1 rounded-lg hover:bg-cyan-700" onClick={()=>setopencheckbox(false)}>Cancel</button>
+    <div className="flex items-center gap-2 justify-around ">
+     <DeleteIcon onClick={deleteMessages} className="text-cyan-600  hover:text-cyan-700"/>
+      <ForwardIcon className="text-cyan-600  hover:text-cyan-700"/>
+      </div>
 
+
+    </div>:
       <form className="px-4 my-3" onSubmit={handleSendMessage} >
-        <div className="w-full relative">
-          {/* Emoji Button */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpen1(!open1);
-            }}
-            className="absolute inset-y-0 z-10 start-1 flex items-center pe-3 transition duration-150 ease-in-out hover:scale-110 cursor-pointer hover:text-cyan-600"
-          >
-            <EmojiIcon />
-          </button>
+      <div className="w-full relative">
+        {/* Emoji Button */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpen1(!open1);
+          }}
+          className="absolute inset-y-0 z-10 start-1 flex items-center pe-3 transition duration-150 ease-in-out hover:scale-110 cursor-pointer hover:text-cyan-600"
+        >
+          <EmojiIcon />
+        </button>
 
-          {/* Emoji Picker (Aligned with Input) */}
-          <AnimatePresence>
-            {open1 && (
-              <motion.div
-                key="box"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.2 }}
-                className="absolute bottom-12 left-0 z-50 rounded-2xl overflow-hidden"
-              >
-                <EmojiKeyboard
-                  height={200}
-                  width={250}
-                  theme="dark"
-                  searchLabel="Search emoji"
-                  searchDisabled={false}
-                  onEmojiSelect={handleEmojiSelect}
-                  categoryDisabled={false}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+        {/* Emoji Picker (Aligned with Input) */}
+        <AnimatePresence>
+          {open1 && (
+            <motion.div
+              key="box"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.2 }}
+              className="absolute bottom-12 left-0 z-50 rounded-2xl overflow-hidden"
+            >
+              <EmojiKeyboard
+                height={200}
+                width={250}
+                theme="dark"
+                searchLabel="Search emoji"
+                searchDisabled={false}
+                onEmojiSelect={handleEmojiSelect}
+                categoryDisabled={false}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-          {/* Input Box */}
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            className="pl-16 pr-19 border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 text-white truncate"
-            placeholder="Send a message"
-          />
+        {/* Input Box */}
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          className="pl-16 pr-19 border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 text-white truncate"
+          placeholder="Send a message"
+        />
 
-          {/* Send Button */}
-          <button
-            
-            type="submit" 
-            className="absolute inset-y-0 end-0 flex items-center pe-3 transition duration-150 ease-in-out hover:scale-110 cursor-pointer hover:text-cyan-600"
-          >
-            {loadingSend ? <PendingIcon /> : <SendIcon />}
-          </button>
+        {/* Send Button */}
+        <button
+          
+          type="submit" 
+          className="absolute inset-y-0 end-0 flex items-center pe-3 transition duration-150 ease-in-out hover:scale-110 cursor-pointer hover:text-cyan-600"
+        >
+          {loadingSend ? <PendingIcon /> : <SendIcon />}
+        </button>
 
-          {/* Microphone Button */}
-          <button
-            type="button"
-            onClick={toggleListening}
-            className="absolute inset-y-0 end-8 flex items-center pe-3 transition duration-150 ease-in-out hover:scale-110 cursor-pointer hover:text-cyan-600"
-            
-          >
-            {!isListening?(<MicNoneIcon />):(<SettingsVoiceIcon className="text-orange-800 text-blink" />)}
-          </button>
+        {/* Microphone Button */}
+        <button
+          type="button"
+          onClick={toggleListening}
+          className="absolute inset-y-0 end-8 flex items-center pe-3 transition duration-150 ease-in-out hover:scale-110 cursor-pointer hover:text-cyan-600"
+          
+        >
+          {!isListening?(<MicNoneIcon />):(<SettingsVoiceIcon className="text-orange-800 text-blink" />)}
+        </button>
 
-          {/* SpeedDial Positioned Absolutely */}
-          <div className="absolute bottom-1/8 ml-20 bg-transparent">
-            <BasicSpeedDial open={open} setOpen={setOpen} />
-          </div>
+        {/* SpeedDial Positioned Absolutely */}
+        <div className="absolute bottom-1/8 ml-20 bg-transparent">
+          <BasicSpeedDial open={open} setOpen={setOpen} />
         </div>
-      </form>
+      </div>
+    </form>
+}
+    
      
       
     </>

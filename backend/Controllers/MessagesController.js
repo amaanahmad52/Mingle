@@ -78,3 +78,30 @@ exports.DeleteMessages = async (req, res) => {
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
+//deleting multiple messages
+exports.DeleteManyMessages=async (req, res) => {
+    try {
+        const { receiverId, messageIds } = req.body;
+        const senderId=req.userDetails._id;
+        if (!messageIds || messageIds.length === 0) {
+            return res.status(400).json({ success: false, message: "No messages to delete" });
+        }
+
+        // Delete all messages where the ID is in the array and matches the receiverId
+        await Conversation.updateMany(
+            { participants: { $all: [receiverId, senderId] } },
+            { $pull: { messages: { $in: messageIds } } }
+        );
+
+        // ✅ Step 2: Delete Messages from Message Collection/////
+        await Message.deleteMany({ _id: { $in: messageIds } });
+
+        res.status(200).json({
+            success: true,
+            message: " messages deleted successfully"
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+};

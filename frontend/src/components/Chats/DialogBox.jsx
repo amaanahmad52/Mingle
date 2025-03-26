@@ -15,18 +15,24 @@ import { toast } from "react-toastify";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import ChatUserProfile from "./ChatUserProfile"; // Import the ChatUserProfile component
 import { motion } from "framer-motion";
+import { MesssageContext } from "../../Context/MessageContext";
+import { useContext } from "react";
 
 
 const options = ["Select Messages", "Clear Chat", "User Profile"];
 
 export default function ThreeDotMenu({ id }) {
  
+  const {opencheckbox,setopencheckbox} = useContext(MesssageContext);
+  //from message context import setselectedmessages setSelectedMessages
+  const{selectedMessages,setSelectedMessages}=useContext(MesssageContext);
+
   const [reference, setReference] = React.useState(null);
   const [openModal, setOpenModal] = React.useState(false);
   const [openProfileModal, setOpenProfileModal] = React.useState(false); // New state for user profile modal
   const open = Boolean(reference);
   const dispatch = useDispatch();
-
+ 
   const handleClick = (event) => setReference(event.currentTarget);
   const handleClose = () => setReference(null);
 
@@ -39,6 +45,9 @@ export default function ThreeDotMenu({ id }) {
       }
     } else if (option === "User Profile") {
       setOpenProfileModal(true); // Open the profile modal
+    }
+    else if (option === "Select Messages") {
+      setopencheckbox(true)
     }
 
     handleClose();
