@@ -1,7 +1,7 @@
 import React from "react";
 import { useContext } from "react";
 import { SidebarContext } from "../../Context/SideBarContext";
-const ProfileTile = ({user, onClick, imageUrl }) => {
+const RequestProfileTile = ({user, onClick, imageUrl }) => {
   const isOnline = true;
   
   const { Userselected } = useContext(SidebarContext);
@@ -38,5 +38,5 @@ const ProfileTile = ({user, onClick, imageUrl }) => {
   );
 };
 
-export default ProfileTile;
+export default RequestProfileTile;
 

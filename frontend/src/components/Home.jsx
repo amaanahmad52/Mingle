@@ -8,7 +8,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { motion } from "framer-motion";
 import MessageInput from "./Chats/messageBox";
 import MessageContainer from "./Chats/MessageContainer";
-import { useRef, useState, useEffect, useContext } from "react";
+import { useRef, useState, useEffect, useContext, use } from "react";
 import Sidebar from "../assets/utilityComponents/Sidebar";
 import SimpleDialogDemo from "./Chats/DialogBox";
 import ViewListIcon from "@mui/icons-material/ViewList";
@@ -217,7 +217,7 @@ const Home = () => {
                           users={users}
                         />
                       ) : (
-                        <RequestsBar />
+                        <RequestsBar allusers={users.user} />
                       )}
 
                       <ToggleBars

@@ -4,6 +4,7 @@ const { loginUser,registerUser, otpConfirm_and_login, otpSend, getUserDetails,ot
 const { authenticationCheck } = require('../Utils/authenticationJWT')
 const { getAllUser } = require('../Controllers/UserController')    
 const { addFriend } = require('../Controllers/UserController')
+const { checkConversation } = require('../Controllers/MessagesController')
 
 //routes for new/existing user for entry
 router.route("/login").post(loginUser)
@@ -21,7 +22,8 @@ router.route("/getalluser").get(getAllUser);
 router.route("/nameAboutUpdate").put(authenticationCheck,NameAboutUpdate)
 router.route("/updateProfilePic").put(authenticationCheck,UpdateProfilePic)
 router.route("/verifyphone").post(verifyPhoneNumber)
-
 router.route("/sendsms").post(sendSMS)
+router.route("/requestNonFriends").post(authenticationCheck,checkConversation);
+
 
 module.exports=router

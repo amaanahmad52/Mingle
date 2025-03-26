@@ -124,6 +124,17 @@ export const VerifyPhoneNumber = createAsyncThunk("VerifyPhoneNumber",async ({ot
   }
 )
 
+//check if non friend user sent message to user
+export const CheckNonFriendUserAction = createAsyncThunk("CheckNonFriendUserAction",async ({receiverUsers}) => {
+  const { data } = await axios.post(
+      `${URL}/requestNonFriends`,
+      {receiverUsers},
+      { withCredentials: true, headers: { "Content-Type": "application/json" } }
+    );
+    return data;
+  } 
+)
+
 // Combined user slice
 const userSlice = createSlice({
   name: "user",
@@ -138,6 +149,7 @@ const userSlice = createSlice({
     logoutdone:false,
     nameaboutupdate:false,
     friendadded:false,
+    nonfriendusers:[]
 
   },
   extraReducers: (builder) => {
@@ -230,6 +242,13 @@ const userSlice = createSlice({
      // state.user=action.payload.user;
       state.friendadded=true;
     })
+
+    //handling non friends (For request messages)
+    builder.
+      addCase(CheckNonFriendUserAction.fulfilled, (state, action) => {
+        state.nonfriendusers=action.payload.nonFriends
+       
+      })
   },
 });
 

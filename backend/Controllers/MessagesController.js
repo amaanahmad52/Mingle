@@ -1,6 +1,7 @@
 
 const Message = require("../Models/MessageModel");
 const Conversation = require("../Models/ConversationsModel");
+const User=require("../Models/UserModel");
 
 exports.sendMessage = async (req, res) => {
     try {
@@ -45,7 +46,7 @@ exports.getMessages = async (req, res) => {
         const senderId=req.userDetails._id;
         const conversation = await Conversation.findOne({ participants: { $all: [senderId, receiverId] } }).populate("messages");
         if(!conversation){
-            return res.status(200).json({ success: false, message: [] });
+            return res.status(200).json({ success: false, messages: [] });
         }
         const messages = conversation.messages;
         
@@ -103,5 +104,39 @@ exports.DeleteManyMessages=async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Server error" });
+    }
+};
+
+//checking if converation between one user and another array of users exists or not 
+
+
+exports.checkConversation = async (req, res) => {
+    try {
+        const senderId = req.userDetails._id;
+        const { receiverUsers } = req.body; // Expecting an array
+
+        // ✅ Check if receiverUsers is undefined or empty
+        if (!receiverUsers || !Array.isArray(receiverUsers) || receiverUsers.length === 0) {
+            return res.status(400).json({ success: false, message: "receiverUsers array is required" });
+        }
+
+        const nonFriends = [];
+
+        for (let i = 0; i < receiverUsers.length; i++) {
+            const receiverId = receiverUsers[i]; // Ensure it's an ID, not an object
+            const conversation = await Conversation.findOne({
+                participants: { $all: [senderId, receiverId] }
+            });
+
+            if (conversation) {
+                nonFriends.push(receiverId);    
+            }
+        }
+
+        res.status(200).json({ success: true, nonFriends });
+
+    } catch (error) {
+        console.error("Error checking conversation:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
