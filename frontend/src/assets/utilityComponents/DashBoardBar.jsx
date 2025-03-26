@@ -198,7 +198,7 @@ console.log("userid",id);
 
       <button
         onClick={handlefriend}
-        className="btn btn-info text-white bg-[#f43098] rounded-2xl hover:bg-[#c02078] hover:shadow-[0_4px_10px_rgba(0,0,0,0.2)]"
+        className="btn  text-white bg-[#f43098] rounded-2xl hover:bg-[#c02078] hover:shadow-[0_4px_10px_rgba(0,0,0,0.2)]"
       >
         Add new Friend
       </button>

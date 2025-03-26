@@ -115,6 +115,7 @@ const SettingsBar = () => {
         }
        
     }, [user,isverify]);
+    // console.log(user.isPhoneVerified);
 
     return (
         <>
@@ -215,7 +216,7 @@ const SettingsBar = () => {
                             <div className="flex  justify-between max-sm:flex-col ">
                                 <p className="text-gray-200 text-sm">{user.phoneNumber}</p>
 
-                                {isverify ? (
+                                {user &&user.isPhoneVerified ? (
                                     <div className="flex flex-row-reverse items-center gap-2">
                                         <TaskAltIcon className="text-green-500 scale-[0.7]" />
                                         <p className="text-gray-400 text-sm">Verified</p>

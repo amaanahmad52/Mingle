@@ -60,7 +60,7 @@ export default function ThreeDotMenu({ id }) {
   };
 
   return (
-    <div className="flex">
+    <div className="flex mt-1">
       <IconButton onClick={handleClick}>
         <MoreVertIcon
           sx={{
