@@ -17,9 +17,9 @@ const ProfileTile = ({user, onClick, imageUrl }) => {
       onClick={onClick}
     >
       <div className="avatar">
-        <div className={`w-12 rounded-full object-cover ${isOnline ? "online" : ""}`}>
+        <div className={`w-12 rounded-full object-cover ${isOnline ? "online" : ""} ${isUser && "ring-4 ring-[rgb(244,179,49)]"}`}>
           <img 
-            className="scale-100 rounded-full"
+            className="scale-100 rounded-full "
             
             src={imageUrl} 
             alt="user avatar"

@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { SidebarContext } from "../../Context/SideBarContext";
-import { useRef } from "react";
 import { useSelector } from "react-redux";
 import { MesssageContext } from "../../Context/MessageContext";
 
@@ -14,8 +13,10 @@ const Message = ({ message, user }) => {
   const { successSend, loadingSend } = useSelector(
     (state) => state.messagesReducer
   );
-  const { Userselected } = useContext(SidebarContext);
-  ///funtion to hanle checkbox selection..............
+  const { Userselected, RequestUserselected } = useContext(SidebarContext);
+
+  // Use RequestUserselected if available; otherwise, fallback to Userselected
+  const selectedUser = RequestUserselected || Userselected;
 
   const toggleSelection = (id) => {
     setSelectedMessages((prev) => {
@@ -24,14 +25,14 @@ const Message = ({ message, user }) => {
       return newSet;
     });
   };
-  //....................................
+
   const fromMe = message.senderId === user._id;
 
   const avatar =
     user.avatar?.url ||
     "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp";
   const hisAvatar =
-    Userselected.avatar?.url ||
+    selectedUser?.avatar?.url ||
     "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp";
 
   const chatClass = fromMe ? "chat-end" : "chat-start";
@@ -45,19 +46,8 @@ const Message = ({ message, user }) => {
     minute: "2-digit",
   });
 
-  // useEffect(() => {
-  //   console.log(loadingSend);
-
-  // }, [loadingSend]);
-
   return (
     <>
-      {/* Show date heading only when the date changes */}
-      {/* {showDate && (
-        <div className="text-center text-gray-500 text-xs my-2">
-          {messageDate}
-        </div>
-      ) */}
       {opencheckbox && (
         <input
           type="checkbox"
@@ -68,11 +58,13 @@ const Message = ({ message, user }) => {
       )}
       <div className={`chat ${chatClass}`}>
         <div className="chat-image avatar">
-          <div className="w-10 rounded-full ">
+          <div className="w-10 rounded-full">
             <img alt="Profile" src={profilePic} />
           </div>
         </div>
-        <div className={`chat-bubble text-white ${bubbleColor} break-words max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl whitespace-pre-wrap ${selectedMessages.has(message._id) ? "bg-opacity-80 ring-3 ring-[rgb(247,174,30)]" : ""}`}>
+        <div
+          className={`chat-bubble text-white ${bubbleColor} break-words max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl whitespace-pre-wrap ${selectedMessages.has(message._id) ? "bg-opacity-80 ring-3 ring-[rgb(247,174,30)]" : ""}`}
+        >
           {message.messageBody || "No message content"}
         </div>
         <div className="chat-footer opacity-50 text-xs flex gap-1 items-center">

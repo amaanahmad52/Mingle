@@ -2,11 +2,11 @@ import React from "react";
 import { useContext } from "react";
 import { SidebarContext } from "../../Context/SideBarContext";
 const RequestProfileTile = ({user, onClick, imageUrl }) => {
-  const isOnline = true;
+  // const isOnline = true;
   
-  const { Userselected } = useContext(SidebarContext);
-  const isUser=Userselected && user._id===Userselected._id?true:false
-  // const isUser=false
+  const { RequestUserselected,setRequestUserSelected } = useContext(SidebarContext);
+  const isUser=RequestUserselected && user._id===RequestUserselected._id?true:false
+  
 
   return (
     <div 
@@ -16,8 +16,8 @@ const RequestProfileTile = ({user, onClick, imageUrl }) => {
   }
       onClick={onClick}
     >
-      <div className="avatar">
-        <div className={`w-12 rounded-full object-cover ${isOnline ? "online" : ""}`}>
+      <div className="avatar h-12 w-12">
+
           <img 
             className="scale-100 rounded-full"
             
@@ -25,7 +25,6 @@ const RequestProfileTile = ({user, onClick, imageUrl }) => {
             alt="user avatar"
             onError={(e) => { e.target.src = "https://i.pravatar.cc/100"; console.log("Image failed to load:", imageUrl); }}
           />
-        </div>
       </div>
       <div className="flex flex-col flex-1">
         <div className="flex gap-3 justify-between">

@@ -14,7 +14,7 @@ const ChatUserProfile = () => {
       <div className="flex flex-col space-y-3 text-sm overflow-hidden">
         {/* Profile Image */}
         <div
-          className="relative w-27 h-27 rounded-full overflow-hidden flex justify-center items-center mx-auto group max-sm:w-20 max-sm:h-20 cursor-pointer"
+          className=" mt-1 ring-3 ring-[rgb(247,174,30)] relative w-27 h-27 rounded-full overflow-hidden flex justify-center items-center mx-auto group max-sm:w-20 max-sm:h-20 cursor-pointer"
           onClick={() => setOpenImageModal(true)}
         >
           <img
@@ -23,7 +23,7 @@ const ChatUserProfile = () => {
               "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"
             }
             alt="Profile"
-            className="w-full h-full object-cover transition duration-300 group-hover:scale-110"
+            className="w-full h-full object-cover transition duration-300 group-hover:scale-110 "
           />
         </div>
 

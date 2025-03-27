@@ -4,7 +4,8 @@ const bcrypt = require('bcrypt');
 const { setToken } = require('../Utils/TokenGenerateJWT');
 const {sendSMS}=require('../Utils/Twilio')
 const mailSender=require("../Utils/mailsender")
-const cloudinary=require("../Utils/cloudinary")
+const cloudinary=require("../Utils/cloudinary");
+const Conversation = require('../Models/ConversationsModel');
 
 // 1 login by email password
 
@@ -329,6 +330,8 @@ exports.getAllUser=async(req,res)=>{
 
 exports.addFriend = async (req, res) => {
     const { id, email } = req.body;
+    const senderId=req.userDetails._id
+    const receiverId=id
  
     try {
         const user1 = await User.findOne({
@@ -346,7 +349,12 @@ exports.addFriend = async (req, res) => {
             { $addToSet: { friends:id } }, // Allows duplicates
             { new: true }
         )
-console.log("user",user)
+        const dummyconvo=new Conversation({
+            participants: [senderId, receiverId],
+            messages: [],
+          });
+console.log(dummyconvo);
+        await dummyconvo.save()
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" });
         }

@@ -6,7 +6,7 @@ import { SidebarContext } from "../../Context/SideBarContext";
 
 const MessagesBar = ({ setSelectedSearch, searchQuery, users }) => {
   const { user, friendadded } = useSelector((state) => state.userReducer);
-  const { setUserSelected } = useContext(SidebarContext);
+  const { setUserSelected,setRequestUserSelected } = useContext(SidebarContext);
 
   useEffect(() => {
     if (friendadded) {
@@ -16,6 +16,7 @@ const MessagesBar = ({ setSelectedSearch, searchQuery, users }) => {
 
   const handleClick = (u) => {
     setUserSelected(u);
+    setRequestUserSelected(null);
     setSelectedSearch(u.firstname);
   };
 

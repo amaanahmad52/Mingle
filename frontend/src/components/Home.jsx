@@ -27,23 +27,29 @@ import { Link } from "react-router-dom";
 import ToggleBars from "../assets/utilityComponents/ToggleBars";
 import RequestsBar from "../assets/utilityComponents/RequestsBar";
 import { useDispatch } from "react-redux";
-import { getAllMessagesAction } from "../slices/MessagesSlice";
+import { getAllMessagesAction, setMessages } from "../slices/MessagesSlice";
 import Skeleton from "../assets/utilityComponents/Skeleton";
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { SideBarselected, Userselected } = useContext(SidebarContext);
+  const { SideBarselected, Userselected, RequestUserselected, setRequestUserSelected } = useContext(SidebarContext);
   const switcher = useRef();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedSearch, setSelectedSearch] = useState("Pankaj Nunnu");
+  const [selectedSearch, setSelectedSearch] = useState("");
   const { user } = useSelector((state) => state.userReducer);
   const [users, setUsers] = useState([]);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [requestClick, setRequestClick] = useState(false);
-
+  const { messages, successAll, loadingSend, successSend } = useSelector(
+    (state) => state.messagesReducer
+  );
+  
+  const clickSidebar = () => setSidebarOpen(!sidebarOpen);
+ 
+  //to fetch all users from backend
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -59,7 +65,8 @@ const Home = () => {
     };
     fetchUsers();
   }, []);
-
+  
+  //to show login message when user is not logged in
   useEffect(() => {
     if (!user) {
       const timer = setTimeout(() => {
@@ -71,7 +78,8 @@ const Home = () => {
       setShowLoginPopup(false);
     }
   }, [user]);
-
+ 
+  //handling search
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -81,19 +89,16 @@ const Home = () => {
       setSearchOpen(false);
     }
   };
+  
 
-  const clickSidebar = () => setSidebarOpen(!sidebarOpen);
-
-  const { messages, successAll, loadingSend, successSend } = useSelector(
-    (state) => state.messagesReducer
-  );
-
+  //to get messages between two users (MESSAGES)
   useEffect(() => {
     if (Userselected) {
       dispatch(getAllMessagesAction({ receiverId: Userselected._id }));
     }
   }, [Userselected, successSend]);
 
+  //to scroll automatically to bottom of chat container
   const showLastMessageDiv = useRef();
 
   useEffect(() => {
@@ -101,6 +106,22 @@ const Home = () => {
       showLastMessageDiv.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
+ 
+  //to get messages between two users (REQUESTS)
+  useEffect(() => {
+    if (RequestUserselected) {
+      dispatch(getAllMessagesAction({ receiverId: RequestUserselected._id }));
+    }
+  }, [RequestUserselected, successSend]);
+
+  const kon=RequestUserselected || Userselected
+
+  //to again switch to null messaegs when clicked on messages tab at bottom
+  useEffect(() => {
+    
+      dispatch(setMessages([]));
+    
+  },[requestClick])
 
   return (
     <>
@@ -182,22 +203,22 @@ const Home = () => {
               {/* navbar of chatbox */}
               {/* Navbar of chatbox */}
                 <div className="rounded-1xl text-center w-2/3 p-4 flex justify-between border-b border-gray-400 mx-4 max-sm:h-full max-sm:w-full items-center">
-                {Userselected && (
+                {kon && (
                     <div className="flex items-center gap-3">
                     <img
-                        src={Userselected.avatar?.url}
+                        src={kon.avatar?.url || "https://i.pravatar.cc/200"}
                         className="w-12 h-12 object-cover rounded-full"
                         alt="user avatar"
                     />
-                    <span className="text-xl text-cyan-600 font-bold font-sans hover:text-cyan-700">
-                        {Userselected.firstname}
+                    <span className={`text-xl text-cyan-600 font-bold font-sans hover:text-cyan-700`}>
+                        {kon.firstname}
                     </span>
                     </div>
                 )}
-                <div className={`${!Userselected ? "hidden" : "flex"} items-center`}>
+                <div className={`${!kon ? "hidden" : "flex"} items-center`}>
                     <DuoIcon className="mt-1 hover:text-cyan-700 mx-1 cursor-pointer" />
                     <CallIcon className="mt-1 hover:text-cyan-700 mx-1 cursor-pointer" />
-                    <SimpleDialogDemo id={Userselected?._id} />
+                    <SimpleDialogDemo id={kon?._id} />
                 </div>
                 </div>
 
@@ -236,7 +257,7 @@ const Home = () => {
               </div>
 
               <div className="w-2/3 p-4 flex flex-col justify-between max-sm:h-full max-sm:w-full">
-                {!Userselected ? (
+                {!kon ? (
                   <div className="flex flex-col justify-center items-center h-full p-40">
                     <h1 className="text-3xl font-semibold text-center text-gray-300">
                       Start Messaging Now

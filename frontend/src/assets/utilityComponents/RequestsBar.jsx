@@ -4,34 +4,29 @@ import { useDispatch, useSelector } from "react-redux";
 import RequestProfileTile from "./RequestProfileTile";
 import { getAllMessagesAction } from "../../slices/MessagesSlice";
 import { CheckNonFriendUserAction } from "../../slices/UserSlices";
-
+import { useContext } from "react";
+import { SidebarContext } from "../../Context/SideBarContext";
 const RequestsBar = ({ allusers = [] }) => {
     const dispatch = useDispatch();
+    const {RequestUserselected,setRequestUserSelected,userselected,setUserSelected}=useContext(SidebarContext);
     const { user,nonfriendusers } = useSelector((state) => state.userReducer);
     
 
- 
     const filteredUsers = Array.isArray(allusers)
         ? allusers.filter((u) => !user?.friends?.includes(u._id))
         : [];
 
     //check if non-friend user has sent some message to user
-   
-
     useEffect(() => {
         if (filteredUsers.length > 0) {
             dispatch(CheckNonFriendUserAction({ receiverUsers: filteredUsers}));
         }
-    }, [dispatch, filteredUsers]); // ✅ Added dependencies to prevent infinite re-renders
+    }, [dispatch]); 
     
     
-
-   
-    
-
     const handleClick = (u) => {
-        setUserSelected(u);
-      
+        setRequestUserSelected(u); //set user on context
+        setUserSelected(null);
     };
     
 
