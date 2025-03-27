@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import RequestProfileTile from "./RequestProfileTile";
 import { getAllMessagesAction } from "../../slices/MessagesSlice";
-import { CheckNonFriendUserAction } from "../../slices/UserSlices";
+import { AddToFriend, CheckNonFriendUserAction } from "../../slices/UserSlices";
 import { useContext } from "react";
 import { SidebarContext } from "../../Context/SideBarContext";
 const RequestsBar = ({ allusers = [] }) => {
@@ -17,6 +17,9 @@ const RequestsBar = ({ allusers = [] }) => {
         : [];
 
     //check if non-friend user has sent some message to user
+  
+    filteredUsers.splice(filteredUsers.findIndex((u) => u._id === user._id), 1);
+
     useEffect(() => {
         if (filteredUsers.length > 0) {
             dispatch(CheckNonFriendUserAction({ receiverUsers: filteredUsers}));
@@ -29,6 +32,25 @@ const RequestsBar = ({ allusers = [] }) => {
         setUserSelected(null);
     };
     
+    const handleReqClick = (action) => {
+        if(action === "Accept"){
+            //delte this user from non friend array
+            filteredUsers.splice(filteredUsers.findIndex((u) => u._id === RequestUserselected._id), 1);
+            dispatch(CheckNonFriendUserAction({ receiverUsers: filteredUsers}));
+
+            //add this user as a friend
+            dispatch(AddToFriend({ id: RequestUserselected._id, email: user.email }));
+            setRequestUserSelected(null);
+            
+        }
+        if(action === "Reject"){
+
+        }
+    };
+
+    // useEffect(() => {
+    //     setRequestUserSelected(RequestUserselected);
+    // }, [RequestUserselected]);
 
     return (
         <div >
@@ -56,6 +78,7 @@ const RequestsBar = ({ allusers = [] }) => {
                         user={user}
                         onClick={() => handleClick(user)}
                         imageUrl={user.avatar?.url}
+                        requestClick={handleReqClick}
                     />
                 ))}
                 </div>

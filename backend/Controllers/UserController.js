@@ -349,11 +349,12 @@ exports.addFriend = async (req, res) => {
             { $addToSet: { friends:id } }, // Allows duplicates
             { new: true }
         )
+        //if dummy conversation is not made then skeleton will keep on loading on chat box
         const dummyconvo=new Conversation({
             participants: [senderId, receiverId],
             messages: [],
           });
-console.log(dummyconvo);
+// console.log(dummyconvo);
         await dummyconvo.save()
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" });

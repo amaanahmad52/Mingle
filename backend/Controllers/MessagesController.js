@@ -143,11 +143,16 @@ exports.checkConversation = async (req, res) => {
 
     for (let i = 0; i < receiverUsers.length; i++) {
       const receiverId = receiverUsers[i]; // Ensure it's an ID, not an object
+     
       const conversation = await Conversation.findOne({
-        participants: { $all: [senderId, receiverId] },
-      });
+          participants: { $size: 2, $all: [senderId, receiverId] },
+          $or: [
+            { participants: [senderId, receiverId] },
+            { participants: [receiverId, senderId] },
+          ],
+      }).populate("messages");
 
-      if (conversation) {
+      if (conversation && conversation.messages && conversation.messages.length>0) {
         nonFriends.push(receiverId);
       }
     }
@@ -158,3 +163,6 @@ exports.checkConversation = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
+
+

@@ -33,7 +33,7 @@ const URL = import.meta.env.VITE_BACKEND_URL;
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { SideBarselected, Userselected, RequestUserselected, setRequestUserSelected } = useContext(SidebarContext);
+  const { SideBarselected, Userselected,setUserSelected ,RequestUserselected, setRequestUserSelected } = useContext(SidebarContext);
   const switcher = useRef();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -114,14 +114,22 @@ const Home = () => {
     }
   }, [RequestUserselected, successSend]);
 
-  const kon=RequestUserselected || Userselected
+  let kon=RequestUserselected || Userselected
 
   //to again switch to null messaegs when clicked on messages tab at bottom
   useEffect(() => {
-    
+      if(RequestUserselected){
+        setRequestUserSelected(null);
+      }
+      if(Userselected){
+        setUserSelected(null);
+      }
+
       dispatch(setMessages([]));
     
   },[requestClick])
+
+  
 
   return (
     <>
