@@ -26,7 +26,7 @@ exports.sendMessage = async (req, res) => {
       ],
     });
 
-    console.log(convo);
+    // console.log(convo);
 
     if (!convo) {
       // Create a new conversation if it doesn't exist
@@ -57,7 +57,7 @@ exports.getMessages = async (req, res) => {
       participants: { $all: [senderId, receiverId] },
     }).populate("messages");
     if (!conversation) {
-      return res.status(200).json({ success: false, messages: [] });
+      return res.status(200).json({ success: true, messages: [] });
     }
     const messages = conversation.messages;
 

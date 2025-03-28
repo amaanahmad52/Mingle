@@ -33,7 +33,13 @@ const URL = import.meta.env.VITE_BACKEND_URL;
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { SideBarselected, Userselected,setUserSelected ,RequestUserselected, setRequestUserSelected } = useContext(SidebarContext);
+  const {
+    SideBarselected,
+    Userselected,
+    setUserSelected,
+    RequestUserselected,
+    setRequestUserSelected,
+  } = useContext(SidebarContext);
   const switcher = useRef();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -46,9 +52,9 @@ const Home = () => {
   const { messages, successAll, loadingSend, successSend } = useSelector(
     (state) => state.messagesReducer
   );
-  
+
   const clickSidebar = () => setSidebarOpen(!sidebarOpen);
- 
+
   //to fetch all users from backend
   useEffect(() => {
     const fetchUsers = async () => {
@@ -65,7 +71,7 @@ const Home = () => {
     };
     fetchUsers();
   }, []);
-  
+
   //to show login message when user is not logged in
   useEffect(() => {
     if (!user) {
@@ -78,7 +84,7 @@ const Home = () => {
       setShowLoginPopup(false);
     }
   }, [user]);
- 
+
   //handling search
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -89,7 +95,6 @@ const Home = () => {
       setSearchOpen(false);
     }
   };
-  
 
   //to get messages between two users (MESSAGES)
   useEffect(() => {
@@ -106,7 +111,7 @@ const Home = () => {
       showLastMessageDiv.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
- 
+
   //to get messages between two users (REQUESTS)
   useEffect(() => {
     if (RequestUserselected) {
@@ -114,23 +119,31 @@ const Home = () => {
     }
   }, [RequestUserselected, successSend]);
 
-  let kon=RequestUserselected || Userselected
+  let kon = RequestUserselected || Userselected;
 
   //to again switch to null messaegs when clicked on messages tab at bottom
   useEffect(() => {
-      if(RequestUserselected){
-        setRequestUserSelected(null);
-      }
-      if(Userselected){
-        setUserSelected(null);
-      }
+    if (RequestUserselected) {
+      setRequestUserSelected(null);
+    }
+    if (Userselected) {
+      setUserSelected(null);
+    }
 
-      dispatch(setMessages([]));
-    
-  },[requestClick])
+    dispatch(setMessages([]));
+  }, [requestClick]);
 
-  
+  //for date
+  const getFormattedDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
+  let previousDate = null;
   return (
     <>
       {!user ? (
@@ -210,26 +223,27 @@ const Home = () => {
 
               {/* navbar of chatbox */}
               {/* Navbar of chatbox */}
-                <div className="rounded-1xl text-center w-2/3 p-4 flex justify-between border-b border-gray-400 mx-4 max-sm:h-full max-sm:w-full items-center">
+              <div className="rounded-1xl text-center w-2/3 p-4 flex justify-between border-b border-gray-400 mx-4 max-sm:h-full max-sm:w-full items-center">
                 {kon && (
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3">
                     <img
-                        src={kon.avatar?.url || "https://i.pravatar.cc/200"}
-                        className="w-12 h-12 object-cover rounded-full"
-                        alt="user avatar"
+                      src={kon.avatar?.url || "https://i.pravatar.cc/200"}
+                      className="w-12 h-12 object-cover rounded-full"
+                      alt="user avatar"
                     />
-                    <span className={`text-xl text-cyan-600 font-bold font-sans hover:text-cyan-700`}>
-                        {kon.firstname}
+                    <span
+                      className={`text-xl text-cyan-600 font-bold font-sans hover:text-cyan-700`}
+                    >
+                      {kon.firstname}
                     </span>
-                    </div>
+                  </div>
                 )}
                 <div className={`${!kon ? "hidden" : "flex"} items-center`}>
-                    <DuoIcon className="mt-1 hover:text-cyan-700 mx-1 cursor-pointer" />
-                    <CallIcon className="mt-1 hover:text-cyan-700 mx-1 cursor-pointer" />
-                    <SimpleDialogDemo id={kon?._id} />
+                  <DuoIcon className="mt-1 hover:text-cyan-700 mx-1 cursor-pointer" />
+                  <CallIcon className="mt-1 hover:text-cyan-700 mx-1 cursor-pointer" />
+                  <SimpleDialogDemo id={kon?._id} />
                 </div>
-                </div>
-
+              </div>
             </div>
 
             <div className="flex w-full h-[calc(100vh-4rem)]">
@@ -285,11 +299,23 @@ const Home = () => {
                           </h1>
                         </div>
                       ) : (
-                        messages.map((m, index) => (
-                          <div key={index} ref={showLastMessageDiv}>
-                            <MessageContainer message={m} user={user} />
-                          </div>
-                        ))
+                        messages.map((m, index) => {
+                          let messageDate = new Date(m.createdAt).setHours(0, 0, 0, 0);
+                          let shouldShowDate = previousDate === null || messageDate > previousDate;
+          
+                          previousDate = messageDate; // Update for next iteration
+          
+                          return (
+                              <div key={index} ref={showLastMessageDiv}>
+                                  {shouldShowDate && (
+                                      <div className="text-center text-gray-500 text-xs my-2">
+                                          {getFormattedDate(m.createdAt)}
+                                      </div>
+                                  )}
+                                  <MessageContainer message={m} user={user} />
+                              </div>
+                          );
+                        })
                       )}
                     </motion.div>
                     <MessageInput />

@@ -84,6 +84,7 @@ const MessageInput = () => {
   };
   const handleSendMessage = (e) => {
     e.preventDefault();
+    console.log("message", message);
     playSound();
     dispatch(
       sendMessageAction({ messageBody: message, receiverId: Userselected._id })
