@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import RequestProfileTile from "./RequestProfileTile";
-import { getAllMessagesAction } from "../../slices/MessagesSlice";
+import { clearMessagesAction, getAllMessagesAction, setMessages } from "../../slices/MessagesSlice";
 import { AddToFriend, CheckNonFriendUserAction } from "../../slices/UserSlices";
 import { useContext } from "react";
 import { SidebarContext } from "../../Context/SideBarContext";
@@ -10,7 +10,7 @@ const RequestsBar = ({ allusers = [] }) => {
     const dispatch = useDispatch();
     const {RequestUserselected,setRequestUserSelected,userselected,setUserSelected}=useContext(SidebarContext);
     const { user,nonfriendusers } = useSelector((state) => state.userReducer);
-    
+    const {messages}=useSelector((state)=>state.messagesReducer);
 
     const filteredUsers = Array.isArray(allusers)
         ? allusers.filter((u) => !user?.friends?.includes(u._id))
@@ -40,17 +40,21 @@ const RequestsBar = ({ allusers = [] }) => {
 
             //add this user as a friend
             dispatch(AddToFriend({ id: RequestUserselected._id, email: user.email }));
-            setRequestUserSelected(null);
+            
             
         }
         if(action === "Reject"){
-
+            dispatch(clearMessagesAction({ receiverId: RequestUserselected._id }));
         }
+        setRequestUserSelected(null);
+
+        dispatch(setMessages([]));
+        window.location.reload();
     };
 
-    // useEffect(() => {
-    //     setRequestUserSelected(RequestUserselected);
-    // }, [RequestUserselected]);
+    useEffect(() => {
+       
+    }, [messages]);
 
     return (
         <div >
