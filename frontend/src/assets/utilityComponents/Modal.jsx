@@ -5,11 +5,16 @@ import ListItemButton from "@mui/material/ListItemButton";
 import Popover from "@mui/material/Popover";
 import Backdrop from "@mui/material/Backdrop";
 import { Typography } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
 
 export default function ThreeDotMenu({ handleOptionClick,handleProfileFileChange, r, sr, user }) {
   const open = Boolean(r);
 
   const handleClose = () => sr(null);
+
+  
+  const [openImageModal, setOpenImageModal] = React.useState(false);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -52,9 +57,7 @@ export default function ThreeDotMenu({ handleOptionClick,handleProfileFileChange
           <ListItem disablePadding>
             <ListItemButton
               onClick={() => {
-                if (user?.avatar?.url) {
-                  window.open(user.avatar.url, "_blank"); // Open image in new tab
-                }
+                setOpenImageModal(true)
                 handleClose();
               }}
             >
@@ -118,6 +121,38 @@ export default function ThreeDotMenu({ handleOptionClick,handleProfileFileChange
           </ListItem>
         </List>
       </Popover>
+
+
+      {/* modal for profile pic  */}
+      <Dialog
+        open={openImageModal}
+        onClose={() => setOpenImageModal(false)}
+        maxWidth="lg"
+        sx={{
+            "& .MuiPaper-root": {
+              background: "transparent",
+              backdropFilter: "blur(10px)",
+              borderRadius: "12px",
+              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.9)",
+              //make size large
+              width: "50%",
+              height: "50%",
+            },
+          }}
+      >
+        <DialogContent className="p-0">
+          <div className="flex justify-center items-center w-full h-full">
+            <img
+              src={
+                user.avatar.url ||
+                "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"
+              }
+              alt="Profile"
+              className="w-full h-auto max-w-96 max-h-96"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
