@@ -144,6 +144,31 @@ const Home = () => {
   };
 
   let previousDate = null;
+
+
+  /// for search bar 
+
+  const searchRef = useRef(null);
+
+  // Function to handle outside clicks
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setSearchOpen(false);
+      }
+    };
+
+    if (searchOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [searchOpen]);
+  //.......................
   return (
     <>
       {!user ? (
@@ -201,7 +226,7 @@ const Home = () => {
                     </span>
                   ))}
 
-                <div className="relative">
+                <div className="relative" ref={searchRef}>
                   {searchOpen ? (
                     <input
                       type="text"
@@ -211,12 +236,17 @@ const Home = () => {
                       className="border border-gray-400 rounded px-2 py-1 focus:outline-none"
                       placeholder="Search..."
                     />
-                  ) : (
-                    <SearchIcon
-                      className="hover:text-cyan-600 cursor-pointer ml-4"
-                      onClick={() => setSearchOpen(true)}
-                    />
-                  )}
+                  ) : 
+                  (
+                    SideBarselected === "Messages" && (
+                      <SearchIcon
+                        className="hover:text-cyan-600 cursor-pointer ml-4"
+                        onClick={() => setSearchOpen(true)}
+                      />
+                    )
+                  )
+                    
+                  }
                 </div>
                 <MultiAvatars count={`+${user?.friends?.length}`} />
               </div>

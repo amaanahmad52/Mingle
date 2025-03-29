@@ -59,7 +59,7 @@ const RequestsBar = ({ allusers = [] }) => {
     return (
         <div >
             {/* No message requests UI */}
-            {filteredUsers.length === 0 ? (
+            {nonfriendusers.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 justify-center w-full h-full mb-25">
                     <img
                         className="w-20 h-20 object-contain"
