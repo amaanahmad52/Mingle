@@ -27,6 +27,7 @@ app.use(cors(
 
 app.use('/mingle/v1',require('./Routes/UserRoutes'))
 app.use('/mingle/v1',require('./Routes/MessagesRoutes'))
+app.use('/mingle/v1',require('./Routes/PaymentRoute'))
 
 
 connect()

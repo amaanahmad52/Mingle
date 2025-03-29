@@ -51,11 +51,15 @@ const userSchema=new mongoose.Schema({
         type: String,
         default: "Hey there i am using Mingle !",
     },
+    friends: [{ type: String}],
+    balance:{
+        type:Number,
+        default:10
+    },
     joinedAt: {
         type: Date,
         default: Date.now,
     },
-    friends: [{ type: String}],
 })
 
 userSchema.methods.getJWTTOKEN=async function(){  

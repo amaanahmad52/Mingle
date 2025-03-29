@@ -13,6 +13,7 @@ import { getUserDetailsAction } from './slices/UserSlices'
 import SignUp from './components/User/SignUp'
 import Verify_Email_on_Signup from './components/User/Verify_Email_on_Signup'
 import Invitation from './assets/utilityComponents/Invitation'
+import PaymentSuccess from './components/Payments/PaymentSuccess'
 
 
 
@@ -51,6 +52,7 @@ function App() {
         {/* conditional routing */}
         {/* <Route element={<ProtectedRoute/>}> */}
         <Route exact path='/home' element={<Home/>}/>
+        <Route exact path='/paymentSuccess/:paymentId' element={<PaymentSuccess/>}/>
         {/* </Route> */}
 
       

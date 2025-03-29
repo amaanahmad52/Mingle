@@ -22,6 +22,7 @@ import { MesssageContext } from "../../Context/MessageContext";
 import sendsound from "../../assets/sound/sendsound.mp3";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ForwardIcon from "@mui/icons-material/Forward";
+import PaymentBox from "../Payments/PaymentBox";
 const MessageInput = () => {
   const { opencheckbox, setopencheckbox } = useContext(MesssageContext);
   const { loadingSend, successSend, messages } = useSelector(
@@ -84,7 +85,6 @@ const MessageInput = () => {
   };
   const handleSendMessage = (e) => {
     e.preventDefault();
-    console.log("message", message);
     playSound();
     dispatch(
       sendMessageAction({ messageBody: message, receiverId: Userselected._id })
@@ -172,7 +172,7 @@ const MessageInput = () => {
             >
               <EmojiIcon />
             </button>
-
+              
             {/* Emoji Picker (Aligned with Input) */}
             <AnimatePresence>
               {open1 && (
@@ -196,16 +196,22 @@ const MessageInput = () => {
                 </motion.div>
               )}
             </AnimatePresence>
-
+            
             {/* Input Box */}
+            <div className=" absolute inset-y-0 end-15 flex items-center pe-3 ">
+              <PaymentBox/>
+            </div>
+            
             <input
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="pl-16 pr-19 border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 text-white truncate"
+              className="pl-16 pr-25 border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 text-white truncate"
               placeholder="Send a message"
             />
 
+             {/* payment button */}
+             
             {/* Send Button */}
             <button
               type="submit"
@@ -228,8 +234,10 @@ const MessageInput = () => {
             </button>
 
             {/* SpeedDial Positioned Absolutely */}
+            
             <div className="absolute bottom-1/8 ml-20 bg-transparent">
               <BasicSpeedDial open={open} setOpen={setOpen} />
+              
             </div>
           </div>
         </form>
