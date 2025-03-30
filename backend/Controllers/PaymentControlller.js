@@ -35,10 +35,7 @@ exports.verifyPayment=async(req,res)=>{
             const payment=new PaymentModel({razorpay_payment_id,razorpay_order_id,razorpay_signature,senderId,receiverId,amount})
             await payment.save();
             const paymentId=payment._id
-            res.status(200).json({
-                success: true,
-                paymentId: paymentId,
-            });
+           res.redirect(`http://localhost:5173/paymentSuccess/${paymentId}`)
         }
         else{
             res.status(400).json({success:false,message:"Payment Failed"})
