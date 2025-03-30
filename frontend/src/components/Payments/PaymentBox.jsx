@@ -23,7 +23,9 @@ const PaymentBox = () => {
     );
     const order_id=data.order.id
     
-    console.log(typeof(amount))
+    // console.log(typeof(amount))
+    localStorage.setItem('receiver', JSON.stringify(Userselected));
+    console.log((localStorage.getItem('receiver')));
     //callback for payment verification
     //get key
     const { data: key } = await axios.get(
