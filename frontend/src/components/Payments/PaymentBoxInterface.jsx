@@ -2,7 +2,7 @@ import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import { useState } from 'react';
 
 const PaymentBoxInterface=({clickedFunction})=>{
-    const [amount,setAmount]=useState()
+    const [amount,setAmount]=useState(null)
  return(
     <>  
      <div className="flex flex-col space-y-3 text-sm ">

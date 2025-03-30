@@ -13,6 +13,7 @@ const PaymentBox = () => {
   const [openImageModal, setOpenImageModal] = useState(false);
   const {Userselected}=useContext(SidebarContext)
   const {user}=useSelector((state)=>state.userReducer)
+
   const handlePayment=async(amount)=>{
     
     const { data } = await axios.post(
@@ -22,7 +23,7 @@ const PaymentBox = () => {
     );
     const order_id=data.order.id
     
-
+    console.log(typeof(amount))
     //callback for payment verification
     //get key
     const { data: key } = await axios.get(
@@ -37,7 +38,7 @@ const PaymentBox = () => {
         description: `{You are sending ₹${amount} to ${Userselected.name}}`,
         image: Userselected.avatar.url,
         order_id: order_id, 
-        callback_url: `{/verifyPayment/${Userselected._id}}`,
+        callback_url: `${URL}verifyPayment/${Userselected._id}?amount=${amount}`,
         prefill: {
            name: user.name,
             email: user.email,
