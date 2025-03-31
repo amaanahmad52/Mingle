@@ -31,7 +31,7 @@ exports.verifyPayment=async(req,res)=>{
             .update(params)
             .digest('hex');
         if (razorpay_signature === expectedSignature) {
-            console.log("Payment verified");
+            // console.log("Payment verified");
             const payment=new PaymentModel({razorpay_payment_id,razorpay_order_id,razorpay_signature,senderId,receiverId,amount})
             await payment.save();
             const paymentId=payment._id

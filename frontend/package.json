@@ -34,7 +34,8 @@
     "react-speech-recognition": "^4.0.0",
     "react-toastify": "^11.0.5",
     "reactjs-emoji-keyboard": "^1.0.17",
-    "tailwind-scrollbar": "^4.0.1"
+    "tailwind-scrollbar": "^4.0.1",
+    "to-words": "^4.4.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

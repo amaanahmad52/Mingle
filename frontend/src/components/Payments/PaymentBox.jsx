@@ -15,7 +15,10 @@ const PaymentBox = () => {
   const {user}=useSelector((state)=>state.userReducer)
 
   const handlePayment=async(amount)=>{
-    
+    if(amount<1){
+      alert("Amount should be greater than 0")
+      return
+    }
     const { data } = await axios.post(
         `${URL}/createOrder`,
         {amount},
@@ -76,7 +79,7 @@ const PaymentBox = () => {
       <Dialog
         open={openImageModal}
         onClose={() => setOpenImageModal(false)}
-        // maxWidth="xs"
+        maxWidth="xs"
         sx={{
           "& .MuiPaper-root": {
             background: "transparent",
@@ -85,12 +88,12 @@ const PaymentBox = () => {
             boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.9)",
             //make size large
             width: "30%",
-            height: "30%",
+            height: "70%",
           },
         }}
       >
         <DialogContent className="p-0">
-          <div className="flex justify-center items-center w-full h-full">
+          <div className="flex justify-center items-center w-full h-full ">
            <PaymentBoxInterface clickedFunction={handlePayment}/>
           </div>
         </DialogContent>
