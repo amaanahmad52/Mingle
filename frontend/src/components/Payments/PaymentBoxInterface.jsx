@@ -12,7 +12,7 @@ const PaymentBoxInterface=({clickedFunction})=>{
                 type="Number"
                 value={amount}
                 onChange={(e)=>setAmount(e.target.value)}
-                className={`ring-2 ${amount ? "ring-[#cb7936]" : "ring-[#E7AC36]"} border border-gray-400 text-white rounded px-2 py-1 font-Poppins focus:outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-moz-appearance:textfield]`}
+                className={`ring-2 ${amount ? "ring-green-700" : "ring-green-900"} border border-gray-400 text-white rounded px-2 py-1 font-Poppins focus:outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-moz-appearance:textfield]`}
 
                 placeholder="Enter Amount..."
                 onKeyDown={(e) => {
@@ -23,7 +23,7 @@ const PaymentBoxInterface=({clickedFunction})=>{
             />
           </div>
           
-          <TaskAltIcon onClick={()=>clickedFunction(amount)} className="text-[#F7AE1E] text-5xl transition duration-300 hover:text-[#F69213] cursor-pointer scale-130" />
+          <TaskAltIcon onClick={()=>clickedFunction(amount)} className="text-green-700 text-5xl transition duration-300 hover:text-green-800 cursor-pointer scale-130" />
           
         </div>
     </div>

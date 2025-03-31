@@ -1,14 +1,32 @@
-import { useContext, useEffect, useState } from 'react';
+import { use, useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Explosion from '../../assets/utilityComponents/Explosion';
 import { SidebarContext } from '../../Context/SideBarContext';
-
+import paymentSuccessSound from "/sound/paymentSuccessSound.mp3"
 const PaymentSuccess = () => {
     const { paymentId } = useParams();
     const navigate = useNavigate();
     const [time, setTime] = useState(10);
     const{setUserSelected}=useContext(SidebarContext)
+    
+    //success sound
+    const [audio] = useState(new Audio(paymentSuccessSound));
+    
     useEffect(() => {
+        audio.load(); // Preload the audio when the component mounts
+    }, [audio]);
+
+    const playSound = () => {
+        audio.currentTime = 0; // Reset audio to start
+        audio.play();
+    };
+
+    useEffect(() => {
+        playSound();
+    }, [audio]);
+  
+    useEffect(() => {
+       
         const interval = setInterval(() => {
             setTime((prevTime) => prevTime - 1);
         }, 1000);
@@ -48,8 +66,9 @@ const PaymentSuccess = () => {
     //after sucees 
 
     const receiver=localStorage.getItem('receiver')
-    console.log(JSON.parse(receiver))
+    // console.log(JSON.parse(receiver))
 
+    
 
     return (
         <div className="flex flex-col items-center justify-center h-screen text-white p-6">
@@ -64,7 +83,7 @@ const PaymentSuccess = () => {
                 </span>
                 <span className="text-sm ml-2" style={{ color: 'rgb(247,174,30)' }}>
                     {paymentId}
-                </span>
+                </span> 
             </div>
 
             <div className='mt-4 flex flex-row items-center gap-2 justify-between'>

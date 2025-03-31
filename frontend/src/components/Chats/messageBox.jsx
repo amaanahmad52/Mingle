@@ -19,7 +19,7 @@ import {
 import { useContext } from "react";
 import { SidebarContext } from "../../Context/SideBarContext";
 import { MesssageContext } from "../../Context/MessageContext";
-import sendsound from "../../assets/sound/sendsound.mp3";
+import sendsound from "/sound/sendsound.mp3";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ForwardIcon from "@mui/icons-material/Forward";
 import PaymentBox from "../Payments/PaymentBox";
