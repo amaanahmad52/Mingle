@@ -32,6 +32,8 @@ import Skeleton from "../assets/utilityComponents/Skeleton";
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 const Home = () => {
+  //const paymentuser=localStorage.getItem('receiver')
+
   const dispatch = useDispatch();
   const {
     SideBarselected,
@@ -168,6 +170,17 @@ const Home = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [searchOpen]);
+/// 
+  useEffect(() => {
+    const storedUser = localStorage.getItem('receiver');
+    if (storedUser) {
+     
+        setUserSelected(JSON.parse(storedUser));
+        //if home render first time with out any payment then also this work thats why we need to remove it 
+        localStorage.removeItem('receiver');
+    
+    }
+  }, []);
   //.......................
   return (
     <>
