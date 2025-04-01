@@ -15,8 +15,8 @@ const Message = ({ message, user }) => {
   );
   const { Userselected, RequestUserselected } = useContext(SidebarContext);
 
-  // Use RequestUserselected if available; otherwise, fallback to Userselected
   const selectedUser = RequestUserselected || Userselected;
+  const fromMe = message.senderId === user._id;
 
   const toggleSelection = (id) => {
     setSelectedMessages((prev) => {
@@ -25,8 +25,6 @@ const Message = ({ message, user }) => {
       return newSet;
     });
   };
-
-  const fromMe = message.senderId === user._id;
 
   const avatar =
     user.avatar?.url ||
@@ -38,6 +36,8 @@ const Message = ({ message, user }) => {
   const chatClass = fromMe ? "chat-end" : "chat-start";
   const profilePic = fromMe ? avatar : hisAvatar;
   const bubbleColor = fromMe ? "bg-cyan-600" : "bg-gray-500";
+  const checkboxAlign = fromMe ? "order-0 mr-auto" : "order-1 ml-auto"; // Ensure checkbox is positioned correctly
+  const iscolour=selectedMessages.has(message._id)?"transparent bg-cyan-200":""
 
   // Format date and time
   const messageDate = new Date(message.createdAt).toLocaleDateString();
@@ -47,23 +47,28 @@ const Message = ({ message, user }) => {
   });
 
   return (
-    <>
+    <div className={`chat ${chatClass} ${iscolour} `}>
       {opencheckbox && (
-        <input
-          type="checkbox"
-          className="mr-2 cursor-pointer absolute mt-5"
-          checked={selectedMessages.has(message._id)}
-          onChange={() => toggleSelection(message._id)}
-        />
+        <div className={`flex items-center h-full ${checkboxAlign} `}>
+          <input
+            type="checkbox"
+            className="cursor-pointer"
+            checked={selectedMessages.has(message._id)}
+            onChange={() => toggleSelection(message._id)}
+          />
+        </div>
       )}
-      <div className={`chat ${chatClass}`}>
+
+      <div>
         <div className="chat-image avatar">
           <div className="w-10 rounded-full">
             <img alt="Profile" src={profilePic} />
           </div>
         </div>
         <div
-          className={`chat-bubble text-white ${bubbleColor} break-words max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl whitespace-pre-wrap ${selectedMessages.has(message._id) ? "bg-opacity-80 ring-3 ring-[rgb(247,174,30)]" : ""}`}
+          className={`chat-bubble text-white ${bubbleColor} break-words max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl whitespace-pre-wrap ${
+            selectedMessages.has(message._id) ? "bg-opacity-80 ring-3 ring-[rgb(247,174,30)]" : ""
+          }`}
         >
           {message.messageBody || "No message content"}
         </div>
@@ -71,7 +76,7 @@ const Message = ({ message, user }) => {
           {messageTime}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

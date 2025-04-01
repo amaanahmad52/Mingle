@@ -30,6 +30,7 @@ import { useDispatch } from "react-redux";
 import { getAllMessagesAction, setMessages } from "../slices/MessagesSlice";
 import Skeleton from "../assets/utilityComponents/Skeleton";
 import TitleData from "../assets/utilityComponents/TitleData";
+import mingle from "/sound/mingle.wav"
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 const Home = () => {
@@ -57,9 +58,20 @@ const Home = () => {
   );
 
   const clickSidebar = () => setSidebarOpen(!sidebarOpen);
+const [audio] = useState(new Audio(mingle));
+const playSound = () => {
+  audio.currentTime = 0; // Reset audio to start
+  audio.play();
+};
+  useEffect(() => {
+    audio.load(); // Preload the audio when the component mounts
+  }, [audio]);
+
 
   //to fetch all users from backend
-  useEffect(() => {
+  useEffect(() => { 
+
+   
     const fetchUsers = async () => {
       try {
         const response = await axios.get(`${URL}/getalluser`, {
@@ -84,6 +96,7 @@ const Home = () => {
 
       return () => clearTimeout(timer); // Cleanup on unmount or user login
     } else {
+      
       setShowLoginPopup(false);
     }
   }, [user]);

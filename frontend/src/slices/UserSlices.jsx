@@ -37,6 +37,12 @@ export const LoginByEmailAction = createAsyncThunk("LoginByEmailAction",async ({
       { email: email ,password:password},
       { withCredentials: true, headers: { "Content-Type": "application/json" } }
     );
+    console.log(data);
+
+    if(data.message==="Invalid Credentials"){
+
+    
+      toast.error(data.message)}
     return data;
   }
 );
