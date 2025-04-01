@@ -29,6 +29,7 @@ import RequestsBar from "../assets/utilityComponents/RequestsBar";
 import { useDispatch } from "react-redux";
 import { getAllMessagesAction, setMessages } from "../slices/MessagesSlice";
 import Skeleton from "../assets/utilityComponents/Skeleton";
+import TitleData from "../assets/utilityComponents/TitleData";
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 const Home = () => {
@@ -184,6 +185,7 @@ const Home = () => {
   //.......................
   return (
     <>
+      
       {!user ? (
         <>
           {!showLoginPopup ? (
@@ -206,6 +208,7 @@ const Home = () => {
         </>
       ) : (
         <>
+          <TitleData data={`Welcome ${user.firstname} to Mingle`} />
           <div
             className="w-full h-screen overflow-hidden font-mono"
             style={{ fontFamily: "Poppins" }}

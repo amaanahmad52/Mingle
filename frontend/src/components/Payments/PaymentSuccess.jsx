@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Explosion from '../../assets/utilityComponents/Explosion';
 import { SidebarContext } from '../../Context/SideBarContext';
 import paymentSuccessSound from "/sound/paymentSuccessSound.mp3"
+import TitleData from "../../assets/utilityComponents/TitleData";
 const PaymentSuccess = () => {
     const { paymentId } = useParams();
     const navigate = useNavigate();
@@ -71,6 +72,9 @@ const PaymentSuccess = () => {
     
 
     return (
+        <>
+        <TitleData data={"Payment Success"} />
+
         <div className="flex flex-col items-center justify-center h-screen text-white p-6">
             <Explosion isExploding={expload}/>
             <h1 className="text-4xl font-bold mb-4" style={{ color: 'rgb(247,174,30)' }}>
@@ -95,6 +99,7 @@ const PaymentSuccess = () => {
             </div>
            
         </div>
+        </>
     );
 };
 

@@ -4,13 +4,14 @@ import { SidebarContext } from "../../Context/SideBarContext";
 import bhimIcon from "/images/bhimIcon.png";
 import SecureIcon from "@mui/icons-material/VerifiedUser";
 import NumberToWords from "../../assets/utilityComponents/NumberToWords";
-
+import TitleData from "../../assets/utilityComponents/TitleData";
 const PaymentBoxInterface = ({ clickedFunction }) => {
   const [amount, setAmount] = useState(null);
   const { Userselected } = useContext(SidebarContext);
   const [hasText, setHasText] = useState(false);
   return (
     <>
+       <TitleData data={"Payment"}/>
       <div className="flex flex-col ">
         <div className="flex flex-col space-y-2 text-sm text-white ">
             <div className="flex flex-row gap-3 justify-start items-center max-sm:flex-col max-sm:justify-center">

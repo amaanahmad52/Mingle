@@ -7,6 +7,7 @@ import PaymentBoxInterface from "./PaymentBoxInterface";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
+
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 const PaymentBox = () => {
@@ -62,6 +63,7 @@ const PaymentBox = () => {
   }
   return (
     <>
+     
       <div
         className="group transition duration-150 ease-in-out hover:scale-110 cursor-pointer"
         onClick={() => setOpenImageModal(true)}

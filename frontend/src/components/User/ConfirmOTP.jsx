@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { ConfirmOTPAction } from "../../slices/UserSlices";
+import TitleData from "../../assets/utilityComponents/TitleData";
 
 const ConfirmOTP = () => {
     const dispatch = useDispatch();
@@ -34,6 +35,7 @@ const ConfirmOTP = () => {
 
     return (
         <div>
+            <TitleData data={"Mingle-Confirm OTP"} />
             <form onSubmit={handleSubmit}>
                 <div className="hero bg-base-200 min-h-screen">
                 <div className="hero-content flex-row w-full min-h-96">
