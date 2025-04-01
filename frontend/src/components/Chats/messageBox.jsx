@@ -113,6 +113,10 @@ const MessageInput = () => {
 
     setopencheckbox(false); //to turnoff the checkbox after deletion
   };
+  const cancel=()=>{
+    setSelectedMessages(new Set());
+    setopencheckbox(false)
+  }
 
   useEffect(() => { //to close the chaeckbox of deletion when clicked on the other user
     setopencheckbox(false)
@@ -144,7 +148,7 @@ const MessageInput = () => {
         <div className="absolute bottom-0 left-0 w-full flex items-center justify-between bg-gray-700 border-gray-600 rounded-2xl p-2.5">
           <button
             className="bg-cyan-600 text-white px-2 py-1 rounded-lg hover:bg-cyan-700 cursor-pointer"
-            onClick={() => setopencheckbox(false)}
+            onClick={() => cancel()}
           >
             Cancel
           </button>
