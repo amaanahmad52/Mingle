@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { SidebarContext } from "../../Context/SideBarContext";
 import { useSelector } from "react-redux";
 import { MesssageContext } from "../../Context/MessageContext";
@@ -38,7 +38,10 @@ const Message = ({ message, user }) => {
   const bubbleColor = fromMe ? "bg-cyan-600" : "bg-gray-500";
   const checkboxAlign = fromMe ? "order-0 mr-auto" : "order-1 ml-auto"; // Ensure checkbox is positioned correctly
   const iscolour=selectedMessages.has(message._id)?"transparent bg-cyan-200":""
+useEffect(()=>{
 
+setSelectedMessages(new Set())
+},[Userselected])
   // Format date and time
   const messageDate = new Date(message.createdAt).toLocaleDateString();
   const messageTime = new Date(message.createdAt).toLocaleTimeString([], {

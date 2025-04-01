@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { LoginByEmailAction } from "../../slices/UserSlices";
 import { toast } from "react-toastify";
 import TitleData from "../../assets/utilityComponents/TitleData";
-
+import mingle from "/sound/mingle.wav"
 const LoginByEmail = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,10 +16,19 @@ const LoginByEmail = () => {
 
     dispatch(LoginByEmailAction({ email, password }));
   };
+  const [audio] = useState(new Audio(mingle));
+  const playSound = () => {
+    audio.currentTime = 0; // Reset audio to start
+    audio.play();
+  };
+    useEffect(() => {
+      audio.load(); // Preload the audio when the component mounts
+    }, [audio]);
 
   useEffect(() => {
     if (successO) {
       nav("/home", { replace: true });
+      playSound()
       toast.success("Login Success");
     }
   }, [nav, successO]);
