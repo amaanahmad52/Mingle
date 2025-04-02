@@ -145,7 +145,7 @@ const MessageInput = () => {
       )}
       {opencheckbox ? (
         <div className="relative w-full">
-        <div className="absolute bottom-0 left-0 w-full flex items-center justify-between bg-gray-700 border-gray-600 rounded-2xl p-2.5">
+        <div className="absolute -bottom-7 left-0 w-full flex items-center justify-between bg-gray-700 border-gray-600 rounded-2xl p-1">
           <button
             className="bg-cyan-600 text-white px-2 py-1 rounded-lg hover:bg-cyan-700 cursor-pointer"
             onClick={() => cancel()}

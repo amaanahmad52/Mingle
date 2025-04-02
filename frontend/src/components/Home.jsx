@@ -31,6 +31,7 @@ import { getAllMessagesAction, setMessages } from "../slices/MessagesSlice";
 import Skeleton from "../assets/utilityComponents/Skeleton";
 import TitleData from "../assets/utilityComponents/TitleData";
 import mingle from "/sound/mingle.wav"
+import { MesssageContext } from "../Context/MessageContext";
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 const Home = () => {
@@ -56,6 +57,10 @@ const Home = () => {
   const { messages, successAll, loadingSend, successSend } = useSelector(
     (state) => state.messagesReducer
   );
+   const {
+      opencheckbox,
+   
+    } = useContext(MesssageContext);
 
   const clickSidebar = () => setSidebarOpen(!sidebarOpen);
 const [audio] = useState(new Audio(mingle));
@@ -125,8 +130,27 @@ const playSound = () => {
   useEffect(() => {
     if (showLastMessageDiv.current) {
       showLastMessageDiv.current.scrollIntoView({ behavior: "smooth" });
+
+
+     
+
+        // Scroll to the bottom initially
+       
+  
+        // Create a MutationObserver to detect changes in the message list height
+        const observer = new MutationObserver(() => {
+          showLastMessageDiv.current.scrollIntoView({ behavior: "smooth" });
+        });
+  
+        // Observe changes to child nodes (messages)
+        observer.observe(showLastMessageDiv.current.parentNode, { childList: true, subtree: true });
+  
+        return () => {
+          // Disconnect the observer on cleanup
+          observer.disconnect();
+        };
     }
-  }, [messages]);
+  }, [opencheckbox,messages]);
 
   //to get messages between two users (REQUESTS)
   useEffect(() => {
@@ -365,9 +389,9 @@ const playSound = () => {
                           previousDate = messageDate; // Update for next iteration
           
                           return (
-                              <div key={index} ref={showLastMessageDiv}>
+                              <div className="" key={index} ref={showLastMessageDiv}>
                                   {shouldShowDate && (
-                                      <div className="text-center text-gray-500 text-xs my-2">
+                                      <div className="text-center text-gray-500 text-xs mt-2">
                                           {getFormattedDate(m.createdAt)}
                                       </div>
                                   )}
