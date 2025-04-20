@@ -40,7 +40,7 @@ const PaymentBoxInterface = ({ clickedFunction }) => {
 
             <div className="flex flex-col justify-around items-center gap-1 w-full">
             
-                <div className="ml-9 flex items-center justify-center text-white font-bold text-2xl">
+                <div className="ml-15 flex items-center justify-center text-white font-bold text-2xl">
                   <span className="mr-1">₹</span>
                   <input
                     type="Number"
@@ -49,7 +49,7 @@ const PaymentBoxInterface = ({ clickedFunction }) => {
                     className="bg-transparent text-white font-Poppins focus:outline-none w-30 text-xl font-bold appearance-none 
                               [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none 
                               [&::-moz-appearance:textfield]"
-                    placeholder="Amount"
+                    placeholder="0.00"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         clickedFunction(amount);

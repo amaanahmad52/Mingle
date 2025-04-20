@@ -1,8 +1,11 @@
 const PaymentModel=require('../Models/PaymentModel')
+const User=require('../Models/UserModel')
 const instance=require('../Utils/Razorpay')
 const dotenv=require('dotenv');
 const crypto = require('crypto');
 dotenv.config();
+
+//step 1 of razorpay (creating order and getting order ID)
 exports.createOrder=async(req,res)=>{
         const {amount}=req.body
     try{
@@ -18,6 +21,8 @@ exports.createOrder=async(req,res)=>{
         res.status(500).json({success:false,message:"Internal Server Error",error:error.message})    
     }
 }
+
+//step 2 of razorpay (verifying payment) and then savin info to database
 
 exports.verifyPayment=async(req,res)=>{
     const {razorpay_payment_id,razorpay_order_id,razorpay_signature}=req.body
@@ -46,12 +51,39 @@ exports.verifyPayment=async(req,res)=>{
     }
 }
    
-
+//sending key to frontend
 exports.getKey=async(req,res)=>{
     try{
         res.status(200).json({success:true,key:process.env.RAZORPAY_key_id})
     }
     catch(error){
         res.status(500).json({success:false,message:"Internal Server Error",error:error.message})    
+    }
+}
+
+//getting payment history of a user
+exports.getPaymentHistory=async(req,res)=>{
+    try {
+        //get all the payments from backend where senderId is req.userDetails._id or receiverId is req.userDetails._id
+        // console.log(req.userDetails._id)
+        const payments=await PaymentModel.find({$or:[{senderId:req.userDetails._id},{receiverId:req.userDetails._id}]})
+        res.status(200).json({success:true,payments})
+
+    } catch (error) {
+        res.status(500).json({success:false,message:"Internal Server Error",error:error.message})
+    }
+}
+
+//adding money to wallet
+exports.addBalance=async(req,res)=>{
+    try {
+        const {amount}=req.body
+        console.log(typeof amount)
+        const user=await User.findById(req.userDetails._id)
+        user.balance=user.balance+amount
+        await user.save()
+        res.status(200).json({success:true,user})
+    } catch (error) {
+        res.status(500).json({success:false,message:"Internal Server Error",error:error.message})
     }
 }

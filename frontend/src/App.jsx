@@ -14,6 +14,7 @@ import SignUp from './components/User/SignUp'
 import Verify_Email_on_Signup from './components/User/Verify_Email_on_Signup'
 import Invitation from './assets/utilityComponents/Invitation'
 import PaymentSuccess from './components/Payments/PaymentSuccess'
+import LandingPage from './components/LandingPage'
 
 
 
@@ -38,7 +39,7 @@ function App() {
 
        
        
-        <Route exact path='/' element={<Home/>}/>
+        <Route exact path='/' element={<LandingPage/>}/>
         <Route exact path='/login' element={<LoginByEmail/>}/>
         <Route exact path='/loginByPhone' element={<LoginByPhone/>}/>
         <Route exact path='/confirmOTP' element={<ConfirmOTP/>}/>

@@ -22,6 +22,7 @@ import { AddToFriend } from "../../slices/UserSlices";
 import CloseIcon from "@mui/icons-material/HighlightOff";
 import { Typography } from "@mui/material";
 import { toast } from "react-toastify";
+import BalanceAndHistory from "../../components/Payments/BalanceAndHistory";
 
 const DashBoardBar = ({ friend }) => {
   const { user } = useSelector((state) => state.userReducer);
@@ -48,7 +49,9 @@ const DashBoardBar = ({ friend }) => {
     setSearch(value);
 
     const results = friend?.filter(
-      (u) => u.email !== user.email && u.phoneNumber.toLowerCase() === value.toLowerCase()
+      (u) =>
+        u.email !== user.email &&
+        u.phoneNumber.toLowerCase() === value.toLowerCase()
     );
 
     setFilteredUsers(results);
@@ -56,7 +59,6 @@ const DashBoardBar = ({ friend }) => {
   };
 
   const handleAddFriend = async (u) => {
-   
     // alert(`${u.firstname} added as a friend!`);
     const email = user.email;
     const id = u._id;
@@ -65,14 +67,17 @@ const DashBoardBar = ({ friend }) => {
   };
 
   const handleInvite = () => setInviteDialog(true);
-const id= user._id;
-console.log("userid",id);
+  const id = user._id;
+  // console.log("userid", id);
   const sendInviteSMS = async () => {
     alert(`Invitation link sent to ${inviteNumber}!`);
     await fetch(`${URL}/sendsms`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phoneNumber:inviteNumber,message:`http://localhost:5173/signUp/:${id}` }),
+      body: JSON.stringify({
+        phoneNumber: inviteNumber,
+        message: `http://localhost:5173/signUp/:${id}`,
+      }),
     })
       .then((response) => response.json())
       .then((data) => console.log("Success:", data))
@@ -84,124 +89,156 @@ console.log("userid",id);
 
   return (
     <>
-      <Modal
-        open={isopen}
-        onClose={closeModal}
-        sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-      >
-        <Box
+      <div className="flex flex-row  items-center justify-around max-sm:flex-col max-md:flex-col">
+        <Modal
+          open={isopen}
+          onClose={closeModal}
           sx={{
-            bgcolor: "transparent",
-            p: 4,
-            borderRadius: 2,
-            boxShadow: 24,
-            minWidth: 350,
-            textAlign: "center",
-            position: "relative",
-            color: "rgb(128,127,255)",
-            backdropFilter: "blur(10px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <h2 style={{ color: "rgb(128,127,255)", fontWeight: "bold" }}>Add Friends</h2>
-          <TextField
-            fullWidth
-            label="Search user by Phone number"
-            variant="outlined"
-            value={search}
-            onChange={handleSearch}
+          <Box
             sx={{
-              mt: 2,
-              mb: 2,
-              input: { color: "rgb(128,127,255)", fontWeight: "bold" },
-              label: { color: "rgb(128,127,255)" },
-              fieldset: { borderColor: "rgb(128,127,255)", fontWeight: "bold" },
+              bgcolor: "transparent",
+              p: 4,
+              borderRadius: 2,
+              boxShadow: 24,
+              minWidth: 350,
+              textAlign: "center",
+              position: "relative",
+              color: "rgb(128,127,255)",
+              backdropFilter: "blur(10px)",
             }}
-          />
+          >
+            <h2 style={{ color: "rgb(128,127,255)", fontWeight: "bold" }}>
+              Add Friends
+            </h2>
+            <TextField
+              fullWidth
+              label="Search user by Phone number"
+              variant="outlined"
+              value={search}
+              onChange={handleSearch}
+              sx={{
+                mt: 2,
+                mb: 2,
+                input: { color: "rgb(128,127,255)", fontWeight: "bold" },
+                label: { color: "rgb(128,127,255)" },
+                fieldset: {
+                  borderColor: "rgb(128,127,255)",
+                  fontWeight: "bold",
+                },
+              }}
+            />
 
-          {filteredUsers.length > 0 ? (
-            <List>
-              {filteredUsers.map((u) => (
-                <ListItem key={u.phoneNumber} disablePadding>
-                  <ListItemButton onClick={() => handleAddFriend(u)}>
-                    <ListItemAvatar>
-                      <Avatar sx={{ bgcolor: "transparent", color: blue[500] ,scale: 0.7}}>
-                        <img src={u.avatar.url} alt="" />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={
-                        <Typography
+            {filteredUsers.length > 0 ? (
+              <List>
+                {filteredUsers.map((u) => (
+                  <ListItem key={u.phoneNumber} disablePadding>
+                    <ListItemButton onClick={() => handleAddFriend(u)}>
+                      <ListItemAvatar>
+                        <Avatar
                           sx={{
-                            color: "rgb(128,127,255)",
-                            fontSize: "17px",
-                            fontWeight: "bold",
-                            "&:hover": {
-                              color: "rgb(14, 116, 144)",
-                              fontSize: "14px",
-                            },
+                            bgcolor: "transparent",
+                            color: blue[500],
+                            scale: 0.7,
                           }}
                         >
-                          {u.firstname}
-                        </Typography>
-                      }
-                    />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          ) : (
-            search && search.length === 10 && (
-              <div>
-                <p style={{ color: "rgb(128,127,255)" }}>No user found.</p>
-                <Button
-                  variant="contained"
-                  sx={{
-                    bgcolor: "rgb(128,127,255)",
-                    color: "black",
-                    "&:hover": { bgcolor: "darkcyan" },
-                  }}
-                  onClick={handleInvite}
-                >
-                  Send Invite
-                </Button>
-              </div>
-            )
-          )}
-          <IconButton
-            onClick={closeModal}
-            sx={{ position: "absolute", top: 8, right: 8, color: "rgb(128,127,255)" }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </Box>
-      </Modal>
+                          <img src={u.avatar.url} alt="" />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <Typography
+                            sx={{
+                              color: "rgb(128,127,255)",
+                              fontSize: "17px",
+                              fontWeight: "bold",
+                              "&:hover": {
+                                color: "rgb(14, 116, 144)",
+                                fontSize: "14px",
+                              },
+                            }}
+                          >
+                            {u.firstname}
+                          </Typography>
+                        }
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            ) : (
+              search &&
+              search.length === 10 && (
+                <div>
+                  <p style={{ color: "rgb(128,127,255)" }}>No user found.</p>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      bgcolor: "rgb(128,127,255)",
+                      color: "black",
+                      "&:hover": { bgcolor: "darkcyan" },
+                    }}
+                    onClick={handleInvite}
+                  >
+                    Send Invite
+                  </Button>
+                </div>
+              )
+            )}
+            <IconButton
+              onClick={closeModal}
+              sx={{
+                position: "absolute",
+                top: 8,
+                right: 8,
+                color: "rgb(128,127,255)",
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </Modal>
 
-      <Dialog open={inviteDialog} onClose={() => setInviteDialog(false)}>
-        <DialogTitle sx={{ color: "#0092b8" }}>Send Invitation</DialogTitle>
-        <DialogContent>
-          <DialogContentText sx={{ color: "#0092b8" }}>
-            No user found. Would you like to send an invitation link to {inviteNumber}?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setInviteDialog(false)} sx={{ color: "#0092b8" }}>
-            Cancel
-          </Button>
-          <Button
-            onClick={sendInviteSMS}
-            sx={{ bgcolor: "#0092b8", color: "black", "&:hover": { bgcolor: "#0e7490" } }}
-          >
-            Send SMS
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <Dialog open={inviteDialog} onClose={() => setInviteDialog(false)}>
+          <DialogTitle sx={{ color: "#0092b8" }}>Send Invitation</DialogTitle>
+          <DialogContent>
+            <DialogContentText sx={{ color: "#0092b8" }}>
+              No user found. Would you like to send an invitation link to{" "}
+              {inviteNumber}?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => setInviteDialog(false)}
+              sx={{ color: "#0092b8" }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={sendInviteSMS}
+              sx={{
+                bgcolor: "#0092b8",
+                color: "black",
+                "&:hover": { bgcolor: "#0e7490" },
+              }}
+            >
+              Send SMS
+            </Button>
+          </DialogActions>
+        </Dialog>
 
-      <button
-        onClick={handlefriend}
-        className="btn  text-white bg-[#f43098] rounded-2xl hover:bg-[#c02078] hover:shadow-[0_4px_10px_rgba(0,0,0,0.2)]"
-      >
-        Add new Friend
-      </button>
+        <div
+          onClick={handlefriend}
+          className="rounded-2xl cursor-pointer flex flex-col items-center justify-center p-4  border-2 border-[#f43098] h-30 w-30 text-center font-bold   "
+        >
+          <p className="hover:scale-110">Add new Friend</p>
+        </div>
+        <BalanceAndHistory />
+      </div>
     </>
   );
 };

@@ -330,6 +330,19 @@ exports.getAllUser=async(req,res)=>{
     });
 }
 
+//get user details by id
+
+exports.getUserDetailsById=async(req,res)=>{
+    const id=req.params.id
+    try {
+        const user=await User.findById(id)
+        res.status(200).json({
+            user
+        })
+    } catch (error) {
+        res.status(500).json({success:false,message:"Internal Server Error",error:error.message})
+    }
+}
 //adding friend 
 
 exports.addFriend = async (req, res) => {

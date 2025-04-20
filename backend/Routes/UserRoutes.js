@@ -1,6 +1,6 @@
 const express=require('express')
 const router = express.Router()
-const { loginUser,registerUser, otpConfirm_and_login, otpSend, getUserDetails,otpSendbymail, logoutUser, NameAboutUpdate, UpdateProfilePic, verifyPhoneNumber, sendSMS } = require('../Controllers/UserController')
+const { loginUser,registerUser, otpConfirm_and_login, otpSend, getUserDetails,otpSendbymail, logoutUser, NameAboutUpdate, UpdateProfilePic, verifyPhoneNumber, sendSMS, getUserDetailsById } = require('../Controllers/UserController')
 const { authenticationCheck } = require('../Utils/authenticationJWT')
 const { getAllUser } = require('../Controllers/UserController')    
 const { addFriend } = require('../Controllers/UserController')
@@ -14,6 +14,7 @@ router.route("/otpConfirm").post(otpConfirm_and_login)
 router.route("/sendOtpByEmail").post(otpSendbymail)
 router.route("/register").post(registerUser)
 router.route("/logout").post(logoutUser)
+router.route("/userDetailsById/:id").get(getUserDetailsById)
 
 //routes for an authenticated user
 router.route("/me").get(authenticationCheck,getUserDetails);

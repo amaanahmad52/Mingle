@@ -36,6 +36,7 @@ const PaymentBox = () => {
         `${URL}/getKey`,
         { withCredentials: true, headers: { "Content-Type": "application/json" } }
     )
+    // console.log(key)
       const options = {
         key: key, 
         amount: amount*100, 
