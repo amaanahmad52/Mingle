@@ -29,7 +29,7 @@ const BalanceAndHistory = () => {
                      borderRadius: "12px",
                      boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.9)",
                      //make size large
-                     width: "40%",
+                     width: "35%",
                      height: "100%",
                    },
                  }}
