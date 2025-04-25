@@ -19,6 +19,7 @@ const BAndHContent = () => {
   const [checkBalance, setCheckBalance] = useState(false);
   const dispatch = useDispatch();
   const { paymentHistory } = useSelector((state) => state.paymentReducer);
+
   useEffect(() => {
     dispatch(getPaymentHistoryAction());
   }, []);
@@ -49,7 +50,7 @@ const BAndHContent = () => {
 
   //for filters
   const [openFilter,setOpenFilter]=useState(false)
- 
+  const[updatedPaymentHistory,setUpdatedPaymentHistory]=useState(null)  
 
   return (
     <>
@@ -99,14 +100,19 @@ const BAndHContent = () => {
 
         {openFilter ? (
           //filter box 
-          <BAndHFilter setOpenFilter={setOpenFilter}/>
+          
+          <BAndHFilter setOpenFilter={setOpenFilter} setUpdatedPaymentHistory={setUpdatedPaymentHistory}/>
         ) : (
           // payment history box
           <div className="flex flex-col scrollbar-hidden items-center overflow-auto">
-            {paymentHistory &&
-              paymentHistory.map((payment) => (
+            {updatedPaymentHistory?
+              updatedPaymentHistory.map((payment) => (
                 <HistoryTiles key={payment._id} payment={payment} searchItem={searchQuery} />
-              ))}
+              )):(
+                paymentHistory && paymentHistory.map((payment) => (
+                  <HistoryTiles key={payment._id} payment={payment} searchItem={searchQuery} />
+                ))
+              )}
           </div>
         )}
 
