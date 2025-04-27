@@ -28,7 +28,7 @@ const HistoryTiles = ({ payment , searchItem}) => {
         const { data } = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/userDetailsById/${otherUser}`
         );
-        console.log(data)
+        // console.log(data)
         setReceiver(data.user); // THIS IS UNDEFINED .. ISSUE !!!
       } catch (err) {
         console.error("Failed to fetch user", err);

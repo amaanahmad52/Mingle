@@ -1,19 +1,23 @@
 import CancelIcon from "@mui/icons-material/Cancel";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import DatePicker from 'react-date-picker';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
-
-const BAndHFilter = ({ setOpenFilter, setUpdatedPaymentHistory }) => {
+import { useDispatch, useSelector } from "react-redux";
+import { PaymentFilterContext } from "../../Context/PaymentFilterContext";
+import { setFilteredPaymentHistory } from "../../slices/paymentSlice";
+const BAndHFilter = ({ setOpenFilter }) => {
+  const { paymentHistory} = useSelector((state) => state.paymentReducer);
   const [konsaFilter, setKonsaFilter] = useState("");
-  const [paymentType, setPaymentType] = useState("");
-  const [{ minAmount, maxAmount }, setAmount] = useState({ minAmount: "", maxAmount: "" });
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  
+  const {paymentType,setPaymentType,minAmount,maxAmount,setAmount,startDate,setStartDate,endDate,setEndDate}=useContext(PaymentFilterContext) //these are in context, because we want filter to retain even on component change, it is removed if page reloaded or user explicitly removes it
+
   const [openModal, setOpenModal] = useState(false);
   const [activePicker, setActivePicker] = useState(null); // 'from' or 'to'
+
+  const{user} = useSelector((state) => state.userReducer);
 
   // Format date as dd/mm/yyyy
   const formatDate = (date) => {
@@ -45,15 +49,74 @@ const BAndHFilter = ({ setOpenFilter, setUpdatedPaymentHistory }) => {
     }
   };
 
-  useEffect(() => {
-    console.log("Selected dates:", startDate, endDate);
-  }, [startDate, endDate]);
+  // useEffect(() => {
+  //   console.log("Selected dates:", startDate, endDate);
+  // }, [startDate, endDate]);
 
   const openDateModal = (pickerType) => {
     setActivePicker(pickerType);
     setOpenModal(true);
   };
 
+  //filter handlers
+  const dispatch=useDispatch();
+  const[updatedPaymentHistory,setUpdatedPaymentHistory]=useState(null)
+
+  const removeFilter = () => {
+    setKonsaFilter("");
+    setPaymentType("");
+    setAmount({ minAmount: "", maxAmount: "" });
+    setStartDate(null);
+    setEndDate(null);
+  }
+  const applyFilter = () => {
+    const my_id = user._id;
+  
+    let filteredPaymentHistory = paymentHistory.filter((payment) => {
+      // Apply Payment Type filter
+      let typeFilterPass = true;
+      if (paymentType === "Paid") {
+        typeFilterPass = payment.senderId === my_id;
+      } else if (paymentType === "Received") {
+        typeFilterPass = payment.receiverId === my_id;
+      }
+  
+      // Apply Amount filter
+      let amountFilterPass = true;
+      const paymentAmount = Number(payment.amount);
+      if (minAmount !== "" && paymentAmount < Number(minAmount)) {
+        amountFilterPass = false;
+      }
+      if (maxAmount !== "" && paymentAmount > Number(maxAmount)) {
+        amountFilterPass = false;
+      }
+  
+      // Apply Date Range filter
+        let dateFilterPass = true;
+        if (startDate && endDate) {
+          const paymentDate = new Date(payment.createdAt);
+          
+          // Set time to 00:00:00 for clean comparison
+          const paymentDateOnly = new Date(paymentDate.getFullYear(), paymentDate.getMonth(), paymentDate.getDate());
+          const startDateOnly = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+          const endDateOnly = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+
+          if (paymentDateOnly < startDateOnly || paymentDateOnly > endDateOnly) {
+            dateFilterPass = false;
+          }
+        }
+  
+      return typeFilterPass && amountFilterPass && dateFilterPass;
+    });
+  
+    // setUpdatedPaymentHistory(filteredPaymentHistory);
+
+    //and save in redux so that bandhcontent component can also get filtered history
+    dispatch(setFilteredPaymentHistory(filteredPaymentHistory))
+    //console.log(filteredPaymentHistory) //it is setting correctly 
+    setOpenFilter(false)
+  };
+  
   return (
     <div className="flex flex-col gap-0">
       <div className="flex flex-row justify-between">
@@ -176,8 +239,8 @@ const BAndHFilter = ({ setOpenFilter, setUpdatedPaymentHistory }) => {
         </div>
       </div>
       <div className="flex flex-row justify-between my-10">
-        <button className="btn btn-primary-outline">Clear All</button>
-        <button className="btn btn-primary">Apply</button>
+        <button onClick={removeFilter} className="btn btn-primary-outline">Clear All</button>
+        <button onClick={applyFilter} className="btn btn-primary">Apply</button>
       </div>
     </div>
   );

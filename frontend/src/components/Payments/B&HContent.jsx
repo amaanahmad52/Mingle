@@ -11,14 +11,15 @@ import {
 import { toast } from "react-toastify";
 import { Dialog, DialogContent } from "@mui/material";
 import SecureIcon from "@mui/icons-material/VerifiedUser";
-
 import BAndHFilter from "./B&H_Filter";
+
 
 const BAndHContent = () => {
   const { user } = useSelector((state) => state.userReducer);
   const [checkBalance, setCheckBalance] = useState(false);
   const dispatch = useDispatch();
-  const { paymentHistory } = useSelector((state) => state.paymentReducer);
+  const { paymentHistory ,filteredPaymentHistory} = useSelector((state) => state.paymentReducer);
+   //payment history is from api call and filteredpayment history is set by filter component
 
   useEffect(() => {
     dispatch(getPaymentHistoryAction());
@@ -50,7 +51,10 @@ const BAndHContent = () => {
 
   //for filters
   const [openFilter,setOpenFilter]=useState(false)
-  const[updatedPaymentHistory,setUpdatedPaymentHistory]=useState(null)  
+
+  useEffect(() => {
+    console.log(filteredPaymentHistory);
+  }, [openFilter]);
 
   return (
     <>
@@ -101,12 +105,12 @@ const BAndHContent = () => {
         {openFilter ? (
           //filter box 
           
-          <BAndHFilter setOpenFilter={setOpenFilter} setUpdatedPaymentHistory={setUpdatedPaymentHistory}/>
+          <BAndHFilter setOpenFilter={setOpenFilter} />
         ) : (
           // payment history box
           <div className="flex flex-col scrollbar-hidden items-center overflow-auto">
-            {updatedPaymentHistory?
-              updatedPaymentHistory.map((payment) => (
+            {filteredPaymentHistory?
+              filteredPaymentHistory.map((payment) => (
                 <HistoryTiles key={payment._id} payment={payment} searchItem={searchQuery} />
               )):(
                 paymentHistory && paymentHistory.map((payment) => (
