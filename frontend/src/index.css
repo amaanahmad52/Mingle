@@ -41,4 +41,16 @@ body {
     animation: pulseBlink 1.2s infinite ease-in-out;
   }
   
+  .custom-inline-date-picker .react-date-picker__inputGroup__input {
+    color: white;
+  }
+  
+  .custom-inline-date-picker .react-date-picker__inputGroup__input::placeholder {
+    color:rgb(72,70,187);
+  }
+  
+  .custom-inline-date-picker .react-date-picker__inputGroup {
+    background: rgba(255, 255, 255, 0.137);
+    padding: 10px;
+  }
   

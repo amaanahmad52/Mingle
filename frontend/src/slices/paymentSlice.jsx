@@ -31,9 +31,14 @@ const PaymentSlice = createSlice({
     initialState: {
         loading: false,
         paymentHistory: null,
+        filteredPaymentHistory:null,
         error: null,
     },
-    reducers: {},
+    reducers: {
+        setFilteredPaymentHistory:(state,action)=>{
+            state.filteredPaymentHistory=action.payload
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(getPaymentHistoryAction.pending, (state) => {
             state.loading = true;
@@ -52,4 +57,5 @@ const PaymentSlice = createSlice({
         });
     }
 });
+export const { setFilteredPaymentHistory} = PaymentSlice.actions;
 export default PaymentSlice.reducer;

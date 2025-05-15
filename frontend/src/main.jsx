@@ -8,7 +8,9 @@ import { Provider } from 'react-redux'
 import { ToastContainer } from 'react-toastify'
 import { SidebarProvider } from './Context/SideBarContext'
 import {MessageProvider} from './Context/MessageContext'
+import { PaymentFilterProvider } from './Context/PaymentFilterContext'
 createRoot(document.getElementById('root')).render(
+  <PaymentFilterProvider>
   <MessageProvider>
   <SidebarProvider>
   <Provider store={store}>
@@ -28,5 +30,6 @@ createRoot(document.getElementById('root')).render(
   </Provider>
   </SidebarProvider>
   </MessageProvider>
+  </PaymentFilterProvider>
   
 )
