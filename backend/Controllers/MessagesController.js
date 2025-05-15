@@ -164,5 +164,39 @@ exports.checkConversation = async (req, res) => {
   }
 };
 
+//multiple message forward into user:
 
+
+exports.ForwardManyMessages = async (req, res) => {
+  try {
+    const { receiverIds, messageIds } = req.body;
+    const senderId = req.userDetails._id;
+    if (!messageIds || messageIds.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No messages to forward" });
+    }
+
+    // forwarding  all messages where the ID is in the array and matches the receiverId
+    for(let i=0;i<receiverIds.length;i++){
+      const receiverId=receiverIds[i];
+       await Conversation.updateMany(
+      { participants: { $all: [receiverId, senderId] } },
+      { $push: { messages: { $each: messageIds } } },
+      {new:true}
+    );
+    }
+   
+
+   
+
+    res.status(200).json({
+      success: true,
+      message: " messages forwarded successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
 

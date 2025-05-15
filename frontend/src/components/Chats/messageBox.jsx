@@ -11,6 +11,7 @@ import { useSpeechRecognition } from "react-speech-recognition";
 import SpeechRecognition from "react-speech-recognition";
 import SettingsVoiceIcon from "@mui/icons-material/SettingsVoice";
 import { useDispatch, useSelector } from "react-redux";
+import ForwardButton from "../../assets/utilityComponents/ForwardButton";
 import {
   setMessages,
   sendMessageAction,
@@ -23,7 +24,8 @@ import sendsound from "/sound/sendsound.mp3";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ForwardIcon from "@mui/icons-material/Forward";
 import PaymentBox from "../Payments/PaymentBox";
-const MessageInput = () => {
+const MessageInput = ({users}) => {
+ 
   const { opencheckbox, setopencheckbox } = useContext(MesssageContext);
   const { loadingSend, successSend, messages } = useSelector(
     (state) => state.messagesReducer
@@ -35,7 +37,7 @@ const MessageInput = () => {
   const [isListening, setIsListening] = useState(false); // Microphone state
   const { Userselected } = useContext(SidebarContext);
   const { selectedMessages, setSelectedMessages } = useContext(MesssageContext);
-
+    
   // Speech Recognition Hook
   const {
     transcript,
@@ -64,12 +66,16 @@ const MessageInput = () => {
   };
 
   // Update message when transcript changes
-  useEffect(() => {
-    if (transcript) {
-      setMessage(transcript); // Continuously update message field
-    }
-  }, [transcript, isListening]);
 
+
+  useEffect(() => {
+    if (isListening && transcript) {
+      setMessage(prev => transcript); // replacing is better for real-time voice typing
+    }
+  }, [transcript]);
+  
+
+  
   const handleEmojiSelect = (emoji) => {
     setMessage((prev) => prev + emoji.character); // Append emoji to input
   };
@@ -122,9 +128,23 @@ const MessageInput = () => {
     setopencheckbox(false)
   }, [Userselected]);
 
+const [clickedForward,setclickedForward]=useState(false)
+//............................................................forward message
+const forwardMessage=(e)=>{
+  
+    setclickedForward(true)
+    setopencheckbox(false)
+    //setSelectedMessages(new Set());
+}
+
+
+//.............................................................
+
+
   return (
     <>
       {/* Backdrop for closing Emoji Picker & SpeedDial */}
+      {clickedForward && (<ForwardButton  onClose={()=>setclickedForward(false) } users={users}/>)}
       {(open1 || open) && (
         <Backdrop
           open={true}
@@ -157,7 +177,7 @@ const MessageInput = () => {
               onClick={deleteMessages}
               className="text-cyan-600 hover:text-cyan-700 cursor-pointer"
             />
-            <ForwardIcon className="text-cyan-600 hover:text-cyan-700 cursor-pointer" />
+            <ForwardIcon  onClick={forwardMessage} className="text-cyan-600 hover:text-cyan-700 cursor-pointer" />
           </div>
         </div>
       </div>
@@ -239,7 +259,8 @@ const MessageInput = () => {
 
             {/* SpeedDial Positioned Absolutely */}
             
-            <div className="absolute bottom-1/8 ml-20 bg-transparent">
+            <div className="absolute bottom-1/8 ml-20 bg-transparent pointer-events-auto z-[2000]">
+
               <BasicSpeedDial open={open} setOpen={setOpen} />
               
             </div>
