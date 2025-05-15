@@ -1,6 +1,8 @@
 const Message = require("../Models/MessageModel");
 const Conversation = require("../Models/ConversationsModel");
 const User = require("../Models/UserModel");
+const { getUserSocketMap,io } = require("../Socket/Socket");
+
 
 exports.sendMessage = async (req, res) => {
   try {
@@ -39,6 +41,12 @@ exports.sendMessage = async (req, res) => {
     convo.messages.push(newMessage._id);
 
     await Promise.all([newMessage.save(), convo.save()]);
+
+    //add socket functionality
+    const receiverSocketId=getUserSocketMap(receiverId)
+    if(receiverSocketId){
+        io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
 
     res
       .status(200)

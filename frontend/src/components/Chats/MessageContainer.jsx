@@ -2,8 +2,11 @@ import React, { useContext, useEffect } from "react";
 import { SidebarContext } from "../../Context/SideBarContext";
 import { useSelector } from "react-redux";
 import { MesssageContext } from "../../Context/MessageContext";
+import useListenMessages from "../../../hooks/useListenMessage";
 
 const Message = ({ message, user }) => {
+  useListenMessages()
+  const shakeClass = message.shouldShake ? "shake" : "";
   const {
     opencheckbox,
     setopencheckbox,
@@ -77,7 +80,7 @@ setSelectedMessages(new Set())
             </div>
           </div>
           <div
-            className={`chat-bubble text-white ${bubbleColor} break-words max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl whitespace-pre-wrap ${
+            className={`chat-bubble text-white ${bubbleColor} ${shakeClass} break-words max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl whitespace-pre-wrap ${
               selectedMessages.has(message._id) ? "bg-opacity-80 ring-3 ring-[rgb(247,174,30)]" : ""
             }`}
           >

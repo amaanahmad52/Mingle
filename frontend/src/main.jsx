@@ -9,27 +9,31 @@ import { ToastContainer } from 'react-toastify'
 import { SidebarProvider } from './Context/SideBarContext'
 import {MessageProvider} from './Context/MessageContext'
 import { PaymentFilterProvider } from './Context/PaymentFilterContext'
+import { SocketProvider } from './Context/SocketContext'
 createRoot(document.getElementById('root')).render(
-  <PaymentFilterProvider>
-  <MessageProvider>
-  <SidebarProvider>
   <Provider store={store}>
-      <App />
-      <ToastContainer
-        position="bottom-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        />
-  </Provider>
-  </SidebarProvider>
-  </MessageProvider>
-  </PaymentFilterProvider>
+  <SocketProvider>
+    <PaymentFilterProvider>
+      <MessageProvider>
+        <SidebarProvider>
+          <App />
+          <ToastContainer
+            position="bottom-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
+        </SidebarProvider>
+      </MessageProvider>
+    </PaymentFilterProvider>
+  </SocketProvider>
+</Provider>
+
   
 )
