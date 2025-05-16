@@ -1,13 +1,16 @@
 import React from "react";
 import { useContext } from "react";
 import { SidebarContext } from "../../Context/SideBarContext";
+import { useSocketContext } from "../../Context/SocketContext";
+import { useEffect } from "react";
 const ProfileTile = ({user, onClick, imageUrl }) => {
-  const isOnline = true;
-  
+  const{onlineUsers}=useSocketContext();
+  const isOnline = onlineUsers.includes(user._id);
+
+
   const { Userselected } = useContext(SidebarContext);
   const isUser=Userselected && user._id===Userselected._id?true:false
-  // const isUser=false
-
+ 
   return (
     <div 
     className={isUser

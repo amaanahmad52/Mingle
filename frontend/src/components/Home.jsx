@@ -35,6 +35,7 @@ import { MesssageContext } from "../Context/MessageContext";
 import Docs from "./Chats/Docs";
 const URL = import.meta.env.VITE_BACKEND_URL;
 
+
 const Home = () => {
   //const paymentuser=localStorage.getItem('receiver')
 
@@ -333,7 +334,9 @@ const Home = () => {
                   </div>
                 )}
                 <div className={`${!kon ? "hidden" : "flex"} items-center`}>
-                  <DuoIcon className="mt-1 hover:text-cyan-700 mx-1 cursor-pointer" />
+                  <Link to="/facetime">
+                    <DuoIcon className="mt-1 hover:text-cyan-700 mx-1 cursor-pointer" />
+                  </Link>
                   <CallIcon className="mt-1 hover:text-cyan-700 mx-1 cursor-pointer" />
                   <SimpleDialogDemo id={kon?._id} />
                 </div>

@@ -1,5 +1,5 @@
 const express=require('express');
-const app=express();
+const {app,httpserver}=require('./Socket/Socket')
 const bodyParser=require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors=require('cors');
@@ -29,11 +29,12 @@ app.use('/mingle/v1',require('./Routes/UserRoutes'))
 app.use('/mingle/v1',require('./Routes/MessagesRoutes'))
 app.use('/mingle/v1',require('./Routes/PaymentRoute'))
 
-
 connect()
 
 
+//send this map to controllers for messaging
 
-const server=app.listen(PORT,()=>{
+
+httpserver.listen(PORT,()=>{
     console.log(`server is running on port: http://localhost:${PORT}`)
 })
