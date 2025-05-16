@@ -51,7 +51,21 @@ export const clearMultipleMessagesAction = createAsyncThunk(
         return data;
     }
 );
+// call to push messages in conversation from many users
+export const ForwardMultipleMessagesAction = createAsyncThunk(
+    "ForwardMultipleMessagesAction",
+    async ({ receiverIds, messageIds }) => {
+        const { data } = await axios.post(
+            `${URL}/forwardMultipleMessages`, 
+            
+             { receiverIds, messageIds }, 
 
+             { withCredentials: true, headers: { "Content-Type": "application/json" } }
+            
+        );
+        return data;
+    }
+);
 const messagesSlice = createSlice({
     name: "messages",
     initialState: {

@@ -32,6 +32,7 @@ import Skeleton from "../assets/utilityComponents/Skeleton";
 import TitleData from "../assets/utilityComponents/TitleData";
 import mingle from "/sound/mingle.wav"
 import { MesssageContext } from "../Context/MessageContext";
+import Docs from "./Chats/Docs";
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 
@@ -58,26 +59,30 @@ const Home = () => {
   const { messages, successAll, loadingSend, successSend } = useSelector(
     (state) => state.messagesReducer
   );
-   const {
-      opencheckbox,
-   
-    } = useContext(MesssageContext);
+  const {
+    opencheckbox,
+    setopencheckbox,
+
+    docsOpen,
+    setDocsOpen,
+
+  } = useContext(MesssageContext);
 
   const clickSidebar = () => setSidebarOpen(!sidebarOpen);
-const [audio] = useState(new Audio(mingle));
-const playSound = () => {
-  audio.currentTime = 0; // Reset audio to start
-  audio.play();
-};
+  const [audio] = useState(new Audio(mingle));
+  const playSound = () => {
+    audio.currentTime = 0; // Reset audio to start
+    audio.play();
+  };
   useEffect(() => {
     audio.load(); // Preload the audio when the component mounts
   }, [audio]);
 
 
   //to fetch all users from backend
-  useEffect(() => { 
+  useEffect(() => {
 
-   
+
     const fetchUsers = async () => {
       try {
         const response = await axios.get(`${URL}/getalluser`, {
@@ -102,7 +107,7 @@ const playSound = () => {
 
       return () => clearTimeout(timer); // Cleanup on unmount or user login
     } else {
-      
+
       setShowLoginPopup(false);
     }
   }, [user]);
@@ -133,25 +138,25 @@ const playSound = () => {
       showLastMessageDiv.current.scrollIntoView({ behavior: "smooth" });
 
 
-     
 
-        // Scroll to the bottom initially
-       
-  
-        // Create a MutationObserver to detect changes in the message list height
-        const observer = new MutationObserver(() => {
-          showLastMessageDiv.current.scrollIntoView({ behavior: "smooth" });
-        });
-  
-        // Observe changes to child nodes (messages)
-        observer.observe(showLastMessageDiv.current.parentNode, { childList: true, subtree: true });
-  
-        return () => {
-          // Disconnect the observer on cleanup
-          observer.disconnect();
-        };
+
+      // Scroll to the bottom initially
+
+
+      // Create a MutationObserver to detect changes in the message list height
+      const observer = new MutationObserver(() => {
+        showLastMessageDiv.current.scrollIntoView({ behavior: "smooth" });
+      });
+
+      // Observe changes to child nodes (messages)
+      observer.observe(showLastMessageDiv.current.parentNode, { childList: true, subtree: true });
+
+      return () => {
+        // Disconnect the observer on cleanup
+        observer.disconnect();
+      };
     }
-  }, [opencheckbox,messages]);
+  }, [opencheckbox, messages]);
 
   //to get messages between two users (REQUESTS)
   useEffect(() => {
@@ -161,7 +166,15 @@ const playSound = () => {
   }, [RequestUserselected, successSend]);
 
   let kon = RequestUserselected || Userselected;
+  useEffect(() => {
 
+    if (SideBarselected !== "Messages") {
+      kon = null;
+      setRequestUserSelected(null)
+      setUserSelected(null)
+    }
+    // Perform any side effects here
+  }, [kon, SideBarselected]);
   //to again switch to null messaegs when clicked on messages tab at bottom
   useEffect(() => {
     if (RequestUserselected) {
@@ -209,21 +222,21 @@ const playSound = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [searchOpen]);
-/// 
+  /// 
   useEffect(() => {
     const storedUser = localStorage.getItem('receiver');
     if (storedUser) {
-     
-        setUserSelected(JSON.parse(storedUser));
-        //if home render first time with out any payment then also this work thats why we need to remove it 
-        localStorage.removeItem('receiver');
-    
+
+      setUserSelected(JSON.parse(storedUser));
+      //if home render first time with out any payment then also this work thats why we need to remove it 
+      localStorage.removeItem('receiver');
+
     }
   }, []);
   //.......................
   return (
     <>
-      
+
       {!user ? (
         <>
           {!showLoginPopup ? (
@@ -253,11 +266,9 @@ const playSound = () => {
           >
             <div className="flex flex-row w-full h-16">
               <div
-                className={`text-center ${
-                  sidebarOpen ? "w-1/5 p-4" : "w-1/15 p-5"
-                } flex ${
-                  sidebarOpen ? "justify-between" : "flex-col items-start"
-                }`}
+                className={`text-center ${sidebarOpen ? "w-1/5 p-4" : "w-1/15 p-5"
+                  } flex ${sidebarOpen ? "justify-between" : "flex-col items-start"
+                  }`}
                 ref={switcher}
               >
                 <Logoicon className="text-cyan-600 mx-3 hover:text-cyan-800 cursor-pointer" />
@@ -290,16 +301,16 @@ const playSound = () => {
                       className="border border-gray-400 rounded px-2 py-1 focus:outline-none"
                       placeholder="Search..."
                     />
-                  ) : 
-                  (
-                    SideBarselected === "Messages" && (
-                      <SearchIcon
-                        className="hover:text-cyan-600 cursor-pointer ml-4"
-                        onClick={() => setSearchOpen(true)}
-                      />
+                  ) :
+                    (
+                      SideBarselected === "Messages" && (
+                        <SearchIcon
+                          className="hover:text-cyan-600 cursor-pointer ml-4"
+                          onClick={() => setSearchOpen(true)}
+                        />
+                      )
                     )
-                  )
-                    
+
                   }
                 </div>
                 <MultiAvatars count={`+${user?.friends?.length}`} />
@@ -365,6 +376,9 @@ const playSound = () => {
               </div>
 
               <div className="w-2/3 p-4 flex flex-col justify-between max-sm:h-full max-sm:w-full">
+
+                
+
                 {!kon ? (
                   <div className="flex flex-col justify-center items-center h-full p-40">
                     <h1 className="text-3xl font-semibold text-center text-gray-300">
@@ -385,26 +399,31 @@ const playSound = () => {
                           </h1>
                         </div>
                       ) : (
+
                         messages.map((m, index) => {
                           let messageDate = new Date(m.createdAt).setHours(0, 0, 0, 0);
                           let shouldShowDate = previousDate === null || messageDate > previousDate;
-          
+
                           previousDate = messageDate; // Update for next iteration
-          
+
                           return (
-                              <div className="" key={index} ref={showLastMessageDiv}>
-                                  {shouldShowDate && (
-                                      <div className="text-center text-gray-500 text-xs mt-2">
-                                          {getFormattedDate(m.createdAt)}
-                                      </div>
-                                  )}
-                                  <MessageContainer message={m} user={user} />
-                              </div>
+                            <div className="" key={index} ref={showLastMessageDiv}>
+                              {shouldShowDate && (
+                                <div className="text-center text-gray-500 text-xs mt-2">
+                                  {getFormattedDate(m.createdAt)}
+                                </div>
+                              )}
+
+
+
+
+                              <MessageContainer message={m} user={user} />
+                            </div>
                           );
                         })
                       )}
                     </motion.div>
-                    <MessageInput />
+                    <MessageInput users={users} />
                   </>
                 )}
               </div>
